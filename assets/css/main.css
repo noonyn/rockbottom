@@ -936,7 +936,7 @@ input, select, textarea {
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-	padding: 15px;
+	padding: 7px;
 }
 
 .grid img {
