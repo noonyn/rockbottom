@@ -320,85 +320,62 @@ input, select, textarea {
 
 /* Image */
 
-	.image {
+.image {
+	border-radius: 4px;
+	border: 0;
+	display: inline-block;
+	position: relative;
+}
+
+	.image img {
 		border-radius: 4px;
-		border: 0;
-		display: inline-block;
-		position: relative;
+		display: block;
 	}
 
-		.image:before {
-			pointer-events: none;
-			background-image: url("../../images/overlay.png");
-			background-color: rgba(19, 21, 25, 0.5);
-			border-radius: 4px;
-			content: '';
-			display: block;
-			height: 100%;
-			left: 0;
-			opacity: 0;
-			position: absolute;
-			top: 0;
+	.image.left, .image.right {
+		max-width: 40%;
+	}
+
+		.image.left img, .image.right img {
 			width: 100%;
 		}
 
-		.image img {
-			border-radius: 4px;
-			display: block;
-		}
+	.image.left {
+		float: left;
+		padding: 0 1.5em 1em 0;
+		top: 0.25em;
+	}
 
-		.image.left, .image.right {
-			max-width: 40%;
-		}
+	.image.right {
+		float: right;
+		padding: 0 0 1em 1.5em;
+		top: 0.25em;
+	}
 
-			.image.left img, .image.right img {
-				width: 100%;
-			}
+	.image.fit {
+		display: block;
+		margin: 0 0 2em 0;
+		width: 100%;
+	}
 
-		.image.left {
-			float: left;
-			padding: 0 1.5em 1em 0;
-			top: 0.25em;
-		}
-
-		.image.right {
-			float: right;
-			padding: 0 0 1em 1.5em;
-			top: 0.25em;
-		}
-
-		.image.fit {
-			display: block;
-			margin: 0 0 2rem 0;
+		.image.fit img {
 			width: 100%;
 		}
 
-			.image.fit img {
-				width: 100%;
-			}
+	.image.main {
+		display: block;
+		margin: 0 0 3em 0;
+		width: 100%;
+	}
 
-		.image.main {
-			display: block;
-			margin: 2.5rem 0;
+		.image.main img {
 			width: 100%;
 		}
-
-			.image.main img {
-				width: 100%;
-			}
 
 		@media screen and (max-width: 736px) {
 
 			.image.main {
-				margin: 2rem 0;
-			}
-
-		}
-
-		@media screen and (max-width: 480px) {
-
-			.image.main {
-				margin: 1.5rem 0;
+				margin: 0 0 2em 0;
 			}
 
 		}
@@ -1150,4 +1127,76 @@ input, select, textarea {
     display: flex; 
     justify-content: center; 
     align-items: center; 
+}
+
+
+/* Tiles */
+
+.tiles {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -2.5em 0 0 -2.5em;
+}
+
+.tiles article {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    position: relative;
+    width: calc(33.33333% - 2.5em);
+    margin: 2.5em 0 0 2.5em;
+}
+
+.tiles article > .image {
+    transition: transform 0.5s ease;
+    display: block;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tiles article > .image img {
+    display: block;
+    width: 100%;
+}
+
+.tiles article > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.5s ease, transform 0.5s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+    border-radius: 4px;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+}
+
+.tiles article.style1 > .image:before {
+    background-color: #f2849e;
+}
+
+.tiles article.style2 > .image:before {
+    background-color: #7ecaf6;
+}
+
+.tiles article.style3 > .image:before {
+    background-color: #7bd0c1;
+}
+
+.tiles article.style4 > .image:before {
+    background-color: #c75b9b;
+}
+
+.tiles article:hover > .image {
+    transform: scale(1.1);
+}
+
+.tiles article:hover > a .content {
+    max-height: 15em;
+    opacity: 1;
 }
