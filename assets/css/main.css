@@ -1056,6 +1056,7 @@ input, select, textarea {
 }
 
 
+
 @media (max-width: 768px) {
     .alt-box {
         top: 110%; 
@@ -1199,4 +1200,58 @@ input, select, textarea {
 .tiles article:hover > a .content {
     max-height: 15em;
     opacity: 1;
+}
+
+
+
+/* Green, White, White pattern with alt monsters on first */
+.grid.altfirst-pattern > img:nth-child(3n+1) {
+    border: 2px solid #32CD32; /* Green */
+}
+
+.grid.altfirst-pattern > img:nth-child(3n+2),
+.grid.altfirst-pattern > img:nth-child(3n+3) {
+    border: 2px solid #FFFFFF; /* White */
+}
+
+.grid.altfirst-pattern > .monster-wrapper:nth-child(3n+1) img {
+    border: 2px solid #32CD32;
+    margin: 0;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.grid.altfirst-pattern > .monster-wrapper:nth-child(3n+1):hover img {
+    transform: scale(1.1);
+}
+
+/* Show alt-box on hover for green monster-wrapper */
+.grid.altfirst-pattern > .monster-wrapper:nth-child(3n+1) .alt-box {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 10;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.grid.altfirst-pattern > .monster-wrapper:nth-child(3n+1):hover .alt-box {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.grid.altfirst-pattern > .monster-wrapper:nth-child(3n+1) .alt-box img {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 2px solid #32CD32;
+    transition: transform 0.3s ease;
 }
