@@ -529,17 +529,21 @@
       grid-column:1/-1; text-align:center; padding:2.5rem 1rem;
       color:var(--muted); font-size:0.85rem; line-height:1.6;
     }
-    .report-sub-label {
-      font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
-      color:var(--muted); margin:1.25rem 0 0.65rem;
-      padding-top:1.25rem; border-top:1px solid var(--border);
+    .report-stats-row {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-top:0.75rem;
     }
-    .report-sub-label.first { margin-top:0; padding-top:0; border-top:none; }
-    .report-metrics-grid.sm .report-metric { padding:0.8rem 0.5rem; }
-    .report-metrics-grid.sm .ring-wrap { width:64px; height:64px; }
-    .report-metrics-grid.sm .ring-svg  { width:64px; height:64px; }
-    .report-metrics-grid.sm .ring-pct  { font-size:1rem; }
-    .report-metrics-grid.sm .metric-name { font-size:0.58rem; }
+    .report-stat-card {
+      background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+      padding:0.85rem 0.6rem; display:flex; flex-direction:column; align-items:center; gap:4px;
+    }
+    .stat-value {
+      font-family:'Rajdhani',sans-serif; font-size:1.2rem; font-weight:700;
+      color:var(--white); line-height:1; text-align:center;
+    }
+    .stat-label {
+      font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--muted); text-align:center;
+    }
     @media (max-width:440px) {
       .report-metrics-grid { grid-template-columns:1fr; }
       .report-metric { flex-direction:row; justify-content:flex-start; gap:1rem; padding:1rem; }
@@ -629,7 +633,7 @@
   <div class="report-card">
     <div class="report-header">
       <div>
-        <div class="report-title">SIEGE <span id="report-season-label">REPORT</span></div>
+        <div class="report-title">DEFENSE <span id="report-season-label">REPORT</span></div>
         <div class="report-subtitle" id="report-date-label"></div>
       </div>
       <button class="report-close" onclick="closeReportBtn()">✕</button>
@@ -701,18 +705,16 @@ const DATA = {
       'Yellow_Lileo','Yosuzume','horstiflyyyy97','nikigamer1989','rhkrsmurf',
     ],
     report: {
-      asOf: 'May 28, 2026',
-      offenseWR:      null,
-      offense5starWR: null,
-      offense4starWR: null,
+      asOf:           'May 28, 2026',
       defenseWR:      null,
       defense5starWR: null,
       defense4starWR: null,
-      overallCP:      null,
+      totalBattles:   null,
+      defenseWins:    null,
+      defenseLosses:  null,
+      defensePts:     null,
       thresholds: {
-        offense: { g:90,  lg:85,  y:80,  lr:70 },
-        defense: { g:40,  lg:30,  y:25,  lr:20 },
-        overall: { g:130, lg:115, y:105, lr:90  }
+        defense: { g:40, lg:30, y:25, lr:20 }
       }
     }
   },
@@ -1093,27 +1095,38 @@ function openReport() {
   document.getElementById('report-season-label').textContent = `SEASON ${activeSeason}`;
   document.getElementById('report-date-label').textContent = r.asOf ? `Last updated on: ${r.asOf}` : '';
 
-  const hasData = [r.offenseWR, r.defenseWR, r.overallCP, r.offense5starWR, r.defense5starWR].some(v => v !== null);
+  const hasData = [r.defenseWR, r.defense5starWR, r.defense4starWR].some(v => v !== null);
   const grid = document.getElementById('report-metrics-grid');
 
   if (!hasData) {
     grid.innerHTML = `<div class="report-metrics-grid"><div class="report-empty">No report data yet.<br>Check back after the next siege.</div></div>`;
-  } else {
-    const t = r.thresholds;
-    grid.innerHTML = `
-      <div class="report-sub-label first">Overall Performance</div>
-      <div class="report-metrics-grid">
-        ${buildRing('Offense WR%', r.offenseWR, t.offense)}
-        ${buildRing('Defense WR%', r.defenseWR, t.defense)}
-        ${buildRing('Overall CP%', r.overallCP,  t.overall)}
-      </div>
-      <div class="report-sub-label">Siege Defense</div>
-      <div class="report-metrics-grid sm">
-        ${buildRing('Overall WR%', r.defenseWR,      t.defense)}
-        ${buildRing('5★ WR%',      r.defense5starWR, t.defense)}
-        ${buildRing('4★ WR%',      r.defense4starWR, t.defense)}
-      </div>`;
+    overlay.classList.add('open');
+    return;
   }
+
+  const t  = r.thresholds.defense;
+  const fmt = n => n != null ? n.toLocaleString() : '—';
+
+  grid.innerHTML = `
+    <div class="report-metrics-grid">
+      ${buildRing('Defense WR%', r.defenseWR,      t)}
+      ${buildRing('5★ WR%',      r.defense5starWR, t)}
+      ${buildRing('4★ WR%',      r.defense4starWR, t)}
+    </div>
+    <div class="report-stats-row">
+      <div class="report-stat-card">
+        <span class="stat-value">${fmt(r.totalBattles)}</span>
+        <span class="stat-label">Total Battles</span>
+      </div>
+      <div class="report-stat-card">
+        <span class="stat-value">${fmt(r.defenseWins)} / ${fmt(r.defenseLosses)}</span>
+        <span class="stat-label">W / L</span>
+      </div>
+      <div class="report-stat-card">
+        <span class="stat-value">${fmt(r.defensePts)}</span>
+        <span class="stat-label">Defense Pts</span>
+      </div>
+    </div>`;
   overlay.classList.add('open');
 }
 
@@ -1174,13 +1187,13 @@ fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/report.json?_=' 
   .then(r => r.json())
   .then(d => {
     const r = DATA.guildStats.report;
-    if (d.offenseWR      != null) r.offenseWR      = d.offenseWR;
-    if (d.offense5starWR != null) r.offense5starWR = d.offense5starWR;
-    if (d.offense4starWR != null) r.offense4starWR = d.offense4starWR;
     if (d.defenseWR      != null) r.defenseWR      = d.defenseWR;
     if (d.defense5starWR != null) r.defense5starWR = d.defense5starWR;
     if (d.defense4starWR != null) r.defense4starWR = d.defense4starWR;
-    if (d.overallCP      != null) r.overallCP      = d.overallCP;
+    if (d.totalBattles   != null) r.totalBattles   = d.totalBattles;
+    if (d.defenseWins    != null) r.defenseWins    = d.defenseWins;
+    if (d.defenseLosses  != null) r.defenseLosses  = d.defenseLosses;
+    if (d.defensePts     != null) r.defensePts     = d.defensePts;
     if (d.asOf)                   r.asOf           = d.asOf;
   })
   .catch(() => {}); // silently fall back to DATA defaults
