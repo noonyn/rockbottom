@@ -473,9 +473,10 @@
     .report-overlay.open { opacity:1; pointer-events:auto; }
     .report-card {
       background:var(--surface); border:1px solid var(--border); border-radius:16px;
-      padding:1.75rem; width:100%; max-width:520px;
+      padding:1.75rem; width:100%; max-width:560px;
       transform:translateY(14px); transition:transform 0.22s ease;
       box-shadow:0 24px 60px rgba(0,0,0,0.6);
+      max-height:90vh; overflow-y:auto;
     }
     .report-overlay.open .report-card { transform:translateY(0); }
     .report-header {
@@ -528,6 +529,17 @@
       grid-column:1/-1; text-align:center; padding:2.5rem 1rem;
       color:var(--muted); font-size:0.85rem; line-height:1.6;
     }
+    .report-sub-label {
+      font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--muted); margin:1.25rem 0 0.65rem;
+      padding-top:1.25rem; border-top:1px solid var(--border);
+    }
+    .report-sub-label.first { margin-top:0; padding-top:0; border-top:none; }
+    .report-metrics-grid.sm .report-metric { padding:0.8rem 0.5rem; }
+    .report-metrics-grid.sm .ring-wrap { width:64px; height:64px; }
+    .report-metrics-grid.sm .ring-svg  { width:64px; height:64px; }
+    .report-metrics-grid.sm .ring-pct  { font-size:1rem; }
+    .report-metrics-grid.sm .metric-name { font-size:0.58rem; }
     @media (max-width:440px) {
       .report-metrics-grid { grid-template-columns:1fr; }
       .report-metric { flex-direction:row; justify-content:flex-start; gap:1rem; padding:1rem; }
@@ -622,7 +634,7 @@
       </div>
       <button class="report-close" onclick="closeReportBtn()">✕</button>
     </div>
-    <div class="report-metrics-grid" id="report-metrics-grid"></div>
+    <div id="report-metrics-grid"></div>
   </div>
 </div>
 
@@ -690,10 +702,13 @@ const DATA = {
     ],
     report: {
       asOf: 'May 28, 2026',
-      offenseWR: null,   // e.g. 78.5
-      defenseWR: null,   // e.g. 41.2
-      overallCP: null,   // e.g. 68.8
-      // thresholds from the SWGT report URL params
+      offenseWR:      null,
+      offense5starWR: null,
+      offense4starWR: null,
+      defenseWR:      null,
+      defense5starWR: null,
+      defense4starWR: null,
+      overallCP:      null,
       thresholds: {
         offense: { g:90,  lg:85,  y:80,  lr:70 },
         defense: { g:40,  lg:30,  y:25,  lr:20 },
@@ -1049,46 +1064,61 @@ function metricTag(val, t) {
   return opts.find(o => val >= o.min);
 }
 
+function buildRing(label, value, thresholds) {
+  const pct = value !== null ? value : 0;
+  const off = (CIRC * (1 - Math.min(pct, 100) / 100)).toFixed(2);
+  const col = metricColor(value, thresholds);
+  const tag = metricTag(value, thresholds);
+  return `
+    <div class="report-metric">
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 100 100">
+          <circle class="ring-bg"   cx="50" cy="50" r="38"/>
+          <circle class="ring-fill" cx="50" cy="50" r="38"
+            style="stroke:${col}; stroke-dasharray:${CIRC.toFixed(2)}; stroke-dashoffset:${off};"/>
+        </svg>
+        <div class="ring-label">
+          <span class="ring-pct">${value !== null ? value.toFixed(1) : '—'}</span>
+          <span class="ring-unit">${value !== null ? '%' : ''}</span>
+        </div>
+      </div>
+      <div class="metric-name">${label}</div>
+      ${tag ? `<div class="metric-tag" style="background:${tag.bg};border:1px solid ${tag.br};color:${tag.fg}">${tag.text}</div>` : ''}
+    </div>`;
+}
+
 function openReport() {
   const overlay = document.getElementById('report-overlay');
   const r = DATA.guildStats.report;
   document.getElementById('report-season-label').textContent = `SEASON ${activeSeason}`;
-  document.getElementById('report-date-label').textContent = r.asOf ? `As of ${r.asOf}` : '';
+  document.getElementById('report-date-label').textContent = r.asOf ? `Last updated on: ${r.asOf}` : '';
 
-  const metrics = [
-    { label:'Offense WR%', value:r.offenseWR, t:r.thresholds.offense },
-    { label:'Defense WR%', value:r.defenseWR, t:r.thresholds.defense },
-    { label:'Overall CP%', value:r.overallCP, t:r.thresholds.overall },
-  ];
-
-  const hasData = metrics.some(m => m.value !== null);
+  const hasData = [r.offenseWR, r.defenseWR, r.overallCP, r.offense5starWR, r.defense5starWR].some(v => v !== null);
   const grid = document.getElementById('report-metrics-grid');
 
   if (!hasData) {
-    grid.innerHTML = `<div class="report-empty">No report data yet.<br>Check back after the next siege.</div>`;
+    grid.innerHTML = `<div class="report-metrics-grid"><div class="report-empty">No report data yet.<br>Check back after the next siege.</div></div>`;
   } else {
-    grid.innerHTML = metrics.map(m => {
-      const pct  = m.value !== null ? m.value : 0;
-      const off  = (CIRC * (1 - Math.min(pct, 100) / 100)).toFixed(2);
-      const col  = metricColor(m.value, m.t);
-      const tag  = metricTag(m.value, m.t);
-      return `
-        <div class="report-metric">
-          <div class="ring-wrap">
-            <svg class="ring-svg" viewBox="0 0 100 100">
-              <circle class="ring-bg"   cx="50" cy="50" r="38"/>
-              <circle class="ring-fill" cx="50" cy="50" r="38"
-                style="stroke:${col}; stroke-dasharray:${CIRC.toFixed(2)}; stroke-dashoffset:${off};"/>
-            </svg>
-            <div class="ring-label">
-              <span class="ring-pct">${m.value !== null ? m.value.toFixed(1) : '—'}</span>
-              <span class="ring-unit">${m.value !== null ? '%' : ''}</span>
-            </div>
-          </div>
-          <div class="metric-name">${m.label}</div>
-          ${tag ? `<div class="metric-tag" style="background:${tag.bg};border:1px solid ${tag.br};color:${tag.fg}">${tag.text}</div>` : ''}
-        </div>`;
-    }).join('');
+    const t = r.thresholds;
+    grid.innerHTML = `
+      <div class="report-sub-label first">Overall Performance</div>
+      <div class="report-metrics-grid">
+        ${buildRing('Offense WR%', r.offenseWR, t.offense)}
+        ${buildRing('Defense WR%', r.defenseWR, t.defense)}
+        ${buildRing('Overall CP%', r.overallCP,  t.overall)}
+      </div>
+      <div class="report-sub-label">Siege Offense</div>
+      <div class="report-metrics-grid sm">
+        ${buildRing('Overall WR%', r.offenseWR,      t.offense)}
+        ${buildRing('5★ WR%',      r.offense5starWR, t.offense)}
+        ${buildRing('4★ WR%',      r.offense4starWR, t.offense)}
+      </div>
+      <div class="report-sub-label">Siege Defense</div>
+      <div class="report-metrics-grid sm">
+        ${buildRing('Overall WR%', r.defenseWR,      t.defense)}
+        ${buildRing('5★ WR%',      r.defense5starWR, t.defense)}
+        ${buildRing('4★ WR%',      r.defense4starWR, t.defense)}
+      </div>`;
   }
   overlay.classList.add('open');
 }
@@ -1149,10 +1179,15 @@ document.addEventListener('keydown', e => {
 fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/report.json?_=' + Date.now())
   .then(r => r.json())
   .then(d => {
-    if (d.offenseWR != null) DATA.guildStats.report.offenseWR = d.offenseWR;
-    if (d.defenseWR != null) DATA.guildStats.report.defenseWR = d.defenseWR;
-    if (d.overallCP  != null) DATA.guildStats.report.overallCP  = d.overallCP;
-    if (d.asOf)               DATA.guildStats.report.asOf       = d.asOf;
+    const r = DATA.guildStats.report;
+    if (d.offenseWR      != null) r.offenseWR      = d.offenseWR;
+    if (d.offense5starWR != null) r.offense5starWR = d.offense5starWR;
+    if (d.offense4starWR != null) r.offense4starWR = d.offense4starWR;
+    if (d.defenseWR      != null) r.defenseWR      = d.defenseWR;
+    if (d.defense5starWR != null) r.defense5starWR = d.defense5starWR;
+    if (d.defense4starWR != null) r.defense4starWR = d.defense4starWR;
+    if (d.overallCP      != null) r.overallCP      = d.overallCP;
+    if (d.asOf)                   r.asOf           = d.asOf;
   })
   .catch(() => {}); // silently fall back to DATA defaults
 
