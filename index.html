@@ -1048,18 +1048,18 @@ const CIRC = 2 * Math.PI * 38; // SVG r=38 → circumference ≈ 238.76
 function metricColor(val, t) {
   if (val === null) return 'var(--muted)';
   if (val >= t.g)  return '#22c55e';  // Excellent
-  if (val >= t.lg) return '#f59e0b';  // Average
-  if (val >= t.y)  return '#fb923c';  // Low
-  return '#ef4444';                   // Critical
+  if (val >= t.lg) return '#86efac';  // Good
+  if (val >= t.y)  return '#f59e0b';  // Average
+  return '#ef4444';                   // Low
 }
 
 function metricTag(val, t) {
   if (val === null) return null;
   const opts = [
     { min:t.g,       text:'Excellent', bg:'rgba(34,197,94,0.12)',  br:'rgba(34,197,94,0.4)',   fg:'#22c55e' },
-    { min:t.lg,      text:'Average',   bg:'rgba(245,158,11,0.12)', br:'rgba(245,158,11,0.35)', fg:'#f59e0b' },
-    { min:t.y,       text:'Low',       bg:'rgba(251,146,60,0.12)', br:'rgba(251,146,60,0.35)', fg:'#fb923c' },
-    { min:-Infinity, text:'Critical',  bg:'rgba(239,68,68,0.12)',  br:'rgba(239,68,68,0.35)',  fg:'#ef4444' },
+    { min:t.lg,      text:'Good',      bg:'rgba(134,239,172,0.1)', br:'rgba(134,239,172,0.4)', fg:'#86efac' },
+    { min:t.y,       text:'Average',   bg:'rgba(245,158,11,0.12)', br:'rgba(245,158,11,0.35)', fg:'#f59e0b' },
+    { min:-Infinity, text:'Low',       bg:'rgba(239,68,68,0.12)',  br:'rgba(239,68,68,0.35)',  fg:'#ef4444' },
   ];
   return opts.find(o => val >= o.min);
 }
