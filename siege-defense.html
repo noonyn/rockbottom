@@ -1338,7 +1338,7 @@ function renderScheduleList() {
   }
 
   const now = Date.now();
-  const SIEGE_MS = 24 * 60 * 60 * 1000; // 24-hour siege window
+  const SIEGE_MS = 36 * 60 * 60 * 1000; // 36-hour siege window (noon → midnight+1 day)
 
   // Active = first siege whose end time hasn't passed yet
   const activeIdx = sieges.findIndex(s => new Date(s.date).getTime() + SIEGE_MS > now);
