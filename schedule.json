@@ -1,0 +1,8 @@
+{
+  "sieges": [
+    { "date": "2026-05-30", "label": "Season 21 · Siege 1" },
+    { "date": "2026-06-06", "label": "Season 21 · Siege 2" },
+    { "date": "2026-06-13", "label": "Season 21 · Siege 3" },
+    { "date": "2026-06-20", "label": "Season 21 · Siege 4" }
+  ]
+}
