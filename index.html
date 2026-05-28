@@ -19,7 +19,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -125,7 +125,7 @@
       animation:fadeDown 0.5s ease both;
     }
     .hero-desc {
-      font-family:'Space Grotesk',sans-serif; font-size:0.875rem; font-weight:400;
+      font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:400;
       color:rgba(200,214,232,0.92); line-height:1.65; letter-spacing:0.01em;
       max-width:440px; margin:0 auto 1.25rem; position:relative;
       text-shadow: 0 1px 6px rgba(0,0,0,0.7);
@@ -374,7 +374,7 @@
 
     /* ─── SECTION CONTROLS ─── */
     .section-controls-bar {
-      display:flex; justify-content:flex-end; margin-bottom:1.25rem;
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;
     }
     .btn-toggle-all {
       font-size:0.72rem; font-weight:600; letter-spacing:0.06em;
@@ -385,63 +385,74 @@
     .btn-toggle-all:hover { border-color:var(--gold-border); color:var(--gold); }
 
     /* ─── COPY LINK ─── */
-    .copy-link-btn {
-      background:none; border:none; cursor:pointer; line-height:1;
-      color:var(--muted); padding:2px 4px; border-radius:4px;
-      display:inline-flex; align-items:center;
-      opacity:0; transition:opacity 0.15s, color 0.15s; pointer-events:none;
-    }
-    .section-header:hover .copy-link-btn { opacity:1; pointer-events:auto; }
-    .copy-link-btn:hover, .copy-link-btn.copied { color:var(--gold); }
 
-    /* ─── GUILD BAR ─── */
-    .hero-guild-bar {
-      display:inline-flex; align-items:center;
-      background:rgba(15,22,35,0.65); border:1px solid var(--border);
-      border-radius:12px; padding:8px 4px;
-      backdrop-filter:blur(10px);
-      position:relative;
+    /* ─── HERO ACTIONS ─── */
+    .hero-actions {
+      display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+      margin-top:1.25rem;
       animation:fadeDown 0.5s 0.32s ease both;
-      margin-top:1.1rem;
     }
-    .guild-stat {
-      display:flex; align-items:center; gap:6px;
-      padding:0 16px; color:var(--muted);
+
+    /* shared base for all three action buttons */
+    .hero-action-btn {
+      display:inline-flex; align-items:center; gap:7px;
+      background:rgba(15,22,35,0.72); border:1px solid var(--border);
+      border-radius:10px; padding:9px 18px;
+      backdrop-filter:blur(10px);
+      font-family:'Inter',system-ui,sans-serif;
+      font-size:0.78rem; font-weight:700; letter-spacing:0.05em;
+      cursor:pointer; text-decoration:none; white-space:nowrap;
+      transition:border-color 0.18s, background 0.18s, transform 0.15s, color 0.18s;
+      position:relative;
     }
-    .guild-stat svg { flex-shrink:0; }
-    .guild-stat-value {
-      font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700;
+    .hero-action-btn:hover { transform:translateY(-2px); }
+
+    /* Members button */
+    .hero-btn-members {
+      color:var(--text);
+    }
+    .hero-btn-members:hover {
+      border-color:var(--gold-border);
+      background:rgba(245,158,11,0.1);
+      color:var(--white);
+    }
+    .hero-btn-members:hover svg { stroke:var(--gold); }
+    .hero-btn-members .btn-count {
+      font-family:'Rajdhani',sans-serif; font-size:1.1rem; font-weight:700;
       color:var(--white); line-height:1;
     }
-    .guild-stat-label {
-      font-size:0.62rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
-      color:var(--muted);
+    .hero-btn-members:hover .btn-count { color:var(--gold); }
+    .btn-label {
+      font-size:0.68rem; font-weight:600; letter-spacing:0.1em;
+      text-transform:uppercase; color:var(--muted);
     }
-    .guild-bar-div { width:1px; height:26px; background:var(--border); flex-shrink:0; }
-    .guild-apply-btn {
-      display:flex; align-items:center; gap:5px; padding:0 16px;
-      font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-      color:var(--gold); text-decoration:none;
-      transition:color 0.15s, opacity 0.15s;
-    }
-    .guild-apply-btn:hover { color:var(--white); }
-    .guild-report-btn {
-      display:flex; align-items:center; gap:6px; padding:0 16px;
-      font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-      background:none; border:none; cursor:pointer; color:var(--text);
-      transition:color 0.15s;
-    }
-    .guild-report-btn:hover { color:var(--white); }
+    .hero-btn-members:hover .btn-label { color:var(--gold); }
 
-    /* ─── GUILD MEMBERS BTN ─── */
-    .guild-members-btn {
-      background:none; border:none; cursor:pointer;
-      border-radius:8px; transition:background 0.15s;
-      font-family:inherit;
+    /* Apply button — gold CTA */
+    .hero-btn-apply {
+      color:var(--gold);
+      border-color:var(--gold-border);
+      background:var(--gold-bg);
     }
-    .guild-members-btn:hover { background:rgba(245,158,11,0.08); }
-    .guild-members-btn:hover .guild-stat-value { color:var(--gold); }
-    .guild-members-btn:hover svg { stroke:var(--gold); }
+    .hero-btn-apply:hover {
+      background:rgba(245,158,11,0.22);
+      border-color:rgba(245,158,11,0.6);
+      color:var(--white);
+    }
+    .hero-btn-apply:hover svg { stroke:var(--white); }
+
+    /* Season Defense Report button */
+    .hero-btn-report {
+      color:var(--muted);
+      padding:5px 13px;
+      font-size:0.72rem;
+    }
+    .hero-btn-report:hover {
+      border-color:var(--gold-border);
+      background:var(--gold-bg);
+      color:var(--gold);
+    }
+    .hero-btn-report:hover svg { stroke:var(--gold); }
 
     /* ─── MEMBERS LIST ─── */
     .members-list {
@@ -564,9 +575,35 @@
       .team-sep { margin:0 10px; height:58px; }
       .defense-section { margin-bottom:2rem; }
     }
+    .nav-members {
+      display:flex; align-items:center; gap:5px;
+      background:var(--surface2); border:1px solid var(--border); color:var(--muted);
+      padding:5px 11px; border-radius:8px; cursor:pointer; white-space:nowrap;
+      transition:border-color 0.18s, color 0.18s, background 0.18s;
+      font-family:inherit;
+    }
+    .nav-members:hover { border-color:var(--gold-border); background:var(--gold-bg); }
+    .nav-members:hover svg { stroke:var(--gold); }
+    .nav-members-count {
+      font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700;
+      color:var(--white); line-height:1;
+    }
+    .nav-members:hover .nav-members-count { color:var(--gold); }
+    .nav-apply {
+      display:flex; align-items:center; gap:6px;
+      font-size:0.8rem; font-weight:700; letter-spacing:0.04em;
+      background:#dc2626; color:#fff;
+      padding:6px 14px; border-radius:8px; text-decoration:none; white-space:nowrap;
+      transition:opacity 0.18s, transform 0.18s;
+    }
+    .nav-apply:hover { opacity:0.88; transform:translateY(-1px); }
+    .nav-apply svg { flex-shrink:0; }
+
     @media (max-width:520px) {
       .nav-btn-label { display:none; }
       .nav-discord, .nav-swgt { padding:6px 10px; }
+      .nav-apply { padding:6px 10px; }
+      .nav-members { padding:6px 10px; }
     }
     @media (max-width:440px) {
       .monster, .slot-deck { width:52px; }
@@ -587,6 +624,10 @@
     <img src="https://sw-rockbottom.com/images/logo.png" alt="Rock Bottom" style="width:30px;height:30px;object-fit:contain;">
     ROCK BOTTOM
   </a>
+  <a class="nav-apply" href="https://rockbottom.swgt.io/recruit/" target="_blank" rel="noopener">
+    <span class="nav-btn-label">Apply</span>
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+  </a>
   <a class="nav-discord" href="https://tinyurl.com/swrockbottom" target="_blank" rel="noopener">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
     <span class="nav-btn-label">Discord</span>
@@ -595,6 +636,10 @@
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
     <span class="nav-btn-label">SWGT</span>
   </a>
+  <button class="nav-members" onclick="openMembers()" title="Guild Members">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span class="nav-members-count" id="guild-member-count">—</span>
+  </button>
   <div class="nav-search">
     <input type="text" id="search-input" placeholder="Search monsters…" autocomplete="off">
     <button class="nav-search-clear" id="search-clear" title="Clear">✕</button>
@@ -609,23 +654,6 @@
   <div class="hero-meta">
     <span class="hero-season-pill" onclick="cycleSeason()" title="Click to switch season">Season 21</span>
   </div>
-  <div class="hero-guild-bar">
-    <button class="guild-stat guild-members-btn" onclick="openMembers()" title="View members">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span class="guild-stat-value" id="guild-member-count">—</span>
-      <span class="guild-stat-label">Members</span>
-    </button>
-    <div class="guild-bar-div"></div>
-    <a class="guild-apply-btn" href="https://rockbottom.swgt.io/recruit/" target="_blank" rel="noopener">
-      Apply
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    </a>
-    <div class="guild-bar-div"></div>
-    <button class="guild-report-btn" onclick="openReport()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      Season Report
-    </button>
-  </div>
 </div>
 
 <!-- REPORT MODAL -->
@@ -633,7 +661,7 @@
   <div class="report-card">
     <div class="report-header">
       <div>
-        <div class="report-title">DEFENSE <span id="report-season-label">REPORT</span></div>
+        <div class="report-title">SEASON <span id="report-season-label">—</span> DEFENSE STATS</div>
         <div class="report-subtitle" id="report-date-label"></div>
       </div>
       <button class="report-close" onclick="closeReportBtn()">✕</button>
@@ -662,6 +690,9 @@
 
 <main>
   <div class="section-controls-bar">
+    <button class="hero-action-btn hero-btn-report" onclick="openReport()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    </button>
     <button class="btn-toggle-all" id="btn-toggle-all" onclick="toggleAll()">Collapse All</button>
   </div>
   <div id="defenses"></div>
@@ -729,9 +760,10 @@ const DATA = {
         title: 'NAT5 Defense',
         teams: [
           { lead:{p:'LD5/Maximilian',n:'Maximilian',alts:[{p:'LD5/Nephthys',n:'Nephthys'}]}, m2:{p:'5Star/Lionel',n:'Lionel'}, m3:{p:'5Star/Christina',n:'Christina',alts:[{p:'5Star/Driana',n:'Driana'}]}, tower:'B8' },
+          { lead:{p:'4Star/Ciri',n:'Ciri'}, m2:{p:'4Star/Eshir',n:'Eshir'}, m3:{p:'5Star/Driana',n:'Driana'}, tower:'B9' },
+          { lead:{p:'5Star/Ramael and Judiah',n:'Ramael & Judiah'}, m2:{p:'5Star/Ren',n:'Ren'}, m3:{p:'LD5/Zeratu',n:'Zeratu',alts:[{p:'LD5/Narsha',n:'Narsha'},{p:'LD5/Cadiz',n:'Cadiz'},{p:'LD5/Bella',n:'Bella'},{p:'LD5/Salah',n:'Salah'}]}, tower:'B10' },
           { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'4Star/Figaro',n:'Figaro',alts:[{p:'LD5/Lora',n:'Lora'},{p:'LD5/Narsha',n:'Narsha'},{p:'LD5/Xiana',n:'Xiana'},{p:'LD5/Celia',n:'Celia'}]}, m3:{p:'5Star/Savannah',n:'Savannah'}, tower:['B12','B6','R12','Y6'] },
           { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'LD5/Tian Lang',n:'Tian Lang',alts:[{p:'LD5/Craka',n:'Craka'},{p:'LD5/Maya',n:'Maya'},{p:'LD5/Celia',n:'Celia'}]}, m3:{p:'5Star/Zenitsu',n:'Zenitsu'}, tower:['B12','B6','R12','Y6'] },
-          { lead:{p:'5Star/Ramael and Judiah',n:'Ramael & Judiah'}, m2:{p:'5Star/Ren',n:'Ren'}, m3:{p:'LD5/Zeratu',n:'Zeratu',alts:[{p:'LD5/Narsha',n:'Narsha'},{p:'LD5/Cadiz',n:'Cadiz'},{p:'LD5/Bella',n:'Bella'},{p:'LD5/Salah',n:'Salah'}]}, tower:'B10' },
           { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'5Star/Jeogun',n:'Jeogun'}, m3:{p:'LD5/Elsharion',n:'Elsharion'}, tower:['B4','B1'] },
           { lead:{p:'4Star/Platy',n:'Platy'}, m2:{p:'5Star/Irene',n:'Irene'}, m3:{p:'5Star/Zenitsu',n:'Zenitsu',alts:[{p:'5Star/Shahat',n:'Shahat'}]}, tower:['B5','B3'] },
           { lead:{p:'5Star/Seara',n:'Seara'}, m2:{p:'5Star/Lionel',n:'Lionel'}, m3:{p:'5Star/Vendhan',n:'Vendhan'}, tower:'B2' },
@@ -741,19 +773,18 @@ const DATA = {
         id: 'nat4', badgeClass: 'badge-nat4', badgeText: '★★★★',
         title: 'NAT4 Defense',
         teams: [
-          { lead:{p:'4Star/Morris',n:'Morris'}, m2:{p:'4Star/Rex',n:'Rex'}, m3:{p:'4Star/Shumar',n:'Shumar'}, tower:['B7','R11'] },
-          { lead:{p:'4Star/Solveig',n:'Solveig'}, m2:{p:'4Star/Cichlid',n:'Cichlid'}, m3:{p:'4Star/Shumar',n:'Shumar'}, tower:['B11','Y7'] },
-          { lead:{p:'4Star/Ciri',n:'Ciri'}, m2:{p:'4Star/Eshir',n:'Eshir'}, m3:{p:'4Star/Liesel',n:'Liesel'}, tower:'B9' },
-          { lead:{p:'4Star/Mimirr',n:'Mimirr'}, m2:{p:'4Star/Cichlid',n:'Cichlid'}, m3:{p:'4Star/Molly',n:'Molly'}, tower:['Y9','R9'] },
+          { lead:{p:'4Star/Morris',n:'Morris'}, m2:{p:'4Star/Rex',n:'Rex'}, m3:{p:'4Star/Guillaume',n:'Guillaume'}, tower:['B7','R11'] },
+          { lead:{p:'4Star/Morris',n:'Morris'}, m2:{p:'4Star/Vigor',n:'Vigor'}, m3:{p:'4Star/Liu Mei',n:'Liu Mei'}, tower:['B7','R11'] },
+                    { lead:{p:'4Star/Mimirr',n:'Mimirr'}, m2:{p:'4Star/Cichlid',n:'Cichlid'}, m3:{p:'4Star/Molly',n:'Molly'}, tower:['Y9','R9'] },
         ]
       },
       {
         id: 'special', badgeClass: 'badge-special', badgeText: '✦  SPECIAL',
         title: 'Special Defense',
         teams: [
-          { lead:{p:'LD5/Sylvia',n:'Sylvia'}, m2:{p:'4Star/Iris',n:'Iris'}, m3:{p:'5Star/Amber',n:'Amber',alts:[{p:'5Star/Driana',n:'Driana'}]}, tower:['B8','Y8','R10'] },
+          { lead:{p:'LD5/Sylvia',n:'Sylvia'}, m2:{p:'4Star/Iris',n:'Iris'}, m3:{p:'5Star/Driana',n:'Driana',alts:[{p:'5Star/Amber',n:'Amber'},{p:'5Star/Vendhan',n:'Vendhan'}]}, tower:['B8','Y8','R10'] },
+          { lead:{p:'LD5/Rahul',n:'Rahul'}, m2:{p:'4Star/Eshir',n:'Eshir'}, m3:{p:'5Star/Driana',n:'Driana'}, tower:['B8','Y8','R10'] },
           { lead:{p:'LD5/Geldnir',n:'Geldnir'}, m2:{p:'5Star/Irene',n:'Irene'}, m3:{p:'5Star/Momo',n:'Momo',alts:[{p:'5Star/Shahat',n:'Shahat'}]}, tower:['B8','Y8','R10'] },
-          { lead:{p:'LD5/Rahul',n:'Rahul'}, m2:{p:'5Star/Ren',n:'Ren'}, m3:{p:'5Star/Amber',n:'Amber'}, tower:['B8','Y8','R10'] },
           { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'5Star/Layla',n:'Layla'}, m3:{p:'LD5/SZL',n:'SZL',alts:[{p:'LD5/Berghlid',n:'Berghlid'}]}, tower:['B8','Y8','R10'] },
           { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'LD5/SZL',n:'SZL',alts:[{p:'LD5/Berghlid',n:'Berghlid'}]}, m3:{p:'5Star/Layla',n:'Layla'}, tower:['B8','Y8','R10'] },
           { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'LD5/Craka',n:'Craka'}, m3:{p:'4Star/Eshir',n:'Eshir'}, tower:['B8','Y8','R10'] },
@@ -869,9 +900,6 @@ function renderSection(section) {
         <span class="section-badge ${section.badgeClass}">${section.badgeText}</span>
         <span class="section-title">${section.title}</span>
         <span class="section-count-pill">${section.teams.length}</span>
-        <button class="copy-link-btn" onclick="copyLink(event,'${section.id}')" title="Copy link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        </button>
         <span class="collapse-icon">▾</span>
       </div>
       <div class="teams-grid">
@@ -1017,19 +1045,6 @@ function toggleAll() {
 /* ═══════════════════════════════════════════
    COPY LINK
 ═══════════════════════════════════════════ */
-function copyLink(e, id) {
-  e.stopPropagation();
-  const url = `${location.href.split('#')[0]}#section-${id}`;
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = e.currentTarget;
-    btn.classList.add('copied');
-    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
-    }, 1500);
-  });
-}
 
 /* ═══════════════════════════════════════════
    BACK TO TOP
@@ -1090,7 +1105,7 @@ function buildRing(label, value, thresholds) {
 function openReport() {
   const overlay = document.getElementById('report-overlay');
   const r = DATA.guildStats.report;
-  document.getElementById('report-season-label').textContent = `SEASON ${activeSeason}`;
+  document.getElementById('report-season-label').textContent = activeSeason;
   document.getElementById('report-date-label').textContent = r.asOf ? `Last updated on: ${r.asOf}` : '';
 
   const hasData = [r.defenseWR, r.defense5starWR, r.defense4starWR].some(v => v !== null);
