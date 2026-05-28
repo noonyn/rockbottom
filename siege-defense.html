@@ -492,7 +492,15 @@
     }
 
     /* ─── SCHEDULE MODAL ─── */
-    .schedule-list { display:flex; flex-direction:column; gap:8px; }
+    .schedule-list { display:flex; flex-direction:column; gap:14px; }
+    .schedule-week { display:flex; flex-direction:column; gap:6px; }
+    .schedule-week-header {
+      display:flex; align-items:center; gap:8px;
+      font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--muted); padding-bottom:2px;
+    }
+    .schedule-week-header::after { content:''; flex:1; height:1px; background:var(--border); }
+    .schedule-week-range { font-weight:500; opacity:0.65; letter-spacing:0.04em; }
     .schedule-entry {
       display:flex; align-items:center; gap:12px;
       background:var(--surface2); border:1px solid var(--border);
@@ -1337,44 +1345,62 @@ function renderScheduleList() {
     return;
   }
 
-  const now = Date.now();
-  const SIEGE_MS = 36 * 60 * 60 * 1000; // 36-hour siege window (noon → midnight+1 day)
-
-  // Active = first siege whose end time hasn't passed yet
+  const now      = Date.now();
+  const SIEGE_MS = 36 * 60 * 60 * 1000; // 36-hour window (noon → midnight+1 day)
   const activeIdx = sieges.findIndex(s => new Date(s.date).getTime() + SIEGE_MS > now);
 
-  list.innerHTML = sieges.map((s, i) => {
-    const start    = new Date(s.date).getTime();
-    const end      = start + SIEGE_MS;
-    const isActive = i === activeIdx;
-    const isLive   = isActive && start <= now;
-    const isPast   = end <= now;
-    const dt       = new Date(start);
+  // Build weeks: each week = Mon + Thu pair (2 sieges)
+  const weeks = [];
+  for (let i = 0; i < sieges.length; i += 2) {
+    weeks.push({ n: Math.floor(i / 2) + 1, entries: sieges.slice(i, i + 2), offset: i });
+  }
 
-    const dayName   = dt.toLocaleDateString('en-US', { weekday:'short' }).toUpperCase();
-    const shortDate = dt.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-    const dateStr   = dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    const labelText = s.label ? `${s.label} · ${shortDate}` : dateStr;
+  list.innerHTML = weeks.map(({ n, entries, offset }) => {
+    const dtFirst = new Date(entries[0].date);
+    const dtLast  = new Date(entries[entries.length - 1].date);
+    const fmt     = d => d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const range   = entries.length > 1 ? `${fmt(dtFirst)} – ${fmt(dtLast)}` : fmt(dtFirst);
 
-    let cls = 'schedule-entry';
-    if (isActive) cls += ' next';
-    if (isPast)   cls += ' schedule-past';
+    const entriesHTML = entries.map((s, j) => {
+      const i        = offset + j;
+      const start    = new Date(s.date).getTime();
+      const end      = start + SIEGE_MS;
+      const isActive = i === activeIdx;
+      const isLive   = isActive && start <= now;
+      const isPast   = end <= now;
+      const dt       = new Date(start);
 
-    const cdTarget  = isLive ? end : start;
-    const badgeHTML = isActive
-      ? isLive
-        ? `<span class="schedule-next-badge" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#ef4444">LIVE</span>`
-        : `<span class="schedule-next-badge">NEXT</span>`
-      : '';
-    const countdownHTML = isActive
-      ? `<span class="schedule-countdown" data-target="${cdTarget}">${formatCountdown(Math.max(0, cdTarget - now))}</span>`
-      : '';
+      const dayName   = dt.toLocaleDateString('en-US', { weekday:'short' }).toUpperCase();
+      const shortDate = dt.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+      const dateStr   = dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      const labelText = s.label ? `${s.label} · ${shortDate}` : dateStr;
+
+      let cls = 'schedule-entry';
+      if (isActive) cls += ' next';
+      if (isPast)   cls += ' schedule-past';
+
+      const cdTarget      = isLive ? end : start;
+      const badgeHTML     = isActive
+        ? isLive
+          ? `<span class="schedule-next-badge" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#ef4444">LIVE</span>`
+          : `<span class="schedule-next-badge">NEXT</span>`
+        : '';
+      const countdownHTML = isActive
+        ? `<span class="schedule-countdown" data-target="${cdTarget}">${formatCountdown(Math.max(0, cdTarget - now))}</span>`
+        : '';
+
+      return `
+        <div class="${cls}">
+          <span class="schedule-day">${dayName}</span>
+          <span class="schedule-date">${labelText}</span>
+          ${badgeHTML}${countdownHTML}
+        </div>`;
+    }).join('');
 
     return `
-      <div class="${cls}">
-        <span class="schedule-day">${dayName}</span>
-        <span class="schedule-date">${labelText}</span>
-        ${badgeHTML}${countdownHTML}
+      <div class="schedule-week">
+        <div class="schedule-week-header">Week ${n} <span class="schedule-week-range">${range}</span></div>
+        ${entriesHTML}
       </div>`;
   }).join('');
 }
