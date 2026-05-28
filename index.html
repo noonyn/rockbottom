@@ -1,1218 +1,164 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rock Bottom — Siege Defense</title>
+  <title>Rock Bottom - Under Maintenance</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://sw-rockbottom.com/images/logo.png">
   <link rel="apple-touch-icon" href="https://sw-rockbottom.com/images/logo.png">
 
-  <!-- Open Graph / Discord embed -->
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://sw-rockbottom.com/">
-  <meta property="og:title"       content="Rock Bottom — Siege Defense">
-  <meta property="og:description" content="Season 21 siege defense compositions and tower placements for Rock Bottom guild members.">
+  <meta property="og:title"       content="Rock Bottom - Siege Defense">
+  <meta property="og:description" content="Website is currently under maintenance">
   <meta property="og:image"       content="https://sw-rockbottom.com/images/logo.png">
   <meta name="theme-color"        content="#f59e0b">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 
-    /* ─── SCROLLBAR ─── */
-    ::-webkit-scrollbar { width:6px; }
-    ::-webkit-scrollbar-track { background:var(--bg); }
-    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
-    ::-webkit-scrollbar-thumb:hover { background:var(--gold); }
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --bg:           #070b14;
-      --surface:      #0f1623;
-      --surface2:     #161e2e;
-      --border:       #1e2d45;
-      --text:         #c8d6e8;
-      --muted:        #637389;
-      --white:        #f0f6ff;
-      --gold:         #f59e0b;
-      --gold-bg:      rgba(245,158,11,0.12);
-      --gold-border:  rgba(245,158,11,0.35);
-      --purple:       #a855f7;
-      --purple-bg:    rgba(168,85,247,0.12);
-      --purple-border:rgba(168,85,247,0.35);
-      --cyan:         #22d3ee;
-      --cyan-bg:      rgba(34,211,238,0.12);
-      --cyan-border:  rgba(34,211,238,0.35);
-      --orange:       #fb923c;
-      --orange-bg:    rgba(251,146,60,0.12);
-      --orange-border:rgba(251,146,60,0.35);
-      --slate:        #94a3b8;
-      --slate-bg:     rgba(100,116,139,0.12);
-      --slate-border: rgba(100,116,139,0.35);
+      --bg:          #070b14;
+      --surface:     #0f1623;
+      --surface2:    #161e2e;
+      --border:      #1e2d45;
+      --text:        #c8d6e8;
+      --muted:       #637389;
+      --white:       #f0f6ff;
+      --gold:        #f59e0b;
+      --gold-bg:     rgba(245,158,11,0.12);
+      --gold-border: rgba(245,158,11,0.35);
     }
 
-    html { scroll-behavior: smooth; }
-    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
+    html, body {
+      height:100%;
+      font-family:'Inter',system-ui,sans-serif;
+      background:var(--bg); color:var(--text);
+    }
 
-    /* ─── NAV ─── */
-    nav {
-      position:sticky; top:0; z-index:200;
-      background:rgba(7,11,20,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      border-bottom:1px solid var(--border);
-      padding:0 2rem; height:58px;
-      display:flex; align-items:center; gap:1rem;
-    }
-    .nav-brand {
-      display:flex; align-items:center; gap:9px;
-      font-family:'Rajdhani',sans-serif; font-size:1.3rem; font-weight:700; letter-spacing:0.06em;
-      color:var(--white); text-decoration:none; white-space:nowrap; margin-right:auto;
-    }
-    .nav-swgt {
-      display:flex; align-items:center; gap:6px;
-      font-size:0.8rem; font-weight:700; letter-spacing:0.04em;
-      background:var(--gold); color:#000;
-      padding:6px 14px; border-radius:8px; text-decoration:none; white-space:nowrap;
-      transition:opacity 0.18s, transform 0.18s;
-    }
-    .nav-swgt:hover { opacity:0.88; transform:translateY(-1px); }
-    .nav-swgt svg { flex-shrink:0; }
-    .nav-discord {
-      display:flex; align-items:center; gap:6px;
-      font-size:0.8rem; font-weight:700; letter-spacing:0.04em;
-      background:#5865f2; color:#fff;
-      padding:6px 14px; border-radius:8px; text-decoration:none; white-space:nowrap;
-      transition:opacity 0.18s, transform 0.18s;
-    }
-    .nav-discord:hover { opacity:0.88; transform:translateY(-1px); }
-    .nav-discord svg { flex-shrink:0; }
-
-    /* nav search */
-    .nav-search { position:relative; display:flex; align-items:center; }
-    .nav-search input {
-      background:var(--surface2); border:1px solid var(--border); border-radius:8px;
-      color:var(--white); font-size:0.82rem; padding:5px 30px 5px 11px;
-      width:180px; outline:none; transition:border-color 0.18s, width 0.3s;
-    }
-    .nav-search input::placeholder { color:var(--muted); }
-    .nav-search input:focus { border-color:var(--gold-border); width:220px; }
-    .nav-search-clear {
-      position:absolute; right:8px;
-      background:none; border:none; cursor:pointer;
-      color:var(--muted); font-size:0.85rem; line-height:1;
-      display:none; align-items:center; justify-content:center;
-      padding:2px;
-    }
-    .nav-search-clear:hover { color:var(--white); }
-
-    /* ─── HERO ─── */
-    .hero {
-      padding:4rem 2rem 3rem; text-align:center;
+    body {
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center;
       background:
-        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(245,158,11,0.1) 0%, transparent 70%),
+        radial-gradient(ellipse 70% 55% at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 65%),
         radial-gradient(ellipse 55% 65% at 50% 45%, rgba(7,11,20,0.72) 0%, transparent 100%),
-        linear-gradient(to bottom, rgba(7,11,20,0.68) 0%, rgba(7,11,20,0.62) 35%, rgba(7,11,20,0.95) 100%),
+        linear-gradient(to bottom, rgba(7,11,20,0.72) 0%, rgba(7,11,20,0.65) 35%, rgba(7,11,20,0.97) 100%),
         url('https://sw-rockbottom.com/images/Banner.png') center 30% / cover no-repeat;
-      border-bottom:1px solid var(--border);
+      padding:2rem;
       position:relative; overflow:hidden;
     }
-    .hero-eyebrow {
-      font-size:0.65rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase;
-      color:rgba(200,214,232,0.9); margin-bottom:0.35rem; position:relative;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.8);
-      animation:fadeDown 0.5s ease both;
+
+    /* subtle dot pattern */
+    body::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity:0.5;
     }
-    .hero-desc {
-      font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:400;
-      color:rgba(200,214,232,0.92); line-height:1.65; letter-spacing:0.01em;
-      max-width:440px; margin:0 auto 1.25rem; position:relative;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
-      animation:fadeDown 0.5s 0.18s ease both;
+
+    .card {
+      position:relative; z-index:1;
+      background:rgba(15,22,35,0.82);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:3rem 2.5rem;
+      max-width:480px; width:100%;
+      backdrop-filter:blur(12px);
+      animation:fadeUp 0.5s ease both;
     }
-    .hero-season-pill {
-      font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700;
+
+    .logo {
+      width:56px; height:56px; object-fit:contain;
+      margin:0 auto 1.25rem;
+      display:block;
+      filter:drop-shadow(0 0 12px rgba(245,158,11,0.3));
+    }
+
+    .eyebrow {
+      font-size:0.62rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:0.5rem;
+      animation:fadeUp 0.5s 0.08s ease both;
+    }
+
+    h1 {
+      font-family:'Rajdhani',sans-serif;
+      font-size:clamp(2rem,6vw,3rem); font-weight:700; letter-spacing:0.04em;
+      color:var(--white); line-height:1.05; margin-bottom:1rem;
+      text-shadow:0 2px 20px rgba(0,0,0,0.9);
+      animation:fadeUp 0.5s 0.14s ease both;
+    }
+    h1 span { color:var(--gold); }
+
+    p {
+      font-size:0.88rem; font-weight:400; color:var(--text);
+      line-height:1.65; max-width:340px; margin:0 auto 1.75rem;
+      animation:fadeUp 0.5s 0.2s ease both;
+    }
+
+    .divider {
+      width:40px; height:2px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin:0 auto 1.75rem;
+      animation:fadeUp 0.5s 0.26s ease both;
+    }
+
+    .links {
+      display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+      animation:fadeUp 0.5s 0.3s ease both;
+    }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:7px;
+      font-size:0.8rem; font-weight:700; letter-spacing:0.04em;
+      padding:8px 18px; border-radius:8px; text-decoration:none;
+      transition:opacity 0.18s, transform 0.18s;
+    }
+    .btn:hover { opacity:0.88; transform:translateY(-1px); }
+    .btn-discord { background:#5865f2; color:#fff; }
+    .btn-swgt    { background:var(--gold); color:#000; }
+
+    .badge {
+      display:inline-flex; margin-top:1.75rem;
+      font-family:'Rajdhani',sans-serif; font-size:0.95rem; font-weight:700;
       letter-spacing:0.14em; text-transform:uppercase;
       background:var(--gold-bg); border:1px solid var(--gold-border); color:var(--gold);
-      padding:5px 18px; border-radius:20px;
-      animation:pill-pulse 3.5s ease-in-out infinite;
-      cursor:pointer; user-select:none;
-      transition:background 0.18s, border-color 0.18s, transform 0.15s;
+      padding:4px 16px; border-radius:20px;
+      animation:pill-pulse 3.5s ease-in-out infinite, fadeUp 0.5s 0.36s ease both;
     }
-    .hero-season-pill:hover {
-      background:rgba(245,158,11,0.22); border-color:rgba(245,158,11,0.6);
-      transform:translateY(-1px);
-    }
-    .hero-season-pill:active { transform:translateY(0); }
-    @keyframes season-flash {
-      0%   { background:rgba(245,158,11,0.5); border-color:var(--gold); }
-      100% { background:var(--gold-bg);       border-color:var(--gold-border); }
-    }
-    .hero-season-pill.season-flash { animation:season-flash 0.45s ease forwards, pill-pulse 3.5s 0.45s ease-in-out infinite; }
+
     @keyframes pill-pulse {
       0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0); }
       50%      { box-shadow:0 0 14px 3px rgba(245,158,11,0.18); }
     }
-    .hero::before {
-      content:''; position:absolute; inset:0;
-      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      opacity:0.5;
-    }
-    .hero h1 {
-      font-family:'Rajdhani',sans-serif;
-      font-size:clamp(2.2rem,5.5vw,4rem); font-weight:700; letter-spacing:0.04em;
-      color:var(--white); line-height:1.05; margin-bottom:0.75rem; position:relative;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5);
-      animation:fadeDown 0.5s 0.07s ease both;
-    }
-    .hero h1 span { color:var(--gold); animation:gold-shimmer 4s ease-in-out infinite; }
-    @keyframes gold-shimmer {
-      0%,100% { opacity:1; }
-      50%      { opacity:0.75; }
-    }
-    .hero-meta {
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      position:relative; animation:fadeDown 0.5s 0.24s ease both;
-    }
-    .last-updated {
-      font-size:0.72rem; color:var(--muted);
-      background:var(--surface2); border:1px solid var(--border);
-      padding:3px 10px; border-radius:20px;
-    }
-
-
-    /* ─── MAIN ─── */
-    main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
-
-    /* ── SECTION ── */
-    .defense-section { margin-bottom:2.5rem; }
-
-    .section-header {
-      display:flex; align-items:center; gap:12px;
-      margin-bottom:1.1rem; padding-bottom:0.9rem; border-bottom:1px solid var(--border);
-      cursor:pointer; user-select:none;
-    }
-    .section-header:hover .section-title { color:var(--white); }
-    .section-badge {
-      display:inline-flex; align-items:center; gap:5px;
-      font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
-      text-transform:uppercase; padding:4px 12px; border-radius:20px; white-space:nowrap;
-    }
-    .badge-nat5    { background:var(--gold-bg);    border:1px solid var(--gold-border);    color:var(--gold); }
-    .badge-special { background:var(--purple-bg);  border:1px solid var(--purple-border);  color:var(--purple); }
-    .badge-nat4    { background:var(--cyan-bg);    border:1px solid var(--cyan-border);    color:var(--cyan); }
-    .badge-hq      { background:var(--orange-bg);  border:1px solid var(--orange-border);  color:var(--orange); }
-    .badge-map     { background:var(--slate-bg);   border:1px solid var(--slate-border);   color:var(--slate); }
-    .section-title { font-size:1.05rem; font-weight:700; color:var(--text); transition:color 0.18s; }
-    .section-count-pill {
-      font-size:0.7rem; font-weight:700;
-      background:var(--surface2); border:1px solid var(--border); color:var(--muted);
-      padding:2px 8px; border-radius:20px;
-    }
-    .collapse-icon {
-      margin-left:auto; color:var(--muted); font-size:0.85rem;
-      transition:transform 0.25s ease; display:inline-block;
-    }
-    .defense-section.collapsed .collapse-icon { transform:rotate(-90deg); }
-
-    /* ─── TEAMS GRID ─── */
-    .teams-grid {
-      display:flex; flex-direction:column; gap:8px;
-      overflow:visible; transition:height 0.3s ease;
-    }
-
-    /* ─── TEAM ROW ─── */
-    .team-row {
-      background:var(--surface); border:1px solid var(--border); border-radius:10px;
-      padding:11px 16px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;
-      transition:border-color 0.2s, background 0.2s, opacity 0.25s, transform 0.2s, box-shadow 0.2s;
-      overflow:visible; position:relative; z-index:0;
-      animation:fadeUp 0.35s ease both;
-    }
-    .team-row:hover { z-index:10; }
-    .section-nat5    .team-row:hover { border-color:var(--gold-border);    background:rgba(245,158,11,0.07); }
-    .section-special .team-row:hover { border-color:var(--purple-border);  background:rgba(168,85,247,0.07); }
-    .section-nat4    .team-row:hover { border-color:var(--cyan-border);    background:rgba(34,211,238,0.07); }
-    .section-hq      .team-row:hover { border-color:var(--orange-border);  background:rgba(251,146,60,0.07); }
-
-    .team-index { font-size:0.7rem; font-weight:600; color:var(--muted); min-width:18px; margin-right:4px; align-self:center; }
-    .team-sep { width:1px; height:62px; background:var(--border); margin:0 13px; flex-shrink:0; }
-    .team-tower {
-      margin-left:auto; align-self:center; flex-shrink:0;
-      display:flex; flex-direction:column; align-items:center; gap:3px;
-    }
-    .team-tower-label { font-size:0.58rem; font-weight:700; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; }
-    .team-tower-nums { display:flex; flex-wrap:wrap; gap:4px; justify-content:center; width:76px; }
-    .team-tower-num {
-      font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; line-height:1;
-      background:var(--surface2); border:1px solid var(--border); color:var(--muted);
-      width:35px; height:35px; border-radius:7px;
-      display:flex; align-items:center; justify-content:center;
-    }
-
-    /* ─── MONSTER ─── */
-    .monster { display:flex; flex-direction:column; align-items:center; gap:4px; width:62px; flex-shrink:0; }
-    .slot-tag { font-size:0.6rem; font-weight:700; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; height:13px; line-height:13px; }
-    .slot-tag.lead { color:var(--gold); }
-    .monster-img {
-      width:58px; height:58px; border-radius:8px;
-      background:var(--surface2); border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center; overflow:hidden;
-      transition:box-shadow 0.2s;
-    }
-    .monster-img img { width:100%; height:100%; object-fit:contain; }
-    .monster-name { font-size:0.65rem; font-weight:500; color:var(--muted); text-align:center; max-width:62px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color 0.2s; }
-
-    /* search highlight */
-    .monster.match .monster-img { box-shadow:0 0 0 2px var(--gold); }
-    .monster.match .monster-name { color:var(--gold); }
-    .slot-deck.match .deck-primary { box-shadow:0 0 0 2px var(--gold) !important; }
-    .slot-deck.match .monster-name { color:var(--gold); }
-
-    /* dim non-matching rows */
-    .team-row.dimmed { opacity:0.25; }
-
-    /* ─── SLOT DECK ─── */
-    .slot-deck {
-      position:relative; width:62px; flex-shrink:0;
-      display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;
-    }
-    .deck-shadow { position:absolute; top:12px; left:2px; width:58px; height:58px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); }
-    .deck-shadow.s1 { transform:translateY(3px) rotate(7deg);  opacity:0.55; }
-    .deck-shadow.s2 { transform:translateY(5px) rotate(-5deg); opacity:0.35; }
-    .deck-primary {
-      position:relative; z-index:1; width:58px; height:58px; border-radius:8px;
-      background:var(--surface2); border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center; overflow:hidden;
-      transition:box-shadow 0.2s;
-    }
-    .deck-primary img { width:100%; height:100%; object-fit:contain; }
-    .slot-deck:hover .deck-primary { box-shadow:0 0 0 2px var(--gold); }
-    .deck-badge {
-      position:absolute; top:10px; right:-5px; z-index:2;
-      background:var(--gold); color:#000; font-size:0.5rem; font-weight:800;
-      padding:2px 5px; border-radius:10px; line-height:1; pointer-events:none;
-    }
-
-    /* popover */
-    .deck-popover {
-      position:absolute; top:calc(100% + 10px); left:50%;
-      transform:translateX(-50%) translateY(-6px);
-      background:var(--surface); border:1px solid var(--border); border-radius:10px;
-      padding:12px 14px; opacity:0; pointer-events:none;
-      transition:opacity 0.18s ease, transform 0.18s ease;
-      z-index:300; min-width:max-content;
-      box-shadow:0 12px 32px rgba(0,0,0,0.5);
-    }
-    .deck-popover::before {
-      content:''; position:absolute; top:-5px; left:50%;
-      transform:translateX(-50%) rotate(45deg); width:8px; height:8px;
-      background:var(--surface); border-left:1px solid var(--border); border-top:1px solid var(--border);
-    }
-    .slot-deck:hover .deck-popover { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
-
-    /* flip upward when near viewport bottom */
-    .deck-popover.open-up { top:auto; bottom:calc(100% + 10px); transform:translateX(-50%) translateY(6px); }
-    .slot-deck:hover .deck-popover.open-up { transform:translateX(-50%) translateY(0); }
-    .deck-popover.open-up::before { top:auto; bottom:-5px; border-left:none; border-top:none; border-right:1px solid var(--border); border-bottom:1px solid var(--border); }
-
-    .popover-label { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
-    .popover-monsters { display:flex; gap:8px; align-items:flex-start; }
-    .popover-monsters .monster { width:54px; }
-    .popover-monsters .monster-img { width:50px; height:50px; }
-    .popover-monsters .monster-name { max-width:54px; font-size:0.6rem; }
-
-    /* ─── NO RESULTS ─── */
-    .no-results {
-      padding:1.75rem; text-align:center; color:var(--muted); font-size:0.9rem;
-      border:1px dashed var(--border); border-radius:10px; display:none;
-    }
-
-    /* ─── PLACEMENTS ─── */
-    .placements-section { margin-bottom:3rem; }
-    .map-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.5rem; display:flex; justify-content:center; }
-    .map-card img { max-width:100%; border-radius:8px; display:block; }
-
-    /* ─── FOOTER ─── */
-    footer { border-top:1px solid var(--border); padding:1.5rem 2rem; text-align:center; color:var(--muted); font-size:0.78rem; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
-    .footer-sep { opacity:0.4; }
-    footer a { color:var(--gold); text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
-
-    /* ─── HERO ATMOSPHERE ─── */
-    .hero::after {
-      content:''; position:absolute; inset:0; pointer-events:none;
-      background:
-        radial-gradient(ellipse 55% 70% at 15% 60%, rgba(245,158,11,0.05) 0%, transparent 70%),
-        radial-gradient(ellipse 55% 70% at 85% 60%, rgba(168,85,247,0.04) 0%, transparent 70%);
-      animation:hero-drift 10s ease-in-out infinite alternate;
-    }
-    @keyframes hero-drift {
-      0%   { opacity:0.4; transform:translateX(-15px); }
-      100% { opacity:1;   transform:translateX(15px); }
-    }
-
-
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeDown { from { opacity:0; transform:translateY(-8px);  } to { opacity:1; transform:translateY(0); } }
-
-    /* ─── BACK TO TOP ─── */
-    .back-to-top {
-      position:fixed; bottom:1.5rem; right:1.5rem; z-index:500;
-      width:40px; height:40px;
-      background:var(--surface2); border:1px solid var(--border); border-radius:10px;
-      color:var(--muted); cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none;
-      transition:opacity 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
-    }
-    .back-to-top.visible { opacity:1; pointer-events:auto; }
-    .back-to-top:hover { border-color:var(--gold-border); color:var(--gold); transform:translateY(-2px); }
-
-    /* ─── SECTION CONTROLS ─── */
-    .section-controls-bar {
-      display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;
-    }
-    .btn-toggle-all {
-      font-size:0.72rem; font-weight:600; letter-spacing:0.06em;
-      background:var(--surface2); border:1px solid var(--border); color:var(--muted);
-      padding:5px 14px; border-radius:8px; cursor:pointer;
-      transition:border-color 0.18s, color 0.18s;
-    }
-    .btn-toggle-all:hover { border-color:var(--gold-border); color:var(--gold); }
-
-    /* ─── COPY LINK ─── */
-
-    /* ─── HERO ACTIONS ─── */
-    .hero-actions {
-      display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
-      margin-top:1.25rem;
-      animation:fadeDown 0.5s 0.32s ease both;
-    }
-
-    /* shared base for all three action buttons */
-    .hero-action-btn {
-      display:inline-flex; align-items:center; gap:7px;
-      background:rgba(15,22,35,0.72); border:1px solid var(--border);
-      border-radius:10px; padding:9px 18px;
-      backdrop-filter:blur(10px);
-      font-family:'Inter',system-ui,sans-serif;
-      font-size:0.78rem; font-weight:700; letter-spacing:0.05em;
-      cursor:pointer; text-decoration:none; white-space:nowrap;
-      transition:border-color 0.18s, background 0.18s, transform 0.15s, color 0.18s;
-      position:relative;
-    }
-    .hero-action-btn:hover { transform:translateY(-2px); }
-
-    /* Members button */
-    .hero-btn-members {
-      color:var(--text);
-    }
-    .hero-btn-members:hover {
-      border-color:var(--gold-border);
-      background:rgba(245,158,11,0.1);
-      color:var(--white);
-    }
-    .hero-btn-members:hover svg { stroke:var(--gold); }
-    .hero-btn-members .btn-count {
-      font-family:'Rajdhani',sans-serif; font-size:1.1rem; font-weight:700;
-      color:var(--white); line-height:1;
-    }
-    .hero-btn-members:hover .btn-count { color:var(--gold); }
-    .btn-label {
-      font-size:0.68rem; font-weight:600; letter-spacing:0.1em;
-      text-transform:uppercase; color:var(--muted);
-    }
-    .hero-btn-members:hover .btn-label { color:var(--gold); }
-
-    /* Apply button — gold CTA */
-    .hero-btn-apply {
-      color:var(--gold);
-      border-color:var(--gold-border);
-      background:var(--gold-bg);
-    }
-    .hero-btn-apply:hover {
-      background:rgba(245,158,11,0.22);
-      border-color:rgba(245,158,11,0.6);
-      color:var(--white);
-    }
-    .hero-btn-apply:hover svg { stroke:var(--white); }
-
-    /* Season Defense Report button */
-    .hero-btn-report {
-      color:var(--muted);
-      padding:5px 13px;
-      font-size:0.72rem;
-    }
-    .hero-btn-report:hover {
-      border-color:var(--gold-border);
-      background:var(--gold-bg);
-      color:var(--gold);
-    }
-    .hero-btn-report:hover svg { stroke:var(--gold); }
-
-    /* ─── MEMBERS LIST ─── */
-    .members-list {
-      display:grid; grid-template-columns:1fr 1fr; gap:5px;
-      max-height:320px; overflow-y:auto; padding-right:4px;
-    }
-    .members-list::-webkit-scrollbar { width:4px; }
-    .members-list::-webkit-scrollbar-track { background:transparent; }
-    .members-list::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
-    .member-row {
-      display:flex; align-items:center; gap:8px;
-      background:var(--surface2); border:1px solid var(--border);
-      border-radius:8px; padding:7px 10px;
-      transition:border-color 0.15s;
-    }
-    .member-row:hover { border-color:var(--gold-border); }
-    .member-num { font-size:0.6rem; font-weight:600; color:var(--muted); min-width:18px; flex-shrink:0; }
-    .member-name { font-size:0.8rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    @media (max-width:440px) { .members-list { grid-template-columns:1fr; } }
-
-    /* ─── REPORT MODAL ─── */
-    .report-overlay {
-      position:fixed; inset:0; z-index:900;
-      background:rgba(7,11,20,0.85); backdrop-filter:blur(6px);
-      display:flex; align-items:center; justify-content:center; padding:1.5rem;
-      opacity:0; pointer-events:none;
-      transition:opacity 0.22s ease;
-    }
-    .report-overlay.open { opacity:1; pointer-events:auto; }
-    .report-card {
-      background:var(--surface); border:1px solid var(--border); border-radius:16px;
-      padding:1.75rem; width:100%; max-width:560px;
-      transform:translateY(14px); transition:transform 0.22s ease;
-      box-shadow:0 24px 60px rgba(0,0,0,0.6);
-      max-height:90vh; overflow-y:auto;
-    }
-    .report-overlay.open .report-card { transform:translateY(0); }
-    .report-header {
-      display:flex; align-items:flex-start; justify-content:space-between;
-      margin-bottom:1.5rem;
-    }
-    .report-title {
-      font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700;
-      color:var(--white); letter-spacing:0.04em; line-height:1;
-    }
-    .report-title span { color:var(--gold); }
-    .report-subtitle { font-size:0.68rem; color:var(--muted); margin-top:4px; }
-    .report-close {
-      background:none; border:none; cursor:pointer;
-      color:var(--muted); font-size:1.1rem; line-height:1; padding:2px 5px;
-      border-radius:4px; transition:color 0.15s;
-    }
-    .report-close:hover { color:var(--white); }
-
-    .report-metrics-grid {
-      display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;
-    }
-    .report-metric {
-      display:flex; flex-direction:column; align-items:center; gap:8px;
-      background:var(--surface2); border:1px solid var(--border);
-      border-radius:12px; padding:1.25rem 0.75rem;
-    }
-    .ring-wrap { position:relative; width:88px; height:88px; }
-    .ring-svg { width:88px; height:88px; transform:rotate(-90deg); }
-    .ring-bg  { fill:none; stroke:var(--border); stroke-width:6; }
-    .ring-fill { fill:none; stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset 0.9s cubic-bezier(.4,0,.2,1); }
-    .ring-label {
-      position:absolute; inset:0;
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
-    }
-    .ring-pct {
-      font-family:'Rajdhani',sans-serif; font-size:1.25rem; font-weight:700;
-      color:var(--white); line-height:1;
-    }
-    .ring-unit { font-size:0.52rem; color:var(--muted); font-weight:600; letter-spacing:0.06em; margin-top:1px; }
-    .metric-name {
-      font-size:0.62rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
-      color:var(--muted); text-align:center; line-height:1.3;
-    }
-    .metric-tag {
-      font-size:0.58rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
-      padding:2px 8px; border-radius:10px;
-    }
-    .report-empty {
-      grid-column:1/-1; text-align:center; padding:2.5rem 1rem;
-      color:var(--muted); font-size:0.85rem; line-height:1.6;
-    }
-    .report-stats-row {
-      display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-top:0.75rem;
-    }
-    .report-stat-card {
-      background:var(--surface2); border:1px solid var(--border); border-radius:10px;
-      padding:0.85rem 0.6rem; display:flex; flex-direction:column; align-items:center; gap:4px;
-    }
-    .stat-value {
-      font-family:'Rajdhani',sans-serif; font-size:1.2rem; font-weight:700;
-      color:var(--white); line-height:1; text-align:center;
-    }
-    .stat-label {
-      font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
-      color:var(--muted); text-align:center;
-    }
-    @media (max-width:440px) {
-      .report-metrics-grid { grid-template-columns:1fr; }
-      .report-metric { flex-direction:row; justify-content:flex-start; gap:1rem; padding:1rem; }
-      .ring-wrap { width:64px; height:64px; flex-shrink:0; }
-      .ring-svg { width:64px; height:64px; }
-      .ring-pct { font-size:1rem; }
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width:640px) {
-      nav { padding:0 1rem; gap:0.5rem; height:54px; }
-      .nav-search input { width:110px; }
-      .nav-search input:focus { width:145px; }
-      .hero { padding:2.5rem 1rem 2rem; }
-      .hero h1 { font-size:clamp(1.9rem,8vw,3rem); }
-      main { padding:1.75rem 1rem 3rem; }
-      .team-row { padding:10px 12px; gap:7px; }
-      .team-sep { margin:0 10px; height:58px; }
-      .defense-section { margin-bottom:2rem; }
-    }
-    .nav-members {
-      display:flex; align-items:center; gap:5px;
-      background:var(--surface2); border:1px solid var(--border); color:var(--muted);
-      padding:5px 11px; border-radius:8px; cursor:pointer; white-space:nowrap;
-      transition:border-color 0.18s, color 0.18s, background 0.18s;
-      font-family:inherit;
-    }
-    .nav-members:hover { border-color:var(--gold-border); background:var(--gold-bg); }
-    .nav-members:hover svg { stroke:var(--gold); }
-    .nav-members-count {
-      font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700;
-      color:var(--white); line-height:1;
-    }
-    .nav-members:hover .nav-members-count { color:var(--gold); }
-    .nav-apply {
-      display:flex; align-items:center; gap:6px;
-      font-size:0.8rem; font-weight:700; letter-spacing:0.04em;
-      background:#dc2626; color:#fff;
-      padding:6px 14px; border-radius:8px; text-decoration:none; white-space:nowrap;
-      transition:opacity 0.18s, transform 0.18s;
-    }
-    .nav-apply:hover { opacity:0.88; transform:translateY(-1px); }
-    .nav-apply svg { flex-shrink:0; }
-
-    @media (max-width:520px) {
-      .nav-btn-label { display:none; }
-      .nav-discord, .nav-swgt { padding:6px 10px; }
-      .nav-apply { padding:6px 10px; }
-      .nav-members { padding:6px 10px; }
-    }
-    @media (max-width:440px) {
-      .monster, .slot-deck { width:52px; }
-      .monster-img, .deck-primary { width:48px; height:48px; }
-      .deck-shadow { width:48px; height:48px; }
-      .monster-name { max-width:52px; font-size:0.58rem; }
-      .team-sep { margin:0 7px; height:52px; }
-      .team-tower-nums { width:70px; }
-      .team-tower-num { width:32px; height:32px; font-size:0.95rem; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
     }
   </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <a class="nav-brand" href="#">
-    <img src="https://sw-rockbottom.com/images/logo.png" alt="Rock Bottom" style="width:30px;height:30px;object-fit:contain;">
-    ROCK BOTTOM
-  </a>
-  <a class="nav-apply" href="https://rockbottom.swgt.io/recruit/" target="_blank" rel="noopener">
-    <span class="nav-btn-label">Apply</span>
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-  </a>
-  <a class="nav-discord" href="https://tinyurl.com/swrockbottom" target="_blank" rel="noopener">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-    <span class="nav-btn-label">Discord</span>
-  </a>
-  <a class="nav-swgt" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    <span class="nav-btn-label">SWGT</span>
-  </a>
-  <button class="nav-members" onclick="openMembers()" title="Guild Members">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span class="nav-members-count" id="guild-member-count">—</span>
-  </button>
-  <div class="nav-search">
-    <input type="text" id="search-input" placeholder="Search monsters…" autocomplete="off">
-    <button class="nav-search-clear" id="search-clear" title="Clear">✕</button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-eyebrow">Summoners War · Sky Arena</div>
-  <h1>SIEGE <span>DEFENSE</span></h1>
-  <p class="hero-desc">Rock Bottom's defense compositions & tower placements for guild siege battles</p>
-  <div class="hero-meta">
-    <span class="hero-season-pill" onclick="cycleSeason()" title="Click to switch season">Season 21</span>
-  </div>
-</div>
-
-<!-- REPORT MODAL -->
-<div id="report-overlay" class="report-overlay" onclick="closeReport(event)">
-  <div class="report-card">
-    <div class="report-header">
-      <div>
-        <div class="report-title">SEASON <span id="report-season-label">—</span> DEFENSE STATS</div>
-        <div class="report-subtitle" id="report-date-label"></div>
-      </div>
-      <button class="report-close" onclick="closeReportBtn()">✕</button>
-    </div>
-    <div id="report-metrics-grid"></div>
-  </div>
-</div>
-
-<!-- MEMBERS MODAL -->
-<div id="members-overlay" class="report-overlay" onclick="closeMembersOverlay(event)">
-  <div class="report-card" style="max-width:460px;">
-    <div class="report-header">
-      <div>
-        <div class="report-title">GUILD <span>MEMBERS</span></div>
-        <div class="report-subtitle" id="members-subtitle"></div>
-      </div>
-      <button class="report-close" onclick="closeMembers()">✕</button>
-    </div>
-    <div class="members-list" id="members-list"></div>
-  </div>
-</div>
-
-<button class="back-to-top" id="back-to-top" title="Back to top">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-</button>
-
-<main>
-  <div class="section-controls-bar">
-    <button class="hero-action-btn hero-btn-report" onclick="openReport()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    </button>
-    <button class="btn-toggle-all" id="btn-toggle-all" onclick="toggleAll()">Collapse All</button>
-  </div>
-  <div id="defenses"></div>
-
-  <!-- TOWER PLACEMENTS -->
-  <div id="placements" class="placements-section">
-    <div class="section-header" style="cursor:default;">
-      <span class="section-badge badge-map">⊞ &nbsp;MAP</span>
-      <span class="section-title">Tower Placements</span>
-    </div>
-    <div class="map-card">
-      <img id="placement-img" src="" alt="Tower Placement Map">
+  <div class="card">
+    <img class="logo" src="https://sw-rockbottom.com/images/logo.png" alt="Rock Bottom">
+    <div class="eyebrow">Summoners War · Sky Arena</div>
+    <h1>ROCK <span>BOTTOM</span></h1>
+    <div class="divider"></div>
+    <p>Under maintenance, check back soon.</p>
+    <div class="links">
+      <a class="btn btn-discord" href="https://tinyurl.com/swrockbottom" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Discord
+      </a>
+      <a class="btn btn-swgt" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        SWGT
+      </a>
     </div>
   </div>
-</main>
-
-<footer>
-  Monsters and Siege Map images are the property of Com2Us
-  <span class="footer-sep">·</span>
-  <span id="last-updated"></span>
-</footer>
-
-<script>
-/* ═══════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════ */
-const BASE = 'https://sw-rockbottom.com/images/';
-
-const DATA = {
-  currentSeason: 21,
-
-  guildStats: {
-    members: 30,
-    membersLastUpdated: 'May 26, 2026',
-    memberNames: [
-      'Yinmook','Enji','GenesisTao','LucidMurk','Maul0x',
-      'ArchReaver','Dubbla','Jeenine','Raz','Wave96',
-      'karuso-','xKazuu','xMinior','◎Patron◎','Bakiyo~',
-      'Blue_Morpho','BuggyTheGoat','Devilclone','Fluxrh','Limetka',
-      'PeterPuppyKing','Sle3py99','TPHBrill','Vinnner','Yatwyag',
-      'Yellow_Lileo','Yosuzume','horstiflyyyy97','nikigamer1989','rhkrsmurf',
-    ],
-    report: {
-      asOf:           'May 28, 2026',
-      defenseWR:      null,
-      defense5starWR: null,
-      defense4starWR: null,
-      totalBattles:   null,
-      defenseWins:    null,
-      defenseLosses:  null,
-      defensePts:     null,
-      thresholds: {
-        defense: { g:30, lg:20, y:10 }
-      }
-    }
-  },
-
-  seasons: {
-    21: {
-      lastUpdated: 'May 22, 2026',
-      placementImg: 'pic07.PNG',
-      sections: [
-      {
-        id: 'nat5', badgeClass: 'badge-nat5', badgeText: '★★★★★',
-        title: 'NAT5 Defense',
-        teams: [
-          { lead:{p:'LD5/Maximilian',n:'Maximilian',alts:[{p:'LD5/Nephthys',n:'Nephthys'}]}, m2:{p:'5Star/Lionel',n:'Lionel'}, m3:{p:'5Star/Christina',n:'Christina',alts:[{p:'5Star/Driana',n:'Driana'}]}, tower:'B8' },
-          { lead:{p:'4Star/Ciri',n:'Ciri'}, m2:{p:'4Star/Eshir',n:'Eshir'}, m3:{p:'5Star/Driana',n:'Driana'}, tower:'B9' },
-          { lead:{p:'5Star/Ramael and Judiah',n:'Ramael & Judiah'}, m2:{p:'5Star/Ren',n:'Ren'}, m3:{p:'LD5/Zeratu',n:'Zeratu',alts:[{p:'LD5/Narsha',n:'Narsha'},{p:'LD5/Cadiz',n:'Cadiz'},{p:'LD5/Bella',n:'Bella'},{p:'LD5/Salah',n:'Salah'}]}, tower:'B10' },
-          { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'4Star/Figaro',n:'Figaro',alts:[{p:'LD5/Lora',n:'Lora'},{p:'LD5/Narsha',n:'Narsha'},{p:'LD5/Xiana',n:'Xiana'},{p:'LD5/Celia',n:'Celia'}]}, m3:{p:'5Star/Savannah',n:'Savannah'}, tower:['B12','B6','R12','Y6'] },
-          { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'LD5/Tian Lang',n:'Tian Lang',alts:[{p:'LD5/Craka',n:'Craka'},{p:'LD5/Maya',n:'Maya'},{p:'LD5/Celia',n:'Celia'}]}, m3:{p:'5Star/Zenitsu',n:'Zenitsu'}, tower:['B12','B6','R12','Y6'] },
-          { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'5Star/Jeogun',n:'Jeogun'}, m3:{p:'LD5/Elsharion',n:'Elsharion'}, tower:['B4','B1'] },
-          { lead:{p:'4Star/Platy',n:'Platy'}, m2:{p:'5Star/Irene',n:'Irene'}, m3:{p:'5Star/Zenitsu',n:'Zenitsu',alts:[{p:'5Star/Shahat',n:'Shahat'}]}, tower:['B5','B3'] },
-          { lead:{p:'5Star/Seara',n:'Seara'}, m2:{p:'5Star/Lionel',n:'Lionel'}, m3:{p:'5Star/Vendhan',n:'Vendhan'}, tower:'B2' },
-        ]
-      },
-      {
-        id: 'nat4', badgeClass: 'badge-nat4', badgeText: '★★★★',
-        title: 'NAT4 Defense',
-        teams: [
-          { lead:{p:'4Star/Morris',n:'Morris'}, m2:{p:'4Star/Rex',n:'Rex'}, m3:{p:'4Star/Guillaume',n:'Guillaume'}, tower:['B7','R11'] },
-          { lead:{p:'4Star/Morris',n:'Morris'}, m2:{p:'4Star/Vigor',n:'Vigor'}, m3:{p:'4Star/Liu Mei',n:'Liu Mei'}, tower:['B7','R11'] },
-                    { lead:{p:'4Star/Mimirr',n:'Mimirr'}, m2:{p:'4Star/Cichlid',n:'Cichlid'}, m3:{p:'4Star/Molly',n:'Molly'}, tower:['Y9','R9'] },
-        ]
-      },
-      {
-        id: 'special', badgeClass: 'badge-special', badgeText: '✦  SPECIAL',
-        title: 'Special Defense',
-        teams: [
-          { lead:{p:'LD5/Sylvia',n:'Sylvia'}, m2:{p:'4Star/Iris',n:'Iris'}, m3:{p:'5Star/Driana',n:'Driana',alts:[{p:'5Star/Amber',n:'Amber'},{p:'5Star/Vendhan',n:'Vendhan'}]}, tower:['B8','Y8','R10'] },
-          { lead:{p:'LD5/Rahul',n:'Rahul'}, m2:{p:'4Star/Eshir',n:'Eshir'}, m3:{p:'5Star/Driana',n:'Driana'}, tower:['B8','Y8','R10'] },
-          { lead:{p:'LD5/Geldnir',n:'Geldnir'}, m2:{p:'5Star/Irene',n:'Irene'}, m3:{p:'5Star/Momo',n:'Momo',alts:[{p:'5Star/Shahat',n:'Shahat'}]}, tower:['B8','Y8','R10'] },
-          { lead:{p:'5Star/Tarnisha',n:'Tarnisha'}, m2:{p:'5Star/Layla',n:'Layla'}, m3:{p:'LD5/SZL',n:'SZL',alts:[{p:'LD5/Berghlid',n:'Berghlid'}]}, tower:['B8','Y8','R10'] },
-          { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'LD5/SZL',n:'SZL',alts:[{p:'LD5/Berghlid',n:'Berghlid'}]}, m3:{p:'5Star/Layla',n:'Layla'}, tower:['B8','Y8','R10'] },
-          { lead:{p:'5Star/Lamiella',n:'Lamiella'}, m2:{p:'LD5/Craka',n:'Craka'}, m3:{p:'4Star/Eshir',n:'Eshir'}, tower:['B8','Y8','R10'] },
-          { lead:{p:'5Star/Chandra',n:'Chandra'}, m2:{p:'LD5/Jaara',n:'Jaara',alts:[{p:'LD5/Megumi',n:'Megumi'},{p:'LD5/Yuji',n:'Yuji'}]}, m3:{p:'5Star/Taranys',n:'Taranys'}, tower:['B8','Y8','R10'] },
-        ]
-      },
-      {
-        id: 'hq', badgeClass: 'badge-hq', badgeText: '⬡  HQ',
-        title: 'HQ Additionals',
-        teams: [
-          { lead:{p:'5Star/Ashour',n:'Ashour'}, m2:{p:'5Star/Brita',n:'Brita',alts:[{p:'LD5/Fermion',n:'Fermion'},{p:'LD5/Thebae',n:'Thebae'},{p:'LD5/Shazam',n:'Shazam'}]}, m3:{p:'5Star/Taranys',n:'Taranys'}, tower:'HQ' },
-          { lead:{p:'5Star/Fire-Gojo',n:'Fire Gojo'}, m2:{p:'5Star/Adriana',n:'Adriana'}, m3:{p:'5Star/Odin',n:'Odin'}, tower:'HQ' },
-          { lead:{p:'5Star/Nana',n:'Nana'}, m2:{p:'5Star/Byung',n:'Byung'}, m3:{p:'LD5/Bella',n:'Bella',alts:[{p:'LD5/Miying',n:'Miying'},{p:'LD5/Leona',n:'Leona'},{p:'LD5/Thebae',n:'Thebae'}]}, tower:'HQ' },
-        ]
-      }
-      ]
-    } // end season 21
-  } // end seasons
-};
-
-let activeSeason = DATA.currentSeason;
-
-/* ═══════════════════════════════════════════
-   SEASON CYCLING
-═══════════════════════════════════════════ */
-function cycleSeason() {
-  const keys = Object.keys(DATA.seasons).map(Number).sort((a, b) => b - a);
-  const idx = keys.indexOf(activeSeason);
-  activeSeason = keys[(idx + 1) % keys.length];
-  renderPage();
-
-  // brief flash animation on pill
-  const pill = document.querySelector('.hero-season-pill');
-  pill.classList.remove('season-flash');
-  void pill.offsetWidth; // reflow
-  pill.classList.add('season-flash');
-}
-
-/* ═══════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════ */
-function img(path) { return `${BASE}${path}.png`; }
-
-function renderSlot(mon, label, isLead) {
-  const tagClass = isLead ? 'slot-tag lead' : 'slot-tag';
-  const tagText  = isLead ? 'LEAD' : label;
-  const hasAlts  = mon.alts && mon.alts.length > 0;
-  const allNames = [mon.n, ...(mon.alts||[]).map(a=>a.n)].join(',');
-
-  if (hasAlts) {
-    const altsHTML = mon.alts.map(a => `
-      <div class="monster">
-        <div class="monster-img"><img src="${img(a.p)}" alt="${a.n}" loading="lazy"></div>
-        <span class="monster-name">${a.n}</span>
-      </div>`).join('');
-    return `
-      <div class="slot-deck" tabindex="0" data-names="${allNames.toLowerCase()}">
-        <span class="${tagClass}">${tagText}</span>
-        <div class="deck-shadow s1"></div><div class="deck-shadow s2"></div>
-        <div class="deck-primary"><img src="${img(mon.p)}" alt="${mon.n}" loading="lazy"></div>
-        <span class="monster-name">${mon.n}</span>
-        <span class="deck-badge">+${mon.alts.length}</span>
-        <div class="deck-popover">
-          <div class="popover-label">${label} alternatives</div>
-          <div class="popover-monsters">${altsHTML}</div>
-        </div>
-      </div>`;
-  }
-  return `
-    <div class="monster" data-names="${mon.n.toLowerCase()}">
-      <span class="${tagClass}">${tagText}</span>
-      <div class="monster-img"><img src="${img(mon.p)}" alt="${mon.n}" loading="lazy"></div>
-      <span class="monster-name">${mon.n}</span>
-    </div>`;
-}
-
-function renderTeam(team, idx) {
-  const allNames = ['lead','m2','m3']
-    .flatMap(k => team[k] ? [team[k].n, ...(team[k].alts||[]).map(a=>a.n)] : [])
-    .join(',').toLowerCase();
-
-  const slots = [
-    team.lead ? renderSlot(team.lead, 'LEAD', true) : '',
-    team.m2   ? renderSlot(team.m2,   'M2',   false) : '',
-    team.m3   ? renderSlot(team.m3,   'M3',   false) : '',
-  ].join('');
-
-  const towerHTML = team.tower != null ? (() => {
-    const towers = Array.isArray(team.tower) ? team.tower : [team.tower];
-    const numsHTML = towers.map(t => `<span class="team-tower-num">${t}</span>`).join('');
-    return `
-    <div class="team-tower">
-      <span class="team-tower-label">Tower${towers.length > 1 ? 's' : ''}</span>
-      <div class="team-tower-nums">${numsHTML}</div>
-    </div>`;
-  })() : '';
-
-  const delay = (idx * 0.04).toFixed(2);
-  return `
-    <div class="team-row" data-monsters="${allNames}" style="animation-delay:${delay}s">
-      <span class="team-index">${String(idx+1).padStart(2,'0')}</span>
-      <div class="team-sep"></div>
-      ${slots}
-      ${towerHTML}
-    </div>`;
-}
-
-function renderSection(section) {
-  const teamsHTML = section.teams.map((t,i) => renderTeam(t,i)).join('');
-  return `
-    <div class="defense-section section-${section.id}" id="section-${section.id}">
-      <div class="section-header" onclick="toggleSection(this)">
-        <span class="section-badge ${section.badgeClass}">${section.badgeText}</span>
-        <span class="section-title">${section.title}</span>
-        <span class="section-count-pill">${section.teams.length}</span>
-        <span class="collapse-icon">▾</span>
-      </div>
-      <div class="teams-grid">
-        ${teamsHTML}
-        <div class="no-results">No teams match your search.</div>
-      </div>
-    </div>`;
-}
-
-function renderPage() {
-  const season = DATA.seasons[activeSeason];
-
-  // Defense sections
-  document.getElementById('defenses').innerHTML =
-    `<div id="defenses-anchor"></div>` + season.sections.map(renderSection).join('');
-
-  // Placement image
-  document.getElementById('placement-img').src = `${BASE}${season.placementImg}`;
-  document.getElementById('placement-img').alt = 'Tower Placement Map';
-
-  // Last updated
-  document.getElementById('last-updated').textContent = `Updated ${season.lastUpdated}`;
-
-  // Season pill text
-  const pill = document.querySelector('.hero-season-pill');
-  if (pill) pill.textContent = `Season ${activeSeason}`;
-
-  // Member count (use names array length if populated, fallback to static value)
-  const memberEl = document.getElementById('guild-member-count');
-  if (memberEl) {
-    const names = DATA.guildStats.memberNames || [];
-    memberEl.textContent = names.length || DATA.guildStats.members;
-  }
-
-  // Re-init interactions
-  initPopovers();
-}
-
-/* ═══════════════════════════════════════════
-   COLLAPSE
-═══════════════════════════════════════════ */
-function toggleSection(header) {
-  const section = header.parentElement;
-  const grid = section.querySelector('.teams-grid');
-
-  if (section.classList.contains('collapsed')) {
-    section.classList.remove('collapsed');
-    grid.style.overflow = 'hidden';
-    grid.style.height = grid.scrollHeight + 'px';
-    grid.addEventListener('transitionend', () => {
-      grid.style.height = 'auto';
-      grid.style.overflow = 'visible';
-    }, { once: true });
-  } else {
-    grid.style.height = grid.scrollHeight + 'px';
-    grid.style.overflow = 'hidden';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      grid.style.height = '0px';
-      section.classList.add('collapsed');
-    }));
-  }
-}
-
-/* ═══════════════════════════════════════════
-   SEARCH
-═══════════════════════════════════════════ */
-function filterTeams() {
-  const term = document.getElementById('search-input').value.trim().toLowerCase();
-
-  document.querySelectorAll('.defense-section').forEach(section => {
-    const rows = section.querySelectorAll('.team-row');
-    const noResults = section.querySelector('.no-results');
-    let visible = 0;
-
-    rows.forEach(row => {
-      const names = row.dataset.monsters || '';
-      const match = !term || names.includes(term);
-      row.style.display = match ? '' : 'none';
-      row.classList.toggle('dimmed', false);
-      if (match) visible++;
-
-      // highlight matching slots
-      row.querySelectorAll('.monster[data-names], .slot-deck[data-names]').forEach(el => {
-        const elNames = el.dataset.names || '';
-        el.classList.toggle('match', !!term && elNames.split(',').some(n => n.includes(term)));
-      });
-    });
-
-    // expand section if it has matches
-    if (term && visible > 0 && section.classList.contains('collapsed')) {
-      toggleSection(section.querySelector('.section-header'));
-    }
-
-    noResults.style.display = term && visible === 0 ? 'block' : 'none';
-  });
-}
-
-function initSearch() {
-  const input = document.getElementById('search-input');
-  const clear = document.getElementById('search-clear');
-  input.addEventListener('input', () => {
-    clear.style.display = input.value ? 'flex' : 'none';
-    filterTeams();
-  });
-  clear.addEventListener('click', () => {
-    input.value = '';
-    clear.style.display = 'none';
-    filterTeams();
-  });
-}
-
-/* ═══════════════════════════════════════════
-   POPOVER FLIP (up when near bottom)
-═══════════════════════════════════════════ */
-function initPopovers() {
-  document.querySelectorAll('.slot-deck').forEach(deck => {
-    deck.addEventListener('mouseenter', () => {
-      const pop = deck.querySelector('.deck-popover');
-      if (!pop) return;
-      const rect = deck.getBoundingClientRect();
-      pop.classList.toggle('open-up', rect.bottom + 130 > window.innerHeight);
-    });
-  });
-}
-
-
-/* ═══════════════════════════════════════════
-   TOGGLE ALL
-═══════════════════════════════════════════ */
-function toggleAll() {
-  const btn = document.getElementById('btn-toggle-all');
-  const sections = document.querySelectorAll('.defense-section');
-  const anyExpanded = [...sections].some(s => !s.classList.contains('collapsed'));
-  sections.forEach(s => {
-    const header = s.querySelector('.section-header');
-    const isCollapsed = s.classList.contains('collapsed');
-    if (anyExpanded && !isCollapsed) toggleSection(header);
-    if (!anyExpanded && isCollapsed) toggleSection(header);
-  });
-  btn.textContent = anyExpanded ? 'Expand All' : 'Collapse All';
-}
-
-/* ═══════════════════════════════════════════
-   COPY LINK
-═══════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════
-   BACK TO TOP
-═══════════════════════════════════════════ */
-const backToTopBtn = document.getElementById('back-to-top');
-window.addEventListener('scroll', () => {
-  backToTopBtn.classList.toggle('visible', window.scrollY > 300);
-});
-backToTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
-
-/* ═══════════════════════════════════════════
-   SEASON REPORT MODAL
-═══════════════════════════════════════════ */
-const CIRC = 2 * Math.PI * 38; // SVG r=38 → circumference ≈ 238.76
-
-function metricColor(val, t) {
-  if (val === null) return 'var(--muted)';
-  if (val >= t.g)  return '#22c55e';  // Excellent
-  if (val >= t.lg) return '#86efac';  // Good
-  if (val >= t.y)  return '#f59e0b';  // Average
-  return '#ef4444';                   // Low
-}
-
-function metricTag(val, t) {
-  if (val === null) return null;
-  const opts = [
-    { min:t.g,       text:'Excellent', bg:'rgba(34,197,94,0.12)',  br:'rgba(34,197,94,0.4)',   fg:'#22c55e' },
-    { min:t.lg,      text:'Good',      bg:'rgba(134,239,172,0.1)', br:'rgba(134,239,172,0.4)', fg:'#86efac' },
-    { min:t.y,       text:'Average',   bg:'rgba(245,158,11,0.12)', br:'rgba(245,158,11,0.35)', fg:'#f59e0b' },
-    { min:-Infinity, text:'Low',       bg:'rgba(239,68,68,0.12)',  br:'rgba(239,68,68,0.35)',  fg:'#ef4444' },
-  ];
-  return opts.find(o => val >= o.min);
-}
-
-function buildRing(label, value, thresholds) {
-  const pct = value !== null ? value : 0;
-  const off = (CIRC * (1 - Math.min(pct, 100) / 100)).toFixed(2);
-  const col = metricColor(value, thresholds);
-  const tag = metricTag(value, thresholds);
-  return `
-    <div class="report-metric">
-      <div class="ring-wrap">
-        <svg class="ring-svg" viewBox="0 0 100 100">
-          <circle class="ring-bg"   cx="50" cy="50" r="38"/>
-          <circle class="ring-fill" cx="50" cy="50" r="38"
-            style="stroke:${col}; stroke-dasharray:${CIRC.toFixed(2)}; stroke-dashoffset:${off};"/>
-        </svg>
-        <div class="ring-label">
-          <span class="ring-pct">${value !== null ? value.toFixed(1) : '—'}</span>
-          <span class="ring-unit">${value !== null ? '%' : ''}</span>
-        </div>
-      </div>
-      <div class="metric-name">${label}</div>
-      ${tag ? `<div class="metric-tag" style="background:${tag.bg};border:1px solid ${tag.br};color:${tag.fg}">${tag.text}</div>` : ''}
-    </div>`;
-}
-
-function openReport() {
-  const overlay = document.getElementById('report-overlay');
-  const r = DATA.guildStats.report;
-  document.getElementById('report-season-label').textContent = activeSeason;
-  document.getElementById('report-date-label').textContent = r.asOf ? `Last updated on: ${r.asOf}` : '';
-
-  const hasData = [r.defenseWR, r.defense5starWR, r.defense4starWR].some(v => v !== null);
-  const grid = document.getElementById('report-metrics-grid');
-
-  if (!hasData) {
-    grid.innerHTML = `<div class="report-metrics-grid"><div class="report-empty">No report data yet.<br>Check back after the next siege.</div></div>`;
-    overlay.classList.add('open');
-    return;
-  }
-
-  const t  = r.thresholds.defense;
-  const fmt = n => n != null ? n.toLocaleString() : '—';
-
-  grid.innerHTML = `
-    <div class="report-metrics-grid">
-      ${buildRing('Defense WR%', r.defenseWR,      t)}
-      ${buildRing('5★ WR%',      r.defense5starWR, t)}
-      ${buildRing('4★ WR%',      r.defense4starWR, t)}
-    </div>
-    <div class="report-stats-row">
-      <div class="report-stat-card">
-        <span class="stat-value">${fmt(r.totalBattles)}</span>
-        <span class="stat-label">Total Battles</span>
-      </div>
-      <div class="report-stat-card">
-        <span class="stat-value">${fmt(r.defenseWins)} / ${fmt(r.defenseLosses)}</span>
-        <span class="stat-label">W / L</span>
-      </div>
-      <div class="report-stat-card">
-        <span class="stat-value">${fmt(r.defensePts)}</span>
-        <span class="stat-label">Defense Pts</span>
-      </div>
-    </div>`;
-  overlay.classList.add('open');
-}
-
-function closeReport(e) {
-  if (e.target !== document.getElementById('report-overlay')) return;
-  document.getElementById('report-overlay').classList.remove('open');
-}
-function closeReportBtn() {
-  document.getElementById('report-overlay').classList.remove('open');
-}
-
-/* ═══════════════════════════════════════════
-   MEMBERS MODAL
-═══════════════════════════════════════════ */
-function openMembers() {
-  const names = DATA.guildStats.memberNames || [];
-  const overlay = document.getElementById('members-overlay');
-  const updated = DATA.guildStats.membersLastUpdated;
-  document.getElementById('members-subtitle').textContent =
-    updated ? `Last updated on: ${updated}` : `${names.length || DATA.guildStats.members} members`;
-
-  const list = document.getElementById('members-list');
-  if (!names.length) {
-    list.innerHTML = '<div class="report-empty" style="grid-column:1/-1">Member list not available yet.</div>';
-  } else {
-    list.innerHTML = names.map((n, i) => `
-      <div class="member-row">
-        <span class="member-num">${String(i + 1).padStart(2, '0')}</span>
-        <span class="member-name">${n}</span>
-      </div>`).join('');
-  }
-  overlay.classList.add('open');
-}
-function closeMembersOverlay(e) {
-  if (e.target !== document.getElementById('members-overlay')) return;
-  document.getElementById('members-overlay').classList.remove('open');
-}
-function closeMembers() {
-  document.getElementById('members-overlay').classList.remove('open');
-}
-
-/* ═══════════════════════════════════════════
-   KEYBOARD SHORTCUTS
-═══════════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeReportBtn(); closeMembers(); }
-  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
-    e.preventDefault();
-    document.getElementById('search-input').focus();
-  }
-});
-
-/* ═══════════════════════════════════════════
-   BOOT
-═══════════════════════════════════════════ */
-// Fetch live report data from GitHub
-fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/report.json?_=' + Date.now())
-  .then(r => r.json())
-  .then(d => {
-    const r = DATA.guildStats.report;
-    if (d.defenseWR      != null) r.defenseWR      = d.defenseWR;
-    if (d.defense5starWR != null) r.defense5starWR = d.defense5starWR;
-    if (d.defense4starWR != null) r.defense4starWR = d.defense4starWR;
-    if (d.totalBattles   != null) r.totalBattles   = d.totalBattles;
-    if (d.defenseWins    != null) r.defenseWins    = d.defenseWins;
-    if (d.defenseLosses  != null) r.defenseLosses  = d.defenseLosses;
-    if (d.defensePts     != null) r.defensePts     = d.defensePts;
-    if (d.asOf)                   r.asOf           = d.asOf;
-  })
-  .catch(() => {}); // silently fall back to DATA defaults
-
-renderPage();
-initSearch();
-</script>
 </body>
 </html>
