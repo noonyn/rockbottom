@@ -2,23 +2,28 @@
   "entries": [
     {
       "date": "May 29, 2026",
-      "text": "Special Defense — Added Rahul · Eshir · Driana to the lineup."
+      "type": "added",
+      "text": "Rahul · Eshir · Driana to Special Defense."
     },
     {
       "date": "May 29, 2026",
-      "text": "NAT4 Defense — New comp added: Morris · Vigor · Liu Mei."
+      "type": "added",
+      "text": "Morris · Vigor · Liu Mei to NAT4 Defense."
     },
     {
       "date": "May 29, 2026",
-      "text": "NAT4 Defense — Replaced Shumar with Guillaume in the Morris · Rex comp."
+      "type": "changed",
+      "text": "Shumar swapped for Guillaume in NAT4 Morris · Rex comp."
     },
     {
       "date": "May 29, 2026",
-      "text": "NAT5 Defense #4 — Replaced Figaro with Barbara (Tarnisha · Barbara · Savannah)."
+      "type": "changed",
+      "text": "Figaro swapped for Barbara in NAT5 Defense #4 (Tarnisha · Savannah comp)."
     },
     {
       "date": "May 29, 2026",
-      "text": "NAT5 Defense — Added Ciri · Eshir · Driana to the lineup."
+      "type": "added",
+      "text": "Ciri · Eshir · Driana to NAT5 Defense."
     }
   ]
 }
