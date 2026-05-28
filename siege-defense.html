@@ -1337,35 +1337,43 @@ function renderScheduleList() {
     return;
   }
 
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const nextIdx = sieges.findIndex(s => {
-    const [y, mo, d] = s.date.split('-').map(Number);
-    return new Date(y, mo - 1, d) >= today;
-  });
+  const now = Date.now();
+  const SIEGE_MS = 24 * 60 * 60 * 1000; // 24-hour siege window
+
+  // Active = first siege whose end time hasn't passed yet
+  const activeIdx = sieges.findIndex(s => new Date(s.date).getTime() + SIEGE_MS > now);
 
   list.innerHTML = sieges.map((s, i) => {
-    const [y, mo, d] = s.date.split('-').map(Number);
-    const dt = new Date(y, mo - 1, d);
-    const isPast = dt < today;
-    const isNext = i === nextIdx;
-    const msUntil = dt.getTime() - Date.now();
+    const start    = new Date(s.date).getTime();
+    const end      = start + SIEGE_MS;
+    const isActive = i === activeIdx;
+    const isLive   = isActive && start <= now;
+    const isPast   = end <= now;
+    const dt       = new Date(start);
 
-    const dayName = dt.toLocaleDateString('en-US', { weekday:'short' }).toUpperCase();
-    const dateStr = dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const dayName   = dt.toLocaleDateString('en-US', { weekday:'short' }).toUpperCase();
+    const shortDate = dt.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const dateStr   = dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const labelText = s.label ? `${s.label} · ${shortDate}` : dateStr;
 
     let cls = 'schedule-entry';
-    if (isNext) cls += ' next';
-    if (isPast) cls += ' schedule-past';
+    if (isActive) cls += ' next';
+    if (isPast)   cls += ' schedule-past';
 
-    const badgeHTML     = isNext ? '<span class="schedule-next-badge">NEXT</span>' : '';
-    const countdownHTML = isNext
-      ? `<span class="schedule-countdown" data-target="${dt.getTime()}">${formatCountdown(Math.max(0, msUntil))}</span>`
+    const cdTarget  = isLive ? end : start;
+    const badgeHTML = isActive
+      ? isLive
+        ? `<span class="schedule-next-badge" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#ef4444">LIVE</span>`
+        : `<span class="schedule-next-badge">NEXT</span>`
+      : '';
+    const countdownHTML = isActive
+      ? `<span class="schedule-countdown" data-target="${cdTarget}">${formatCountdown(Math.max(0, cdTarget - now))}</span>`
       : '';
 
     return `
       <div class="${cls}">
         <span class="schedule-day">${dayName}</span>
-        <span class="schedule-date">${s.label || dateStr}</span>
+        <span class="schedule-date">${labelText}</span>
         ${badgeHTML}${countdownHTML}
       </div>`;
   }).join('');
@@ -1381,7 +1389,8 @@ function openSchedule() {
     const el = document.querySelector('.schedule-countdown[data-target]');
     if (!el) return;
     const ms = parseInt(el.dataset.target, 10) - Date.now();
-    el.textContent = formatCountdown(ms > 0 ? ms : 0);
+    if (ms <= 0) { renderScheduleList(); return; } // re-render on state change
+    el.textContent = formatCountdown(ms);
   }, 1000);
 }
 function closeSchedule(e) {

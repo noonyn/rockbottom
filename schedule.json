@@ -1,8 +1,30 @@
 {
   "sieges": [
-    { "date": "2026-05-30", "label": "Season 21 · Siege 1" },
-    { "date": "2026-06-06", "label": "Season 21 · Siege 2" },
-    { "date": "2026-06-13", "label": "Season 21 · Siege 3" },
-    { "date": "2026-06-20", "label": "Season 21 · Siege 4" }
+    { "date": "2026-03-30T10:00:00Z", "label": "Siege #1" },
+    { "date": "2026-04-02T10:00:00Z", "label": "Siege #2" },
+    { "date": "2026-04-06T10:00:00Z", "label": "Siege #3" },
+    { "date": "2026-04-09T10:00:00Z", "label": "Siege #4" },
+    { "date": "2026-04-13T10:00:00Z", "label": "Siege #5" },
+    { "date": "2026-04-16T10:00:00Z", "label": "Siege #6" },
+    { "date": "2026-04-20T10:00:00Z", "label": "Siege #7" },
+    { "date": "2026-04-23T10:00:00Z", "label": "Siege #8" },
+    { "date": "2026-04-27T10:00:00Z", "label": "Siege #9" },
+    { "date": "2026-04-30T10:00:00Z", "label": "Siege #10" },
+    { "date": "2026-05-04T10:00:00Z", "label": "Siege #11" },
+    { "date": "2026-05-07T10:00:00Z", "label": "Siege #12" },
+    { "date": "2026-05-11T10:00:00Z", "label": "Siege #13" },
+    { "date": "2026-05-14T10:00:00Z", "label": "Siege #14" },
+    { "date": "2026-05-18T10:00:00Z", "label": "Siege #15" },
+    { "date": "2026-05-21T10:00:00Z", "label": "Siege #16" },
+    { "date": "2026-05-25T10:00:00Z", "label": "Siege #17" },
+    { "date": "2026-05-28T10:00:00Z", "label": "Siege #18" },
+    { "date": "2026-06-01T10:00:00Z", "label": "Siege #19" },
+    { "date": "2026-06-04T10:00:00Z", "label": "Siege #20" },
+    { "date": "2026-06-08T10:00:00Z", "label": "Siege #21" },
+    { "date": "2026-06-11T10:00:00Z", "label": "Siege #22" },
+    { "date": "2026-06-15T10:00:00Z", "label": "Siege #23" },
+    { "date": "2026-06-18T10:00:00Z", "label": "Siege #24" },
+    { "date": "2026-06-22T10:00:00Z", "label": "Siege #25" },
+    { "date": "2026-06-25T10:00:00Z", "label": "Siege #26" }
   ]
 }
