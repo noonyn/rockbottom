@@ -758,7 +758,6 @@
     <div class="report-header">
       <div>
         <div class="report-title">CHANGE<span style="color:var(--cyan)">LOG</span></div>
-        <div class="report-subtitle">Defense lineup updates &amp; site changes</div>
       </div>
       <button class="report-close" onclick="closeChangelogBtn()">✕</button>
     </div>
@@ -772,7 +771,6 @@
     <div class="report-header">
       <div>
         <div class="report-title">SIEGE <span style="color:var(--purple)">SCHEDULE</span></div>
-        <div class="report-subtitle">Season <span id="schedule-season-label">21</span> · Guild Siege dates</div>
       </div>
       <button class="report-close" onclick="closeScheduleBtn()">✕</button>
     </div>
@@ -1375,7 +1373,6 @@ function renderScheduleList() {
 
 function openSchedule() {
   const overlay = document.getElementById('schedule-overlay');
-  document.getElementById('schedule-season-label').textContent = activeSeason;
   renderScheduleList();
   overlay.classList.add('open');
 
