@@ -1460,8 +1460,11 @@ document.addEventListener('keydown', e => {
 /* ═══════════════════════════════════════════
    BOOT
 ═══════════════════════════════════════════ */
-// Fetch live report data from GitHub
-fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/report.json?_=' + Date.now())
+// Fetch live data — GitHub Contents API bypasses CDN cache
+const GH = (f) => `https://api.github.com/repos/noonyn/rockbottom/contents/${f}`;
+const GH_HDRS = { 'Accept': 'application/vnd.github.raw+json', 'X-GitHub-Api-Version': '2022-11-28' };
+
+fetch(GH('report.json'), { headers: GH_HDRS })
   .then(r => r.json())
   .then(d => {
     const r = DATA.guildStats.report;
@@ -1474,14 +1477,14 @@ fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/report.json?_=' 
     if (d.defensePts     != null) r.defensePts     = d.defensePts;
     if (d.asOf)                   r.asOf           = d.asOf;
   })
-  .catch(() => {}); // silently fall back to DATA defaults
+  .catch(() => {});
 
-fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/changelog.json?_=' + Date.now())
+fetch(GH('changelog.json'), { headers: GH_HDRS })
   .then(r => r.json())
   .then(d => { if (Array.isArray(d.entries)) DATA.changelog = d.entries; })
   .catch(() => {});
 
-fetch('https://raw.githubusercontent.com/noonyn/rockbottom/main/schedule.json?_=' + Date.now())
+fetch(GH('schedule.json'), { headers: GH_HDRS })
   .then(r => r.json())
   .then(d => { if (Array.isArray(d.sieges)) DATA.schedule = d.sieges; })
   .catch(() => {});
