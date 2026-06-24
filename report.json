@@ -1,10 +1,10 @@
 {
-  "defenseWR": 35.5,
-  "defense5starWR": 30.2,
-  "defense4starWR": 45.4,
-  "totalBattles": 4700,
-  "defenseWins": 1669,
-  "defenseLosses": 3031,
-  "defensePts": 8345,
-  "asOf": "Jun 18, 2026"
+  "defenseWR": 35,
+  "defense5starWR": 29.7,
+  "defense4starWR": 44.7,
+  "totalBattles": 5065,
+  "defenseWins": 1771,
+  "defenseLosses": 3294,
+  "defensePts": 8855,
+  "asOf": "Jun 24, 2026"
 }
