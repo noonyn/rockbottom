@@ -468,9 +468,12 @@
     }
     .hero-btn-schedule:hover svg { stroke:var(--purple); }
 
-    .hero-btn-seasonreport { color:var(--muted); padding:5px 13px; }
-    .hero-btn-seasonreport:hover { border-color:var(--gold-border); background:var(--gold-bg); color:var(--gold); }
-    .hero-btn-seasonreport:hover svg { stroke:var(--gold); }
+    .hero-btn-seasonreport {
+      color:var(--gold); border-color:var(--gold-border); background:var(--gold-bg);
+      padding:5px 13px;
+    }
+    .hero-btn-seasonreport svg { stroke:var(--gold); }
+    .hero-btn-seasonreport:hover { background:rgba(245,158,11,0.22); border-color:rgba(245,158,11,0.65); }
 
     /* ─── CHANGELOG MODAL ─── */
     .changelog-list { display:flex; flex-direction:column; gap:8px; max-height:380px; overflow-y:auto; padding-right:4px; }
