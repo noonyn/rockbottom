@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Bottom — Siege Summary Season 21</title>
+
+  <link rel="icon" type="image/png" href="https://sw-rockbottom.com/images/logo.png">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://sw-rockbottom.com/season-report.html">
+  <meta property="og:title"       content="Rock Bottom - Siege Summary Season 21">
+  <meta property="og:description" content="Season 21 siege awards and full player stats for guild siege battles.">
+  <meta property="og:image"       content="https://sw-rockbottom.com/images/logo.png">
+  <meta name="theme-color"        content="#f59e0b">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
+    ::-webkit-scrollbar-thumb:hover { background:var(--gold); }
+
+    :root {
+      --bg:           #070b14;
+      --surface:      #0f1623;
+      --surface2:     #161e2e;
+      --border:       #1e2d45;
+      --text:         #c8d6e8;
+      --muted:        #637389;
+      --white:        #f0f6ff;
+      --gold:         #f59e0b;
+      --gold-bg:      rgba(245,158,11,0.12);
+      --gold-border:  rgba(245,158,11,0.35);
+      --purple:       #a855f7;
+      --purple-bg:    rgba(168,85,247,0.12);
+      --purple-border:rgba(168,85,247,0.35);
+      --cyan:         #22d3ee;
+      --cyan-bg:      rgba(34,211,238,0.12);
+      --cyan-border:  rgba(34,211,238,0.35);
+      --green:        #22c55e;
+      --green-bg:     rgba(34,197,94,0.12);
+      --green-border: rgba(34,197,94,0.35);
+      --red:          #ef4444;
+      --red-bg:       rgba(239,68,68,0.12);
+      --red-border:   rgba(239,68,68,0.35);
+    }
+
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:'Inter',system-ui,sans-serif; font-size:15px; line-height:1.6;
+      min-height:100vh; -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position:sticky; top:0; z-index:50;
+      background:rgba(7,11,20,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+      padding:0 2rem; height:58px;
+      display:flex; align-items:center; gap:1rem;
+    }
+    .nav-brand {
+      display:flex; align-items:center; gap:9px;
+      font-family:'Rajdhani',sans-serif; font-size:1.3rem; font-weight:700; letter-spacing:0.06em;
+      color:var(--white); text-decoration:none; white-space:nowrap; margin-right:auto;
+    }
+    .nav-brand img { width:30px; height:30px; object-fit:contain; }
+    .nav-back {
+      display:flex; align-items:center; gap:7px;
+      font-size:0.82rem; font-weight:600; letter-spacing:0.03em;
+      background:var(--surface2); border:1px solid var(--border); color:var(--text);
+      padding:7px 14px; border-radius:8px; text-decoration:none; white-space:nowrap;
+      transition:border-color 0.18s, color 0.18s, background 0.18s;
+    }
+    .nav-back:hover { border-color:var(--gold-border); background:var(--gold-bg); color:var(--gold); }
+    .nav-back:hover svg { stroke:var(--gold); }
+
+    /* ─── PAGE ─── */
+    .page { max-width:1000px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+
+    /* ─── NAV REPORT LABEL ─── */
+    .nav-report-label {
+      display:flex; align-items:center; gap:7px;
+      font-size:0.8rem; font-weight:600; color:var(--text); white-space:nowrap;
+    }
+    .nav-report-label::before {
+      content:''; width:1px; height:16px; background:var(--border);
+    }
+    .nav-report-label span { color:var(--gold); }
+
+    /* ─── DATA STRIP ─── */
+    .report-strip {
+      background:var(--surface); border-bottom:1px solid var(--border);
+      padding:0 1.75rem;
+    }
+    .strip-inner {
+      max-width:1000px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:8px; padding:10px 0;
+    }
+    .strip-meta { font-size:0.76rem; color:var(--muted); }
+    .strip-stats { display:flex; flex-wrap:wrap; gap:6px 20px; }
+    .strip-stat { font-size:0.76rem; color:var(--muted); }
+    .strip-stat strong { color:var(--white); font-weight:700; }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:1.1rem;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ─── AWARDS ─── */
+    .awards-grid {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(178px, 1fr));
+      gap:12px; margin-bottom:3rem;
+    }
+    .award-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:12px;
+      padding:1.25rem 1.1rem; display:flex; flex-direction:column; gap:13px;
+      transition:border-color 0.2s, transform 0.2s;
+    }
+    .award-card:hover { border-color:var(--gold-border); transform:translateY(-2px); }
+    .award-icon {
+      width:38px; height:38px; border-radius:9px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .award-icon svg { width:20px; height:20px; }
+    .ic-gold   { background:var(--gold-bg);   border:1px solid var(--gold-border);   color:var(--gold); }
+    .ic-cyan   { background:var(--cyan-bg);   border:1px solid var(--cyan-border);   color:var(--cyan); }
+    .ic-green  { background:var(--green-bg);  border:1px solid var(--green-border);  color:var(--green); }
+    .ic-red    { background:var(--red-bg);    border:1px solid var(--red-border);    color:var(--red); }
+    .ic-purple { background:var(--purple-bg); border:1px solid var(--purple-border); color:var(--purple); }
+    .award-meta { display:flex; flex-direction:column; }
+    .award-title { font-size:0.66rem; color:#8b97ad; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .award-winner {
+      font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700;
+      color:var(--white); line-height:1.05; margin-top:auto;
+    }
+    .award-card.mvp {
+      border-color:var(--gold-border);
+      background:linear-gradient(160deg, var(--surface2) 60%, rgba(245,158,11,0.08));
+      box-shadow:0 0 0 1px var(--gold-border);
+    }
+    .award-card.mvp .award-winner { color:var(--gold); font-size:1.55rem; }
+    .award-stat { font-size:0.7rem; color:var(--muted); min-height:2.24rem; }
+
+    /* ─── LEGEND ─── */
+    .legend {
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:0.9rem 1.2rem; margin-bottom:1.5rem;
+      display:flex; flex-wrap:wrap; gap:7px 22px;
+    }
+    .legend-item { font-size:0.76rem; color:var(--muted); }
+    .legend-item strong { color:var(--text); font-weight:600; }
+
+    /* ─── TABLE ─── */
+    .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+    table { width:100%; border-collapse:collapse; font-size:0.82rem; min-width:720px; }
+    thead tr { background:var(--surface); }
+    th {
+      padding:10px 12px; text-align:right;
+      font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+      color:var(--muted); border-bottom:1px solid var(--border); white-space:nowrap;
+    }
+    th:first-child { text-align:left; }
+    th.g-off { color:var(--gold); }
+    th.g-def { color:var(--cyan); }
+    th.g-ovr { color:var(--purple); }
+    thead tr.group-row th {
+      padding:8px 12px 5px; text-align:center; border-bottom:none;
+      font-family:'Rajdhani',sans-serif; font-size:0.72rem; letter-spacing:0.08em;
+    }
+    thead tr.group-row th:first-child { text-align:left; }
+    thead tr.group-row th.span-off { color:var(--gold);   border-bottom:2px solid var(--gold-border); }
+    thead tr.group-row th.span-def { color:var(--cyan);   border-bottom:2px solid var(--cyan-border); }
+    thead tr.group-row th.span-ovr { color:var(--purple); border-bottom:2px solid var(--purple-border); }
+    tbody tr { border-bottom:1px solid var(--border); transition:background 0.15s; }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover { background:var(--surface); }
+    tbody tr.tr-mvp { background:rgba(245,158,11,0.06); }
+    tbody tr.tr-mvp:hover { background:rgba(245,158,11,0.1); }
+    td { padding:9px 12px; text-align:right; color:#9aa7bd; white-space:nowrap; }
+    td:first-child { text-align:left; color:var(--text); font-weight:600; }
+    /* legacy — overridden by JS threshold coloring */
+    .good { color:var(--green); }
+    .ok   { color:var(--gold); }
+    .weak { color:var(--red); }
+    /* threshold color scale */
+    .c-g  { color:#22c55e; }          /* green   */
+    .c-lg { color:#86efac; }          /* light green */
+    .c-y  { color:#f59e0b; }          /* yellow  */
+    .c-lr { color:#fb923c; }          /* light red */
+    .c-r  { color:#ef4444; }          /* red     */
+    tbody tr.total-row { background:var(--surface2); font-weight:600; border-top:2px solid var(--border); }
+    tbody tr.total-row:hover { background:var(--surface2); }
+    tbody tr.total-row td:first-child { color:var(--muted); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; }
+
+    /* ─── SORT ─── */
+    th[data-col] { cursor:pointer; user-select:none; transition:color 0.15s; }
+    th[data-col]:hover { color:var(--white); }
+    th[data-col]::after { content:' \2195'; opacity:0.25; font-size:0.75em; }
+    th[data-sort="desc"]::after { content:' \2193'; opacity:1; }
+    th[data-sort="asc"]::after  { content:' \2191'; opacity:1; }
+
+    /* ─── FOOTER ─── */
+    footer { margin-top:2.5rem; font-size:0.76rem; color:var(--muted); text-align:center; }
+
+    @media (max-width:640px) {
+      nav { padding:0 1rem; }
+      .nav-report-label { display:none; }
+      .report-strip { padding:0 1rem; }
+      .page { padding:1.75rem 1rem 3rem; }
+      .nav-back span { display:none; }
+      .nav-back { padding:7px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img src="https://sw-rockbottom.com/images/logo.png" alt="Rock Bottom">
+    ROCK BOTTOM
+  </a>
+  <span class="nav-report-label">Siege Summary - Season <span>21</span> (Complete)</span>
+  <a class="nav-back" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <span>Siege Defense</span>
+  </a>
+</nav>
+
+<div class="report-strip">
+  <div class="strip-inner">
+    <span class="strip-meta">30 Mar 2026 — 19 Jul 2026</span>
+    <div class="strip-stats">
+      <span class="strip-stat"><strong>5,677</strong> battles</span>
+      <span class="strip-stat"><strong>83.9%</strong> offense WR</span>
+      <span class="strip-stat"><strong>35.0%</strong> defense WR</span>
+      <span class="strip-stat"><strong>69,620</strong> total pts</span>
+    </div>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- SUMMARY -->
+  <div class="awards-grid">
+
+    <div class="award-card">
+      <div class="award-icon ic-gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/></svg>
+      </div>
+      <div class="award-meta">
+<span class="award-title">Best Offense Performance</span>
+      </div>
+      <p class="award-winner">GenesisTao</p>
+      <p class="award-stat">98.4% WR</p>
+    </div>
+
+    <div class="award-card">
+      <div class="award-icon ic-cyan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="award-meta">
+<span class="award-title">Best Defense Performance</span>
+      </div>
+      <p class="award-winner">Maul0x</p>
+      <p class="award-stat">45.5% def WR</p>
+    </div>
+
+    <div class="award-card">
+      <div class="award-icon ic-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+      </div>
+      <div class="award-meta">
+<span class="award-title">Most Defense Wins</span>
+      </div>
+      <p class="award-winner">karuso-</p>
+      <p class="award-stat">186 defense wins</p>
+    </div>
+
+    <div class="award-card">
+      <div class="award-icon ic-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      </div>
+      <div class="award-meta">
+<span class="award-title">Top Scorer</span>
+      </div>
+      <p class="award-winner">Enji</p>
+      <p class="award-stat">4,180 pts &nbsp;·&nbsp; 167 avg</p>
+    </div>
+
+    <div class="award-card mvp">
+      <div class="award-icon ic-gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2.5-10 5 5L12 4l1.5 8 5-5L21 17z"/><path d="M4 21h16"/></svg>
+      </div>
+      <div class="award-meta">
+<span class="award-title">MVP</span>
+      </div>
+      <p class="award-winner">Raz</p>
+      <p class="award-stat">133.4% CP%</p>
+    </div>
+
+  </div>
+
+  <!-- PLAYER STATS -->
+  <p class="section-label">Player Stats — Season 21</p>
+  <div class="legend">
+    <span class="legend-item"><strong>WR%</strong> Wins ÷ attacks</span>
+    <span class="legend-item"><strong>P%</strong> Wins ÷ expected attacks (10/battle)</span>
+    <span class="legend-item"><strong>C%</strong> Offense + defense WR%</span>
+    <span class="legend-item"><strong>CP%</strong> Offense P% + defense WR%</span>
+    <span class="legend-item"><strong>Pts</strong> Contribution points</span>
+  </div>
+
+  <div class="table-wrap">
+    <table id="stats-table">
+      <thead>
+        <tr class="group-row">
+          <th></th>
+          <th colspan="5" class="span-off">Offense</th>
+          <th colspan="4" class="span-def">Defense</th>
+          <th colspan="3" class="span-ovr">Overall</th>
+        </tr>
+        <tr>
+          <th data-col="0">Player</th>
+          <th data-col="1"  class="g-off">W</th>
+          <th data-col="2"  class="g-off">L</th>
+          <th data-col="3"  class="g-off">T</th>
+          <th data-col="4"  class="g-off">WR%</th>
+          <th data-col="5"  class="g-off">Pts</th>
+          <th data-col="6"  class="g-def">W</th>
+          <th data-col="7"  class="g-def">T</th>
+          <th data-col="8"  class="g-def">WR%</th>
+          <th data-col="9"  class="g-def">Pts</th>
+          <th data-col="10" class="g-ovr">C%</th>
+          <th data-col="11" class="g-ovr">CP%</th>
+          <th data-col="12" class="g-ovr">Avg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Yinmook</td><td>249</td><td>1</td><td>250</td><td class="good">99.6%</td><td>3,735</td><td>323</td><td>663</td><td class="ok">48.7%</td><td>1,615</td><td>148.3%</td><td>148.3%</td><td>214</td></tr>
+        <tr class="tr-mvp"><td>Raz</td><td>224</td><td>25</td><td>251</td><td class="good">90.0%</td><td>3,360</td><td>103</td><td>235</td><td class="ok">43.8%</td><td>515</td><td>133.8%</td><td>133.4%</td><td>155</td></tr>
+        <tr><td>Enji</td><td>239</td><td>11</td><td>250</td><td class="good">95.6%</td><td>3,585</td><td>119</td><td>331</td><td class="ok">36.0%</td><td>595</td><td>131.6%</td><td>131.6%</td><td>167</td></tr>
+        <tr><td>Maul0x</td><td>215</td><td>28</td><td>250</td><td class="good">88.5%</td><td>3,225</td><td>131</td><td>288</td><td class="ok">45.5%</td><td>655</td><td>134.0%</td><td>131.5%</td><td>155</td></tr>
+        <tr><td>Bakiyo~</td><td>79</td><td>11</td><td>90</td><td class="good">87.8%</td><td>1,185</td><td>4</td><td>10</td><td class="good">40.0%</td><td>20</td><td>127.8%</td><td>127.8%</td><td>133</td></tr>
+        <tr><td>GenesisTao</td><td>242</td><td>4</td><td>250</td><td class="good">98.4%</td><td>3,630</td><td>76</td><td>312</td><td class="weak">24.4%</td><td>380</td><td>122.7%</td><td>121.2%</td><td>160</td></tr>
+        <tr><td>karuso-</td><td>196</td><td>39</td><td>250</td><td class="good">83.4%</td><td>2,940</td><td>186</td><td>493</td><td class="ok">37.7%</td><td>930</td><td>121.1%</td><td>116.1%</td><td>154</td></tr>
+        <tr><td>Jeenine</td><td>168</td><td>35</td><td>250</td><td class="good">82.8%</td><td>2,520</td><td>168</td><td>378</td><td class="ok">44.4%</td><td>840</td><td>127.2%</td><td>111.6%</td><td>134</td></tr>
+        <tr><td>Wave96</td><td>194</td><td>44</td><td>253</td><td class="ok">81.5%</td><td>2,910</td><td>99</td><td>305</td><td class="ok">32.5%</td><td>495</td><td>114.0%</td><td>110.1%</td><td>136</td></tr>
+        <tr><td>Dubbla</td><td>127</td><td>14</td><td>170</td><td class="good">90.1%</td><td>1,905</td><td>15</td><td>44</td><td class="ok">34.1%</td><td>75</td><td>124.2%</td><td>108.8%</td><td>116</td></tr>
+        <tr><td>Limetka</td><td>189</td><td>37</td><td>230</td><td class="ok">83.6%</td><td>2,835</td><td>14</td><td>55</td><td class="weak">25.5%</td><td>70</td><td>109.1%</td><td>107.6%</td><td>126</td></tr>
+        <tr><td>BuggyTheGoat</td><td>214</td><td>36</td><td>250</td><td class="ok">85.6%</td><td>3,210</td><td>18</td><td>96</td><td class="weak">18.8%</td><td>90</td><td>104.3%</td><td>104.3%</td><td>132</td></tr>
+        <tr><td>ArchReaver</td><td>202</td><td>41</td><td>250</td><td class="ok">83.1%</td><td>3,030</td><td>33</td><td>161</td><td class="weak">20.5%</td><td>165</td><td>103.6%</td><td>101.3%</td><td>127</td></tr>
+        <tr><td>rhkrsmurf</td><td>186</td><td>46</td><td>253</td><td class="ok">80.2%</td><td>2,790</td><td>32</td><td>126</td><td class="ok">25.4%</td><td>160</td><td>105.6%</td><td>99.8%</td><td>118</td></tr>
+        <tr><td>Yatwyag</td><td>166</td><td>54</td><td>250</td><td class="ok">75.5%</td><td>2,490</td><td>128</td><td>405</td><td class="ok">31.6%</td><td>640</td><td>107.1%</td><td>98.0%</td><td>125</td></tr>
+        <tr><td>nikigamer1989</td><td>77</td><td>13</td><td>90</td><td class="ok">85.6%</td><td>1,155</td><td>2</td><td>17</td><td class="weak">11.8%</td><td>10</td><td>97.3%</td><td>97.3%</td><td>129</td></tr>
+        <tr><td>Vinnner</td><td>192</td><td>58</td><td>250</td><td class="ok">76.8%</td><td>2,880</td><td>18</td><td>92</td><td class="weak">19.6%</td><td>90</td><td>96.4%</td><td>96.4%</td><td>118</td></tr>
+        <tr><td>xKazuu</td><td>148</td><td>13</td><td>250</td><td class="good">91.9%</td><td>2,220</td><td>41</td><td>128</td><td class="ok">32.0%</td><td>205</td><td>124.0%</td><td>91.2%</td><td>97</td></tr>
+        <tr><td>Devilclone</td><td>143</td><td>53</td><td>250</td><td class="ok">73.0%</td><td>2,145</td><td>8</td><td>25</td><td class="ok">32.0%</td><td>40</td><td>105.0%</td><td>89.2%</td><td>87</td></tr>
+        <tr><td>Sle3py99</td><td>132</td><td>27</td><td>250</td><td class="ok">83.0%</td><td>1,980</td><td>77</td><td>267</td><td class="weak">28.8%</td><td>385</td><td>111.9%</td><td>81.6%</td><td>94</td></tr>
+        <tr><td>LucidMurk</td><td>140</td><td>33</td><td>250</td><td class="ok">80.9%</td><td>2,100</td><td>43</td><td>190</td><td class="weak">22.6%</td><td>215</td><td>103.6%</td><td>78.6%</td><td>92</td></tr>
+        <tr><td>Yellow_Lileo</td><td>142</td><td>94</td><td>250</td><td class="ok">60.2%</td><td>2,130</td><td>11</td><td>54</td><td class="weak">20.4%</td><td>55</td><td>80.5%</td><td>77.2%</td><td>87</td></tr>
+        <tr><td>Yosuzume</td><td>32</td><td>12</td><td>90</td><td class="ok">72.7%</td><td>480</td><td>5</td><td>13</td><td class="ok">38.5%</td><td>25</td><td>111.2%</td><td>74.0%</td><td>56</td></tr>
+        <tr><td>TPHBrill</td><td>69</td><td>12</td><td>240</td><td class="ok">85.2%</td><td>1,035</td><td>108</td><td>327</td><td class="ok">33.0%</td><td>540</td><td>118.2%</td><td>61.8%</td><td>65</td></tr>
+        <tr><td>xMinior</td><td>29</td><td>6</td><td>80</td><td class="ok">82.9%</td><td>435</td><td>1</td><td>4</td><td class="ok">25.0%</td><td>5</td><td>107.9%</td><td>61.2%</td><td>55</td></tr>
+        <tr><td>@Patron@</td><td>54</td><td>29</td><td>100</td><td class="ok">65.1%</td><td>810</td><td>—</td><td>6</td><td>0.0%</td><td>—</td><td>65.1%</td><td>54.0%</td><td>81</td></tr>
+        <tr><td>PeterPuppyKing</td><td>—</td><td>—</td><td>10</td><td>0.0%</td><td>0</td><td>3</td><td>9</td><td class="ok">33.3%</td><td>15</td><td>33.3%</td><td>33.3%</td><td>15</td></tr>
+        <tr><td>horstiflyyy97</td><td>—</td><td>—</td><td>20</td><td>0.0%</td><td>0</td><td>4</td><td>13</td><td class="ok">30.8%</td><td>20</td><td>30.8%</td><td>30.8%</td><td>10</td></tr>
+        <tr><td>Blue_Morpho</td><td>3</td><td>2</td><td>20</td><td class="ok">60.0%</td><td>45</td><td>1</td><td>1</td><td>0.0%</td><td>—</td><td>60.0%</td><td>15.0%</td><td>22</td></tr>
+        <tr><td>Fluxrh</td><td>—</td><td>—</td><td>30</td><td>0.0%</td><td>0</td><td>1</td><td>17</td><td class="weak">5.9%</td><td>5</td><td>5.9%</td><td>5.9%</td><td>1</td></tr>
+        <tr class="total-row"><td>30 Players</td><td>4,051</td><td>778</td><td>5,677</td><td class="ok">83.9%</td><td>60,765</td><td>1,771</td><td>5,065</td><td class="ok">35.0%</td><td>8,855</td><td>106.3%</td><td>106.3%</td><td>107</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>Rock Bottom &nbsp;·&nbsp; Season 21</footer>
+
+</main>
+
+<script>
+/* ── COLOR THRESHOLDS ────────────────────────────── */
+const THRESHOLDS = {
+  4:  { g:90,  lg:85,  y:80,  lr:70  },  // Offense WR%
+  8:  { g:40,  lg:30,  y:25,  lr:20  },  // Defense WR%
+  10: { g:130, lg:115, y:105, lr:90  },  // C%
+  11: { g:130, lg:115, y:105, lr:90  },  // CP%
+};
+
+function colorClass(val, t) {
+  if (val >= t.g)  return 'c-g';
+  if (val >= t.lg) return 'c-lg';
+  if (val >= t.y)  return 'c-y';
+  if (val >= t.lr) return 'c-lr';
+  return 'c-r';
+}
+
+function applyThresholds() {
+  document.querySelectorAll('#stats-table tbody tr:not(.total-row) td').forEach(td => {
+    const t = THRESHOLDS[td.cellIndex];
+    if (!t) return;
+    const text = td.textContent.trim();
+    if (!text || text === '—') { td.className = ''; return; }
+    const val = parseFloat(text.replace(/[%,]/g, ''));
+    if (isNaN(val)) return;
+    td.className = val === 0 ? 'c-r' : colorClass(val, t);
+  });
+}
+
+/* ── SORT ─────────────────────────────────────────── */
+const _sort = { col: -1, dir: 'desc' };
+
+function parseCell(td, isName) {
+  const t = td.textContent.trim();
+  if (!t || t === '—' || t === '0.0%') return isName ? '￿' : -1;
+  if (isName) return t.toLowerCase();
+  return parseFloat(t.replace(/[%,]/g, '')) || 0;
+}
+
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = +th.dataset.col;
+    if (_sort.col === col) {
+      _sort.dir = _sort.dir === 'desc' ? 'asc' : 'desc';
+    } else {
+      _sort.col = col;
+      _sort.dir = 'desc';
+    }
+
+    document.querySelectorAll('th[data-col]').forEach(t => delete t.dataset.sort);
+    th.dataset.sort = _sort.dir;
+
+    const tbody = document.querySelector('#stats-table tbody');
+    const totalRow = tbody.querySelector('.total-row');
+    const rows = [...tbody.querySelectorAll('tr:not(.total-row)')];
+    const isName = col === 0;
+
+    rows.sort((a, b) => {
+      const av = parseCell(a.cells[col], isName);
+      const bv = parseCell(b.cells[col], isName);
+      const cmp = isName ? av.localeCompare(bv) : av - bv;
+      return _sort.dir === 'desc' ? -cmp : cmp;
+    });
+
+    rows.forEach(r => {
+      r.classList.toggle('tr-mvp', r.cells[0].textContent.trim() === 'Raz');
+      tbody.appendChild(r);
+    });
+    if (totalRow) tbody.appendChild(totalRow);
+    applyThresholds();
+  });
+});
+
+applyThresholds();
+</script>
+</body>
+</html>
