@@ -82,7 +82,7 @@
     .nav-back:hover svg { stroke:var(--gold); }
 
     /* ─── PAGE ─── */
-    .page { max-width:1000px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+    .page { max-width:1280px; margin:0 auto; padding:2rem 1.5rem 3rem; }
 
     /* ─── NAV REPORT LABEL ─── */
     .nav-report-label {
@@ -119,12 +119,12 @@
 
     /* ─── AWARDS ─── */
     .awards-grid {
-      display:grid; grid-template-columns:repeat(auto-fit, minmax(178px, 1fr));
-      gap:12px; margin-bottom:3rem;
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(155px, 1fr));
+      gap:10px; margin-bottom:1.5rem;
     }
     .award-card {
-      background:var(--surface); border:1px solid var(--border); border-radius:12px;
-      padding:1.25rem 1.1rem; display:flex; flex-direction:column; gap:13px;
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:0.9rem 0.9rem; display:flex; flex-direction:column; gap:9px;
       transition:border-color 0.2s, transform 0.2s;
     }
     .award-card:hover { border-color:var(--gold-border); transform:translateY(-2px); }
@@ -164,10 +164,10 @@
 
     /* ─── TABLE ─── */
     .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
-    table { width:100%; border-collapse:collapse; font-size:0.82rem; min-width:720px; }
+    table { width:100%; border-collapse:collapse; font-size:0.74rem; min-width:900px; }
     thead tr { background:var(--surface); }
     th {
-      padding:10px 12px; text-align:right;
+      padding:6px 8px; text-align:right;
       font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
       color:var(--muted); border-bottom:1px solid var(--border); white-space:nowrap;
     }
@@ -176,7 +176,7 @@
     th.g-def { color:var(--cyan); }
     th.g-ovr { color:var(--purple); }
     thead tr.group-row th {
-      padding:8px 12px 5px; text-align:center; border-bottom:none;
+      padding:5px 8px 3px; text-align:center; border-bottom:none;
       font-family:'Rajdhani',sans-serif; font-size:0.72rem; letter-spacing:0.08em;
     }
     thead tr.group-row th:first-child { text-align:left; }
@@ -188,7 +188,7 @@
     tbody tr:hover { background:var(--surface); }
     tbody tr.tr-mvp { background:rgba(245,158,11,0.06); }
     tbody tr.tr-mvp:hover { background:rgba(245,158,11,0.1); }
-    td { padding:9px 12px; text-align:right; color:#9aa7bd; white-space:nowrap; }
+    td { padding:5px 8px; text-align:right; color:#9aa7bd; white-space:nowrap; }
     td:first-child { text-align:left; color:var(--text); font-weight:600; }
     /* legacy — overridden by JS threshold coloring */
     .good { color:var(--green); }
