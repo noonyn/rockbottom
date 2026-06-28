@@ -116,7 +116,7 @@
         linear-gradient(to bottom, rgba(7,11,20,0.68) 0%, rgba(7,11,20,0.62) 35%, rgba(7,11,20,0.95) 100%),
         url('https://sw-rockbottom.com/images/Banner.png') center 30% / cover no-repeat;
       border-bottom:1px solid var(--border);
-      position:relative; overflow:hidden;
+      position:relative;
     }
     .hero-eyebrow {
       font-size:0.65rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase;
@@ -131,25 +131,55 @@
       text-shadow: 0 1px 6px rgba(0,0,0,0.7);
       animation:fadeDown 0.5s 0.18s ease both;
     }
-    .hero-season-pill {
+    .hero-season-tabs {
+      display:flex; justify-content:center;
+      animation:fadeDown 0.5s 0.3s ease both;
+    }
+    .season-drop-wrap { position:relative; }
+    .season-drop-pill {
       font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700;
       letter-spacing:0.14em; text-transform:uppercase;
       background:var(--gold-bg); border:1px solid var(--gold-border); color:var(--gold);
-      padding:5px 18px; border-radius:20px;
-      animation:pill-pulse 3.5s ease-in-out infinite;
+      padding:5px 14px 5px 18px; border-radius:20px;
       cursor:pointer; user-select:none;
-      transition:background 0.18s, border-color 0.18s, transform 0.15s;
+      display:flex; align-items:center; gap:8px;
+      transition:background 0.18s, border-color 0.18s;
+      animation:pill-pulse 3.5s ease-in-out infinite;
     }
-    .hero-season-pill:hover {
-      background:rgba(245,158,11,0.22); border-color:rgba(245,158,11,0.6);
-      transform:translateY(-1px);
+    .season-drop-pill:hover {
+      background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.6);
     }
-    .hero-season-pill:active { transform:translateY(0); }
-    @keyframes season-flash {
-      0%   { background:rgba(245,158,11,0.5); border-color:var(--gold); }
-      100% { background:var(--gold-bg);       border-color:var(--gold-border); }
+    .season-drop-chevron {
+      font-size:0.65rem; opacity:0.75; transition:transform 0.2s;
     }
-    .hero-season-pill.season-flash { animation:season-flash 0.45s ease forwards, pill-pulse 3.5s 0.45s ease-in-out infinite; }
+    .season-drop-wrap.open .season-drop-chevron { transform:rotate(180deg); }
+    .season-drop-panel {
+      position:absolute; top:calc(100% + 8px); left:50%;
+      transform:translateX(-50%) translateY(-6px);
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:6px 0; min-width:160px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      z-index:200;
+      opacity:0; pointer-events:none;
+      transition:opacity 0.18s ease, transform 0.18s ease;
+    }
+    .season-drop-wrap.open .season-drop-panel {
+      opacity:1; pointer-events:all;
+      transform:translateX(-50%) translateY(0);
+    }
+    .season-drop-item {
+      font-family:'Rajdhani',sans-serif; font-size:0.95rem; font-weight:700;
+      letter-spacing:0.1em; text-transform:uppercase;
+      padding:8px 20px; cursor:pointer; white-space:nowrap;
+      color:rgba(200,214,232,0.6);
+      transition:background 0.14s, color 0.14s;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .season-drop-item:hover { background:rgba(245,158,11,0.1); color:var(--gold); }
+    .season-drop-item.current { color:var(--gold); }
+    .season-drop-item.current::after {
+      content:'✓'; font-size:0.75rem; opacity:0.8;
+    }
     @keyframes pill-pulse {
       0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0); }
       50%      { box-shadow:0 0 14px 3px rgba(245,158,11,0.18); }
@@ -175,13 +205,6 @@
       display:flex; align-items:center; justify-content:center; gap:8px;
       position:relative; animation:fadeDown 0.5s 0.24s ease both;
     }
-    .last-updated {
-      font-size:0.72rem; color:var(--muted);
-      background:var(--surface2); border:1px solid var(--border);
-      padding:3px 10px; border-radius:20px;
-    }
-
-
     /* ─── MAIN ─── */
     main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
 
@@ -788,7 +811,7 @@
   <h1>SIEGE <span>DEFENSE</span></h1>
 <p class="hero-desc">Rock Bottom's defense comps for guild siege battles</p>
 <div class="hero-meta">
-    <span class="hero-season-pill" onclick="cycleSeason()" title="Click to switch season">Season 21</span>
+    <div id="hero-season-tabs" class="hero-season-tabs"></div>
   </div>
 </div>
 
@@ -852,54 +875,12 @@
     <div class="report-header">
       <div>
         <div class="report-title">SIEGE <span style="color:var(--gold)">SUMMARY</span></div>
-        <div class="report-subtitle">Season 21 &nbsp;·&nbsp; 30 Mar 2026 — 27 Jun 2026</div>
+        <div class="report-subtitle" id="sr-subtitle"></div>
       </div>
       <button class="report-close" onclick="closeSRBtn()">✕</button>
     </div>
-    <div class="sr-strip">
-      <div class="sr-stat"><span class="sr-num">5,677</span><span class="sr-label">Battles</span></div>
-      <div class="sr-stat"><span class="sr-num">83.9%</span><span class="sr-label">Offense WR</span></div>
-      <div class="sr-stat"><span class="sr-num">35.0%</span><span class="sr-label">Defense WR</span></div>
-      <div class="sr-stat"><span class="sr-num">69,620</span><span class="sr-label">Total Pts</span></div>
-    </div>
-    <div class="sr-cards">
-      <div class="sr-card">
-        <div class="sr-icon sri-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/></svg></div>
-        <span class="sr-title">Best Offense WR%</span>
-        <p class="sr-name">GenesisTao</p>
-        <p class="sr-stat-txt">98.4% Offense WR</p>
-      </div>
-      <div class="sr-card">
-        <div class="sr-icon sri-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <span class="sr-title">Best Defense WR%</span>
-        <p class="sr-name">Maul0x</p>
-        <p class="sr-stat-txt">45.2% Def WR</p>
-      </div>
-      <div class="sr-card">
-        <div class="sr-icon sri-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="3" x2="20" y2="21"/><line x1="14" y1="20" x2="20" y2="14"/><line x1="20" y1="3" x2="4" y2="21"/><line x1="4" y1="14" x2="10" y2="20"/><circle cx="20" cy="21" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="21" r="1" fill="currentColor" stroke="none"/></svg></div>
-        <span class="sr-title">Best Combined WR%</span>
-        <p class="sr-name">Raz</p>
-        <p class="sr-stat-txt">132.2% Combined WR</p>
-      </div>
-      <div class="sr-card">
-        <div class="sr-icon sri-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <span class="sr-title">Most Defense Wins</span>
-        <p class="sr-name">karuso-</p>
-        <p class="sr-stat-txt">194 Defense Wins</p>
-      </div>
-      <div class="sr-card">
-        <div class="sr-icon sri-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
-        <span class="sr-title">Top Scorer</span>
-        <p class="sr-name">Enji</p>
-        <p class="sr-stat-txt">4,365 Pts &nbsp;·&nbsp; 167 Avg</p>
-      </div>
-      <div class="sr-card sr-mvp">
-        <div class="sr-icon sri-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2.5-10 5 5L12 4l1.5 8 5-5L21 17z"/><path d="M4 21h16"/></svg></div>
-        <span class="sr-title">MVP</span>
-        <p class="sr-name">GenesisTao</p>
-        <p class="sr-stat-txt">Season 21 MVP</p>
-      </div>
-    </div>
+    <div class="sr-strip" id="sr-strip"></div>
+    <div class="sr-cards" id="sr-cards"></div>
   </div>
 </div>
 
@@ -910,7 +891,7 @@
 <main>
   <div class="section-controls-bar">
     <div style="display:flex;align-items:center;gap:6px;">
-      <button class="hero-action-btn hero-btn-seasonreport" onclick="openSR()" title="Season Summary">
+      <button class="hero-action-btn hero-btn-seasonreport" id="btn-season-summary" onclick="openSR()" title="Season Summary">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
       </button>
       <button class="hero-action-btn hero-btn-report" onclick="openReport()" title="Season Analytics">
@@ -941,8 +922,6 @@
 
 <footer>
   Monsters and Siege Map images are the property of Com2Us
-  <span class="footer-sep">·</span>
-  <span id="last-updated"></span>
 </footer>
 
 <script>
@@ -952,7 +931,7 @@
 const BASE = 'https://sw-rockbottom.com/images/';
 
 const DATA = {
-  currentSeason: 21,
+  currentSeason: 22,
 
   guildStats: {
     members: 30,
@@ -980,13 +959,38 @@ const DATA = {
     }
   },
 
-  changelog: [],
   schedule:  [],
 
   seasons: {
+    22: {
+      lastUpdated: 'Jun 28, 2026',
+      placementImg: null,
+      summary: null,
+      changelog: [],
+      sections: [
+        { id:'nat5',    badgeClass:'badge-nat5',    badgeText:'★★★★★',       title:'NAT5 Defense',    teams:[] },
+        { id:'nat4',    badgeClass:'badge-nat4',    badgeText:'★★★★',        title:'NAT4 Defense',    teams:[] },
+        { id:'special', badgeClass:'badge-special', badgeText:'✦  SPECIAL',  title:'Special Defense', teams:[] },
+        { id:'hq',      badgeClass:'badge-hq',      badgeText:'⬡  HQ',       title:'HQ Additionals',  teams:[] },
+      ]
+    }, // end season 22
+
     21: {
       lastUpdated: 'May 22, 2026',
       placementImg: 'pic08.PNG',
+      changelog: [],
+      summary: {
+        dateRange: '30 Mar 2026 — 27 Jun 2026',
+        stats: { battles:'5,677', offenseWR:'83.9%', defenseWR:'35.0%', totalPts:'69,620' },
+        awards: [
+          { icon:'offense',  color:'gold',   title:'Best Offense WR%',  name:'GenesisTao', stat:'98.4% Offense WR' },
+          { icon:'defense',  color:'cyan',   title:'Best Defense WR%',  name:'Maul0x',     stat:'45.2% Def WR' },
+          { icon:'combined', color:'orange', title:'Best Combined WR%', name:'Raz',        stat:'132.2% Combined WR' },
+          { icon:'defwins',  color:'green',  title:'Most Defense Wins', name:'karuso-',    stat:'194 Defense Wins' },
+          { icon:'scorer',   color:'red',    title:'Top Scorer',        name:'Enji',       stat:'4,365 Pts · 167 Avg' },
+          { icon:'mvp',      color:'gold',   title:'MVP',               name:'GenesisTao', stat:'Season 21 MVP', mvp:true },
+        ]
+      },
       sections: [
       {
         id: 'nat5', badgeClass: 'badge-nat5', badgeText: '★★★★★',
@@ -1041,20 +1045,40 @@ const DATA = {
 let activeSeason = DATA.currentSeason;
 
 /* ═══════════════════════════════════════════
-   SEASON CYCLING
+   SEASON TABS
 ═══════════════════════════════════════════ */
-function cycleSeason() {
+function renderSeasonTabs() {
   const keys = Object.keys(DATA.seasons).map(Number).sort((a, b) => b - a);
-  const idx = keys.indexOf(activeSeason);
-  activeSeason = keys[(idx + 1) % keys.length];
-  renderPage();
+  const items = keys.map(k => `
+    <div class="season-drop-item${k === activeSeason ? ' current' : ''}" onclick="setSeason(${k})">
+      Season ${k}
+    </div>`).join('');
 
-  // brief flash animation on pill
-  const pill = document.querySelector('.hero-season-pill');
-  pill.classList.remove('season-flash');
-  void pill.offsetWidth; // reflow
-  pill.classList.add('season-flash');
+  document.getElementById('hero-season-tabs').innerHTML = `
+    <div class="season-drop-wrap" id="season-drop-wrap">
+      <div class="season-drop-pill" onclick="toggleSeasonDrop(event)">
+        Season ${activeSeason}
+        <span class="season-drop-chevron">▾</span>
+      </div>
+      <div class="season-drop-panel">${items}</div>
+    </div>`;
 }
+
+function toggleSeasonDrop(e) {
+  e.stopPropagation();
+  document.getElementById('season-drop-wrap').classList.toggle('open');
+}
+
+function setSeason(n) {
+  if (n === activeSeason) return;
+  activeSeason = n;
+  renderPage();
+}
+
+document.addEventListener('click', () => {
+  const wrap = document.getElementById('season-drop-wrap');
+  if (wrap) wrap.classList.remove('open');
+});
 
 /* ═══════════════════════════════════════════
    RENDER
@@ -1150,15 +1174,25 @@ function renderPage() {
     `<div id="defenses-anchor"></div>` + season.sections.map(renderSection).join('');
 
   // Placement image
-  document.getElementById('placement-img').src = `${BASE}${season.placementImg}`;
-  document.getElementById('placement-img').alt = 'Tower Placement Map';
+  const placementsEl = document.getElementById('placements');
+  const placementImg = document.getElementById('placement-img');
+  if (season.placementImg) {
+    placementImg.src = `${BASE}${season.placementImg}`;
+    placementImg.alt = 'Tower Placement Map';
+    placementsEl.style.display = '';
+  } else {
+    placementsEl.style.display = 'none';
+  }
 
-  // Last updated
-  document.getElementById('last-updated').textContent = `Updated ${season.lastUpdated}`;
+  // Show/hide Season Summary button based on whether season has summary data
+  const btnSR = document.getElementById('btn-season-summary');
+  if (btnSR) btnSR.style.display = DATA.seasons[activeSeason].summary ? '' : 'none';
 
-  // Season pill text
-  const pill = document.querySelector('.hero-season-pill');
-  if (pill) pill.textContent = `Season ${activeSeason}`;
+  // Re-render Season Summary modal if it's currently open
+  if (document.getElementById('sr-overlay').classList.contains('open')) renderSR();
+
+  // Season tabs
+  renderSeasonTabs();
 
   // Member count (use names array length if populated, fallback to static value)
   const memberEl = document.getElementById('guild-member-count');
@@ -1337,6 +1371,16 @@ function buildRing(label, value, thresholds) {
 
 function openReport() {
   const overlay = document.getElementById('report-overlay');
+
+  if (!DATA.seasons[activeSeason].summary) {
+    document.getElementById('report-season-label').textContent = activeSeason;
+    document.getElementById('report-date-label').textContent = '';
+    document.getElementById('report-metrics-grid').innerHTML =
+      `<div class="report-empty" style="padding:2rem 0;text-align:center;">No analytics yet.</div>`;
+    overlay.classList.add('open');
+    return;
+  }
+
   const r = DATA.guildStats.report;
   document.getElementById('report-season-label').textContent = activeSeason;
   document.getElementById('report-date-label').textContent = r.asOf ? `Last updated on: ${r.asOf}` : '';
@@ -1423,10 +1467,11 @@ function openChangelog() {
 
   const tagLabels = { added:'ADDED', removed:'REMOVED', changed:'CHANGED' };
 
-  if (!DATA.changelog || !DATA.changelog.length) {
+  const entries = DATA.seasons[activeSeason].changelog || [];
+  if (!entries.length) {
     list.innerHTML = '<div class="changelog-empty">No changelog entries yet.</div>';
   } else {
-    list.innerHTML = DATA.changelog.map(e => {
+    list.innerHTML = entries.map(e => {
       const type  = e.type || 'changed';
       const label = tagLabels[type] || type.toUpperCase();
       return `
@@ -1467,6 +1512,12 @@ function formatCountdown(ms) {
 function renderScheduleList() {
   const list = document.getElementById('schedule-list');
   if (!list) return;
+
+  if (!DATA.seasons[activeSeason].summary) {
+    list.innerHTML = '<div class="changelog-empty">Schedule not available yet.</div>';
+    return;
+  }
+
   const sieges = DATA.schedule || [];
 
   if (!sieges.length) {
@@ -1561,7 +1612,43 @@ function closeScheduleBtn() {
 /* ═══════════════════════════════════════════
    SEASON SUMMARY MODAL
 ═══════════════════════════════════════════ */
-function openSR() { document.getElementById('sr-overlay').classList.add('open'); }
+const SR_ICONS = {
+  offense:  `<polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/>`,
+  defense:  `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`,
+  combined: `<line x1="4" y1="3" x2="20" y2="21"/><line x1="14" y1="20" x2="20" y2="14"/><line x1="20" y1="3" x2="4" y2="21"/><line x1="4" y1="14" x2="10" y2="20"/><circle cx="20" cy="21" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="21" r="1" fill="currentColor" stroke="none"/>`,
+  defwins:  `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>`,
+  scorer:   `<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>`,
+  mvp:      `<path d="M3 17l2.5-10 5 5L12 4l1.5 8 5-5L21 17z"/><path d="M4 21h16"/>`,
+};
+
+function renderSR() {
+  const s  = DATA.seasons[activeSeason];
+  const sm = s && s.summary;
+  const svg = (inner) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+
+  document.getElementById('sr-subtitle').textContent = sm
+    ? `Season ${activeSeason}  ·  ${sm.dateRange}`
+    : `Season ${activeSeason}`;
+
+  document.getElementById('sr-strip').innerHTML = sm
+    ? `<div class="sr-stat"><span class="sr-num">${sm.stats.battles}</span><span class="sr-label">Battles</span></div>
+       <div class="sr-stat"><span class="sr-num">${sm.stats.offenseWR}</span><span class="sr-label">Offense WR</span></div>
+       <div class="sr-stat"><span class="sr-num">${sm.stats.defenseWR}</span><span class="sr-label">Defense WR</span></div>
+       <div class="sr-stat"><span class="sr-num">${sm.stats.totalPts}</span><span class="sr-label">Total Pts</span></div>`
+    : `<div class="sr-stat" style="grid-column:1/-1"><span class="sr-num" style="font-size:1rem;color:var(--muted)">Season in Progress</span></div>`;
+
+  document.getElementById('sr-cards').innerHTML = sm
+    ? sm.awards.map(a => `
+        <div class="sr-card${a.mvp ? ' sr-mvp' : ''}">
+          <div class="sr-icon sri-${a.color}">${svg(SR_ICONS[a.icon])}</div>
+          <span class="sr-title">${a.title}</span>
+          <p class="sr-name">${a.name}</p>
+          <p class="sr-stat-txt">${a.stat}</p>
+        </div>`).join('')
+    : `<div style="grid-column:1/-1;text-align:center;padding:2rem 0;color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:0.08em;">Awards will be announced at season end</div>`;
+}
+
+function openSR() { renderSR(); document.getElementById('sr-overlay').classList.add('open'); }
 function closeSR(e) {
   if (e && e.target !== document.getElementById('sr-overlay')) return;
   document.getElementById('sr-overlay').classList.remove('open');
@@ -1603,7 +1690,7 @@ fetch(GH('report.json'), { headers: GH_HDRS })
 
 fetch(GH('changelog.json'), { headers: GH_HDRS })
   .then(r => r.json())
-  .then(d => { if (Array.isArray(d.entries)) DATA.changelog = d.entries; })
+  .then(d => { if (Array.isArray(d.entries)) DATA.seasons[21].changelog = d.entries; })
   .catch(() => {});
 
 fetch(GH('schedule.json'), { headers: GH_HDRS })
