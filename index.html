@@ -115,7 +115,7 @@
     .brand { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); flex-shrink:0; }
     .brand-text { display:flex; flex-direction:column; line-height:1; }
     .brand-name { font-family:var(--font-brand); font-weight:400; font-size:1.3rem; letter-spacing:0.01em; text-transform:uppercase; }
-    .brand-name b { font-weight:900; background:none; -webkit-background-clip:unset; background-clip:unset; color:#fff; }
+    .brand-name b { font-weight:inherit; background:none; -webkit-background-clip:unset; background-clip:unset; color:#fff; }
     .brand-sub { display:none; }
     .nav { display:flex; align-items:stretch; align-self:stretch; gap:6px; margin-left:10px; }
     .nav a { position:relative; display:flex; align-items:center; gap:6px; padding:0 14px; font:700 14px/1 var(--font-ui); letter-spacing:0.02em; text-transform:uppercase; text-decoration:none; color:var(--ink); transition:color .2s; }
@@ -491,7 +491,7 @@
     .tile span { font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-3); }
     .tile b { display:block; margin-top:8px; font-family:var(--font-display); font-size:2.5rem; font-weight:900; color:var(--ink); line-height:1; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; }
     .awards { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.65fr); gap:16px; }
-    .mvp-card { position:relative; overflow:hidden; isolation:isolate; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; min-height:320px; padding:30px; border-radius:var(--r-xl); color:#0d1018; background:var(--grad-cta); box-shadow:0 34px 60px -30px rgba(253,152,0,0.85); }
+    .mvp-card { position:relative; overflow:hidden; isolation:isolate; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; min-height:320px; padding:30px 30px 56px; border-radius:var(--r-xl); color:#0d1018; background:var(--grad-cta); box-shadow:0 34px 60px -30px rgba(253,152,0,0.85); }
     .mvp-card::before { content:'MVP'; position:absolute; z-index:-1; right:-14px; top:-30px; font:900 180px/1 var(--font-display); letter-spacing:-0.03em; color:transparent; -webkit-text-stroke:2px rgba(255,255,255,0.65); pointer-events:none; }
     .mvp-card .eyebrow { color:rgba(13,16,24,0.7); }
     .mvp-crown { position:absolute; top:24px; left:24px; width:60px; height:60px; border-radius:50%; display:grid; place-items:center; font-size:28px; color:#fff; background:#0d1018; box-shadow:0 14px 26px -10px rgba(13,16,24,0.7); }
@@ -1601,7 +1601,7 @@ function siegeHTML(s, st) {
   const badge = live ? `<span class="badge live">Live</span>`
     : isActive ? `<span class="badge next">Next</span>`
     : past ? `<span class="badge done">${icon('check')}Played</span>`
-    : `<span class="badge up">Upcoming</span>`;
+    : '';
   return `<div class="siege${isActive ? ' is-active' : ''}">
       <div class="siege-day"><span>${fmtDay(s.start, { weekday:'short' }).toUpperCase()}</span><b>${new Date(s.start).getDate()}</b></div>
       <div class="siege-info"><div class="siege-label">${esc(s.label)}</div><div class="siege-date">${fmtDay(s.start, { month:'short', day:'numeric' })}</div></div>
@@ -1629,11 +1629,11 @@ function renderSchedule() {
     <div class="sched-top${st.active ? '' : ' solo'}">
       ${st.active ? `<div class="panel status-panel">${statusInner(sn)}</div>` : ''}
       <div class="panel">
-        <div class="panel-head"><div><h2 class="panel-title">Season progress</h2><span class="panel-meta">${Math.round(st.played / st.total * 100)}% complete</span></div></div>
-        <div class="big-num"><b>${st.played}</b><span>of ${plural(st.total, 'siege')} played</span></div>
+        <div class="panel-head"><div><h2 class="panel-title">Season progress</h2></div></div>
+        <div class="big-num"><b>${st.played}</b><span>of ${st.total}</span></div>
         <div class="season-track" role="img" aria-label="${st.played} of ${st.total} sieges played">${track}</div>
         <div class="track-dates"><span>${fmtDay(first.start, { month:'short', day:'numeric' })}</span><span>${fmtDay(last.end, { month:'short', day:'numeric' })}</span></div>
-        <div class="track-legend"><span><i class="past"></i>Played</span><span><i class="live"></i>Live</span><span><i class="next"></i>Next</span><span><i></i>Upcoming</span></div>
+        <div class="track-legend"><span><i class="past"></i>Played</span><span><i class="live"></i>Live</span><span><i class="next"></i>Next</span></div>
       </div>
     </div>
     <h2 class="sec-label">All sieges</h2>
