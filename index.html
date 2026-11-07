@@ -10,7 +10,7 @@
   <script>if (window.top !== window.self) { document.documentElement.style.display = 'none'; try { window.top.location.href = window.self.location.href; } catch (e) {} }   /* never run inside someone else's frame (clickjacking) */</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Siege Defense - Rock Bottom</title>
-  <meta name="description" content="Rock Bottom's Summoners War guild siege defense comps, tower placements, siege schedule and season awards.">
+  <meta name="description" content="Rock Bottom's Summoners War guild siege defense comps, defense placements, siege schedule and season awards.">
 
   <link rel="icon" type="image/png" href="https://sw-rockbottom.com/images/logo.png">
   <link rel="apple-touch-icon" href="https://sw-rockbottom.com/images/logo.png">
@@ -18,7 +18,7 @@
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://sw-rockbottom.com/">
   <meta property="og:title"       content="Rock Bottom - Siege Defense">
-  <meta property="og:description" content="Season 22 defense comps &amp; tower placements for guild siege battles">
+  <meta property="og:description" content="Season 22 defense comps &amp; defense placements for guild siege battles">
   <meta property="og:image"       content="https://sw-rockbottom.com/images/logo.png">
   <meta name="theme-color"        content="#080b13">
 
@@ -321,7 +321,7 @@
     .portrait { position:relative; display:block; width:100%; height:100%; z-index:1; border-radius:inherit; overflow:hidden; background:var(--portrait-bg); border:3px solid var(--portrait-ring); box-shadow:0 0 0 1px var(--line-2), 0 12px 22px -12px rgba(0,0,0,0.7); transition:box-shadow .25s; }
     .portrait img { width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .4s; }
     .portrait.loaded img { opacity:1; }
-    .portrait:not(.loaded)::after, .map-frame:not(.loaded)::after { content:''; position:absolute; inset:0; background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%); background-size:220% 100%; animation:shimmer 1.4s linear infinite; }
+    .portrait:not(.loaded)::after, .tw-cam:not(.loaded)::after { content:''; position:absolute; inset:0; background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%); background-size:220% 100%; animation:shimmer 1.4s linear infinite; }
     .portrait.failed::before { content:attr(data-initial); position:absolute; inset:0; display:grid; place-items:center; font:900 1.6em var(--font-display); color:var(--ink-4); }
     .portrait.failed::after { display:none; }
     .slot.is-lead .portrait, .portrait.lead { box-shadow:0 0 0 3px #ffb21a, 0 16px 26px -12px rgba(255,138,0,0.75); }
@@ -441,11 +441,93 @@
     .map-opt:hover, .map-opt:focus-visible { background:var(--surface-2); outline:none; }
     .map-opt[aria-selected="true"] { color:var(--orange); }
     .map-plan { display:grid; place-items:center; width:100%; aspect-ratio:1.39; border-radius:var(--r-xl); border:1px dashed var(--line-2); background:var(--surface); box-shadow:var(--shadow-2); }
-    .map-frame { position:relative; display:block; width:100%; padding:10px; cursor:zoom-in; overflow:hidden; border-radius:var(--r-xl); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow-2); }
-    .map-frame:not(.loaded) { aspect-ratio:1.39; }
-    .map-frame img { width:100%; height:auto; border-radius:calc(var(--r-xl) - 8px); opacity:0; transition:opacity .5s, transform .6s var(--ease); }
-    .map-frame.loaded img { opacity:1; }
-    .map-frame:hover img { transform:scale(1.008); }
+    /* ═══ tower placements: tap a tower on the map and a card opens beside it ═══
+       Tower boxes are invisible buttons laid over the real map picture. Tapping one selects every defense on it and lights ALL the
+       towers those defenses use; the rest of the map dims and the lit towers are redrawn bright from the picture, like windows. */
+    .tw-frame { position:relative; border-radius:var(--r-xl); border:1px solid var(--line); background:var(--surface); padding:10px; box-shadow:var(--shadow-2); }
+    .tw-mapwrap { position:relative; overflow:hidden; border-radius:calc(var(--r-xl) - 8px); line-height:0; scroll-margin-top:calc(var(--nav-h) + 10px); }
+    .tw-cam { position:relative; }
+    .tw-cam:not(.loaded) { aspect-ratio:1.39; }
+    .tw-cam img { display:block; width:100%; height:auto; }
+    .tw-dim { position:absolute; inset:0; z-index:2; background:rgba(8,11,19,0.66); opacity:0; pointer-events:none; transition:opacity .28s var(--ease); }
+    .tw-mapwrap.has-focus .tw-dim { opacity:1; }
+    .tw-hot { position:absolute; z-index:1; padding:0; background:transparent; border:2px solid transparent; border-radius:9px; cursor:pointer; transition:border-color .18s, box-shadow .25s, background-color .18s; }
+    .tw-hot:hover { border-color:color-mix(in srgb, var(--tc) 85%, transparent); background-color:color-mix(in srgb, var(--tc) 18%, transparent); }
+    .tw-hot:focus-visible { outline:3px solid #fff; outline-offset:2px; }
+    .tw-hot.pv { border-color:color-mix(in srgb, var(--tc) 70%, transparent); background-color:color-mix(in srgb, var(--tc) 14%, transparent); }
+    .tw-hot.on { z-index:3; background-repeat:no-repeat; background-origin:border-box; border-color:var(--tc); box-shadow:0 0 0 3px color-mix(in srgb, var(--tc) 42%, transparent), 0 0 34px color-mix(in srgb, var(--tc) 55%, transparent); }
+    /* one-time intro: each tower pings once, left to right. It only decorates, so a stalled animation leaves the towers looking normal. */
+    @keyframes twping { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--tc) 75%, transparent); border-color:var(--tc); background-color:color-mix(in srgb, var(--tc) 22%, transparent); } 65% { box-shadow:0 0 0 18px transparent; } 100% { box-shadow:0 0 0 0 transparent; border-color:transparent; background-color:transparent; } }
+    .tw-hot.ping { animation:twping 1.25s ease-out forwards; animation-delay:calc(var(--i, 0) * 65ms + 500ms); }
+
+    /* the callout: a card that opens right beside the tapped tower, with an arrow, on the side that covers the fewest lit towers */
+    .tw-cwrap { position:absolute; inset:10px; pointer-events:none; z-index:10; }
+    .tw-callout { position:absolute; pointer-events:auto; display:flex; flex-direction:column; gap:12px; }
+    .tw-callout .tw-card { box-shadow:0 34px 70px -20px rgba(0,0,0,0.95), 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent); }
+    .tw-callout[hidden] { display:none; }
+    .tw-callout::before { content:''; position:absolute; top:calc(var(--ay, 60px) - 11px); width:14px; height:22px; background:var(--surface-2); z-index:2; }
+    .tw-callout[data-side="r"]::before { left:-13px; clip-path:polygon(100% 0, 0 50%, 100% 100%); }
+    .tw-callout[data-side="l"]::before { right:-13px; clip-path:polygon(0 0, 100% 50%, 0 100%); }
+
+    /* defense cards: shield tower badges, x5 + pips, and swap options built like the Defenses tab (a +N badge, tap to open) */
+    .tw-card { --ps:72px; position:relative; display:flex; flex-direction:column; text-align:left; cursor:pointer; border-radius:16px; background:linear-gradient(180deg, var(--surface-2), var(--surface)); border:1px solid var(--line); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 38px -26px rgba(0,0,0,0.95); transition:border-color .2s, transform .25s var(--ease), opacity .25s, box-shadow .25s; }
+    .tw-card.has-pop { z-index:25; }
+    .tw-card::before { content:''; position:absolute; inset:-1px; border-radius:16px; pointer-events:none; background:linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 40%, #fff)) top/100% 3px no-repeat; }
+    .tw-card:hover { transform:translateY(-3px); border-color:color-mix(in srgb, var(--c) 50%, var(--line)); }
+    .tw-card.plain { cursor:default; } .tw-card.plain:hover { transform:none; border-color:var(--line); }
+    .tw-head { display:flex; align-items:center; gap:9px; padding:14px 16px 0; }
+    .tw-head:focus-visible { outline:2px solid var(--orange); outline-offset:3px; border-radius:8px; }
+    .tw-tier { order:1; display:inline-flex; align-items:center; gap:7px; font:800 11.5px/1 var(--font-ui); letter-spacing:.06em; text-transform:uppercase; color:var(--c); }
+    .tw-tier i { width:7px; height:7px; border-radius:50%; background:var(--c); }
+    .tw-no { order:2; font:700 .8rem/1 var(--font-ui); color:var(--ink-3); letter-spacing:.04em; }
+    .tw-x5 { order:3; margin-left:auto; display:inline-flex; align-items:center; gap:8px; }
+    .tw-x5 b { padding:3px 8px; border-radius:99px; background:var(--grad-pill); color:#fff; font:900 11px/1 var(--font-display); letter-spacing:.02em; }
+    .tw-pips { display:inline-flex; gap:4px; }
+    .tw-pips i { width:8px; height:8px; border-radius:2px; transform:rotate(45deg); background:var(--c); }
+    .tw-pips i.off { opacity:.2; }
+    .tw-mons { display:flex; justify-content:center; gap:14px; padding:18px 12px 16px; }
+    .tw-slot { position:relative; flex:0 0 var(--ps); width:var(--ps); display:flex; flex-direction:column; align-items:center; gap:8px; min-width:0; }
+    .tw-art { position:relative; display:block; width:var(--ps); height:var(--ps); }
+    .tw-slot .portrait { width:var(--ps); height:var(--ps); border-radius:calc(var(--ps) * .26); border-width:2px; box-shadow:0 10px 18px -10px rgba(0,0,0,0.9); }
+    .tw-slot .portrait.lead { border-color:#ffb21a; box-shadow:0 0 0 1px rgba(255,178,26,0.5), 0 0 22px -6px rgba(255,178,26,0.5), 0 10px 18px -10px rgba(0,0,0,0.9); }
+    .tw-nm { max-width:100%; font-size:11.5px; line-height:1.2; font-weight:700; color:var(--ink-2); text-align:center; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-wrap:balance; }
+    .tw-slot.lead .tw-nm { color:var(--ink); font-weight:800; }
+    .tw-slot.sw { cursor:pointer; }
+    .tw-slot.sw:hover .portrait { box-shadow:0 0 0 2px color-mix(in srgb, var(--orange) 55%, transparent); }
+    .tw-slot.sw:focus-visible { outline:0; }
+    .tw-slot.sw:focus-visible .portrait { box-shadow:0 0 0 2px var(--orange); }
+    .tw-badge { position:absolute; top:-6px; right:-6px; z-index:2; min-width:23px; height:23px; padding:0 6px; border:3px solid var(--surface); border-radius:99px; background:var(--orange); color:#fff; font:800 11px/17px var(--font-ui); text-align:center; pointer-events:none; }
+    .tw-pop { position:absolute; left:50%; top:calc(100% + 10px); z-index:30; width:max-content; max-width:300px; transform-origin:top center; background:var(--surface); border:1px solid var(--line-2); border-radius:var(--r-md); padding:10px; box-shadow:var(--shadow-2); opacity:0; transform:translate(-50%, -6px) scale(.96); pointer-events:none; transition:opacity .2s var(--ease), transform .2s var(--ease); }
+    .tw-pop::before { content:''; position:absolute; top:-5px; left:50%; width:10px; height:10px; background:var(--surface); border-left:1px solid var(--line-2); border-top:1px solid var(--line-2); transform:translateX(-50%) rotate(45deg); border-radius:2px 0 0 0; }
+    .tw-slot.pop-open .tw-pop { opacity:1; transform:translate(-50%, 0) scale(1); pointer-events:auto; }
+    .tw-slot:first-child .tw-pop { left:-4px; transform:translate(0, -6px) scale(.96); transform-origin:top left; }
+    .tw-slot:first-child.pop-open .tw-pop { transform:translate(0, 0) scale(1); }
+    .tw-slot:first-child .tw-pop::before { left:34px; }
+    .tw-slot:last-child .tw-pop { left:auto; right:-4px; transform:translate(0, -6px) scale(.96); transform-origin:top right; }
+    .tw-slot:last-child.pop-open .tw-pop { transform:translate(0, 0) scale(1); }
+    .tw-slot:last-child .tw-pop::before { left:auto; right:34px; }
+    .tw-slot.up .tw-pop { top:auto; bottom:calc(100% + 10px); }
+    .tw-slot.up .tw-pop::before { top:auto; bottom:-5px; transform:translateX(-50%) rotate(225deg); }
+    .tw-swlist { display:flex; flex-direction:column; }
+    .tw-alt { display:flex; align-items:center; gap:12px; width:100%; padding:9px; border-radius:12px; background:none; border:0; font:700 14.5px var(--font-ui); color:var(--ink); text-align:left; white-space:nowrap; cursor:pointer; }
+    .tw-alt:hover { background:var(--surface-3); }
+    .tw-alt .portrait { width:42px; height:42px; border-radius:12px; border-width:2px; box-shadow:none; flex-shrink:0; }
+    .tw-foot { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:auto; padding:13px 16px 15px; border-top:1px solid var(--line); }
+    .tw-shield { position:relative; isolation:isolate; display:inline-grid; place-items:center; min-width:46px; height:52px; padding:0 6px 9px; color:#fff; background:var(--tc); clip-path:polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); font:900 .98rem/1 var(--font-display); letter-spacing:-.01em; text-shadow:0 1px 0 rgba(0,0,0,0.35); }
+    .tw-shield::before { content:''; position:absolute; inset:2px; z-index:-1; clip-path:inherit; background:linear-gradient(180deg, color-mix(in srgb, var(--tc) 32%, #10162a), #0e1325); }
+    .tw-card.is-sel { border-color:color-mix(in srgb, var(--c) 70%, transparent); box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent), 0 0 44px -12px color-mix(in srgb, var(--c) 65%, transparent); transform:none; }
+    .tw-card.is-sel .tw-shield { color:#0d1018; text-shadow:none; } .tw-card.is-sel .tw-shield::before { background:var(--tc); }
+    .tw-x { flex-shrink:0; border:0; background:var(--surface-3); color:var(--ink-2); width:30px; height:30px; border-radius:50%; font:700 14px/1 var(--font-ui); cursor:pointer; }
+    /* on narrow screens the callout becomes a bottom sheet that sits above the tab bar */
+    .tw-sheet { display:none; }
+    @media (max-width:940px) {
+      .tw-cwrap { display:none; }
+      .tw-sheet.show { display:block; position:sticky; bottom:calc(84px + env(safe-area-inset-bottom)); z-index:95; margin-top:14px; max-height:62vh; overflow:auto; padding:46px 12px 12px; background:var(--surface); border:1px solid var(--line-2); border-radius:24px; box-shadow:0 -10px 44px rgba(0,0,0,0.6), var(--shadow-2); }
+      .tw-sheet .tw-card { margin-bottom:10px; } .tw-sheet .tw-card:last-of-type { margin-bottom:0; }
+      .tw-sheet .tw-x { position:absolute; top:10px; right:12px; z-index:41; }
+      body:has(.tw-sheet.show) .to-top { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { .tw-card, .tw-hot, .tw-dim { transition:none; } .tw-card:hover { transform:none; } .tw-hot.ping { animation:none; } }
 
     .lightbox { position:fixed; inset:0; z-index:400; display:flex; flex-direction:column; background:rgba(5,7,12,0.95); opacity:0; transition:opacity .25s; }
     .lightbox.open { opacity:1; }
@@ -826,7 +908,7 @@
         <div>
           <div class="ph-icon"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
           <span class="eyebrow">Siege Planner</span>
-          <h1 class="page-title" id="map-title">Tower <em>Placements</em></h1>
+          <h1 class="page-title" id="map-title">Defense <em>Placements</em></h1>
           <p class="page-sub" id="map-sub"></p>
         </div>
       </div>
@@ -921,7 +1003,7 @@
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" hidden>
   <div class="lb-bar">
-    <span class="lb-title" id="lb-title">Tower placements</span>
+    <span class="lb-title" id="lb-title">Defense placements</span>
     <div class="lb-actions">
       <button class="btn btn-sm" type="button" data-action="lb-size" id="lb-size">Actual size</button>
       <a class="btn btn-sm" id="lb-open" target="_blank" rel="noopener">Original<svg class="ic" aria-hidden="true"><use href="#i-external"/></svg></a>
@@ -1135,7 +1217,7 @@ const CAT_META = {
 };
 const AWARD_ICON  = { offense:'offense', defense:'shield', combined:'combined', defwins:'defwins', scorer:'flame', mvp:'crown' };
 const AWARD_COLOR = { gold:'var(--gold)', cyan:'var(--nat4)', orange:'#fb923c', green:'#34d399', red:'#f87171', purple:'var(--special)' };
-const VIEW_TITLES = { defenses:'Siege Defense', map:'Tower Placements', schedule:'Siege Schedule', season:'Hall of Fame', guild:'Members' };
+const VIEW_TITLES = { defenses:'Siege Defense', map:'Defense Placements', schedule:'Siege Schedule', season:'Hall of Fame', guild:'Members' };
 const ALIASES = { '':'defenses', placements:'map', towers:'map', summary:'season', awards:'season', analytics:'season', members:'guild', changelog:'defenses' };
 const ANCHORS = { members:'members-h', changelog:'changelog-h', toolbar:'toolbar' };
 const MON = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
@@ -1557,9 +1639,141 @@ function focusSearch() {
 /* ═══════════════════════════════════════════
    VIEW: MAP
 ═══════════════════════════════════════════ */
-/* ── Tower placements: the original placement map (click to enlarge) plus a plan switcher.
-   Plan 1 and Plan 2 are placeholders for now — both empty. ── */
+/* ── Tower placements: the original placement map with a plan switcher and Enlarge, made tappable.
+   Tap a tower on the map and a card opens beside it with every defense that goes there; all the towers those defenses use light up.
+   Plan 1 and Plan 2 are placeholders for now — Plan 2 is empty. ── */
 const MAP_PLANS = [['p1', 'Plan 1', 'Siege Map'], ['p2', 'Plan 2', 'Empty']];
+
+/* Where each tower sits on the placement picture, as [left, top, width, height] in the picture's own pixels (1515 x 1093).
+   Season 21's picture is 1514 x 1089 and the towers sit in the same places, so one table serves both. Special towers (Y8, R10)
+   have no fixed defense, so they aren't tappable. The picture's real size is read once it loads. */
+const TOWER_BOX = {
+  R12:[220,135,188,178], R11:[481,222,188,179], R9:[947,233,188,178],
+  B6:[81,351,189,178], B7:[271,351,189,178], B8:[569,402,187,178], B9:[758,366,187,179], Y9:[966,411,187,179],
+  B4:[380,534,187,178], B10:[758,546,187,181], B1:[2,592,188,178], B2:[191,592,187,178],
+  B5:[500,716,188,178], B11:[760,728,187,180], Y7:[1102,771,187,179], HQ:[2,770,345,322],
+  B3:[349,904,187,178], B12:[661,909,188,179], Y6:[911,908,188,180],
+};
+const twKind = k => (k === 'HQ' ? 'H' : k.charAt(0));
+const twOrder = k => ({ B:0, Y:1, R:2, H:3 }[twKind(k)] ?? 4) * 100 + (parseInt(k.slice(1), 10) || 0);
+const twColor = k => `var(--tw-${'BYRH'.includes(twKind(k)) ? twKind(k) : 'N'})`;
+const twNarrowMQ = window.matchMedia('(max-width:940px)');
+const tw = { defs:[], main:null, pv:null, intro:true, sw:{}, list:[], dims:[1515, 1093], src:'' };
+const twDefsOn = k => tw.list.filter(d => d.towers.includes(k)).map(d => d.uid);
+const twLit = () => new Set(tw.list.filter(d => tw.defs.includes(d.uid)).flatMap(d => d.towers));
+
+/* Every defense that has towers recorded, in the same order as the Defenses page. Special defenses have no fixed tower, so they're left out. */
+function twBuildList(s) {
+  return (s.sections || []).flatMap(sec => sec.id === 'special' ? [] : (sec.teams || []).map((t, i) => {
+    const towers = [...new Set(String(t.tower || '').toUpperCase().split(/[,\s]+/).filter(Boolean))].sort((a, b) => twOrder(a) - twOrder(b));
+    return towers.length ? { sec, t, i, towers, uid:`${sec.id}-${i}` } : null;
+  }).filter(Boolean));
+}
+
+/* the picture inside a lit tower's box: the same map, enlarged and shifted so only that tower shows */
+function twLitStyle([x, y, w, h]) {
+  const [MW, MH] = tw.dims;
+  return `background-image:url(${esc(tw.src)});background-size:${MW / w * 100}% ${MH / h * 100}%;background-position:${x / (MW - w) * 100}% ${y / (MH - h) * 100}%`;
+}
+function twHotsHTML() {
+  const [MW, MH] = tw.dims, lit = twLit(), pvT = tw.pv ? new Set((tw.list.find(d => d.uid === tw.pv) || { towers:[] }).towers) : new Set();
+  return Object.keys(TOWER_BOX).filter(k => twDefsOn(k).length).map((k, idx) => {
+    const r = TOWER_BOX[k], on = lit.has(k);
+    const where = twDefsOn(k).map(u => { const d = tw.list.find(x => x.uid === u); return `${typeLabel(d.sec)} #${d.i + 1}`; }).join(', ');
+    return `<button class="tw-hot${on ? ' on' : ''}${!on && pvT.has(k) ? ' pv' : ''}${tw.intro ? ' ping' : ''}" type="button" data-tw-hot="${k}" aria-label="Tower ${k}: ${esc(where)}" aria-pressed="${on}"
+      style="--tc:${twColor(k)};--i:${idx};left:${r[0] / MW * 100}%;top:${r[1] / MH * 100}%;width:${r[2] / MW * 100}%;height:${r[3] / MH * 100}%;${on ? twLitStyle(r) : ''}"></button>`;
+  }).join('');
+}
+/* update the boxes in place, so the glow fades in and out instead of the boxes being rebuilt */
+function twPaintHots() {
+  const lit = twLit(), pvT = tw.pv ? new Set((tw.list.find(d => d.uid === tw.pv) || { towers:[] }).towers) : new Set();
+  $$('.tw-hot').forEach(b => {
+    const k = b.dataset.twHot, on = lit.has(k);
+    b.classList.remove('ping');
+    b.classList.toggle('on', on); b.classList.toggle('pv', !on && pvT.has(k));
+    b.setAttribute('aria-pressed', String(on));
+    b.style.backgroundImage = b.style.backgroundSize = b.style.backgroundPosition = '';
+    if (on) { const m = twLitStyle(TOWER_BOX[k]).split(';'); m.forEach(p => { const i = p.indexOf(':'); b.style.setProperty(p.slice(0, i), p.slice(i + 1)); }); }
+  });
+}
+
+/* a monster slot: portrait + name; if it has swap options, an orange +N badge and a popover, like the Defenses page */
+const twPool = (m) => [m, ...(m.alts || [])];
+const twActive = (d, j) => (tw.sw[d.uid] && tw.sw[d.uid][j]) || 0;
+function twSlot(d, j, key) {
+  const m0 = d.t[key]; if (!m0) return '';
+  const pool = twPool(m0), act = Math.min(twActive(d, j), pool.length - 1), m = pool[act];
+  const others = pool.map((x, idx) => ({ ...x, idx })).filter(x => x.idx !== act), n = others.length;
+  const pop = n ? `<div class="tw-pop" role="menu" aria-label="${esc(m.n)} swap options"><div class="tw-swlist">${others.map(a => `<button class="tw-alt" type="button" role="menuitem" data-tw-swap="${d.uid}:${j}:${a.idx}">${portrait(a.p, a.n)}<span>${esc(a.n)}</span></button>`).join('')}</div></div>` : '';
+  return `<div class="tw-slot${j === 0 ? ' lead' : ''}${n ? ' sw' : ''}" ${n ? `tabindex="0" role="button" aria-haspopup="true" aria-expanded="false" aria-label="${esc(m.n)}, ${n} swap option${n === 1 ? '' : 's'}"` : ''}>
+      <span class="tw-art">${portrait(m.p, m.n, j === 0 ? 'lead' : '')}${n ? `<span class="tw-badge" aria-hidden="true">+${n}</span>` : ''}</span>
+      <span class="tw-nm" title="${esc(m.n)}">${esc(m.n)}</span>${pop}
+    </div>`;
+}
+function twCard(d, plain = false) {
+  const sel = !plain && tw.defs.includes(d.uid);
+  const n = d.t.x != null ? Math.max(0, Math.min(5, Math.round(+d.t.x) || 0)) : 5;
+  const pips = Array.from({ length:5 }, (_, p) => `<i${p < n ? '' : ' class="off"'}></i>`).join('');
+  const label = `${typeLabel(d.sec)} ${d.i + 1}, towers ${d.towers.join(', ')}`;
+  return `<article class="tw-card${sel ? ' is-sel' : ''}${plain ? ' plain' : ''}" ${plain ? '' : `data-tw-def="${d.uid}"`} style="--c:var(--${esc(d.sec.id)}, var(--gold))">
+      <div class="tw-head"${plain ? '' : ` tabindex="0" role="button" aria-pressed="${sel}" aria-label="${esc(label)}"`}>
+        <span class="tw-tier"><i></i>${esc(typeLabel(d.sec))}</span><span class="tw-no">${pad(d.i + 1)}</span>
+        <span class="tw-x5" title="${n} identical copies"><b>×${n}</b><span class="tw-pips" aria-hidden="true">${pips}</span></span>
+      </div>
+      <div class="tw-mons">${SLOTS.map(([key], j) => twSlot(d, j, key)).join('')}</div>
+      <div class="tw-foot" role="group" aria-label="Towers ${esc(d.towers.join(', '))}">${d.towers.map(k => `<span class="tw-shield" style="--tc:${twColor(k)}">${esc(k)}</span>`).join('')}</div>
+    </article>`;
+}
+const twFocusCards = () => tw.list.filter(d => tw.defs.includes(d.uid)).map(d => twCard(d, true)).join('');
+
+/* Put the callout beside the tapped tower, on whichever side covers the fewest lit towers (right wins a tie), with its arrow pointing at the tower. */
+function twPlace() {
+  const co = $('#tw-callout'); if (!co) return;
+  if (!tw.defs.length || twNarrowMQ.matches) { co.hidden = true; co.innerHTML = ''; return; }
+  co.hidden = false; co.innerHTML = twFocusCards();
+  const wrap = co.parentElement, W = wrap.clientWidth, H = wrap.clientHeight, [MW] = tw.dims, f = W / MW, cw = Math.min(318, W - 12);
+  co.style.width = cw + 'px'; co.style.maxHeight = ''; co.style.overflowY = ''; co.classList.remove('scrolls');
+  let ch = co.offsetHeight;
+  if (ch > H - 12) { co.style.maxHeight = (H - 12) + 'px'; co.style.overflowY = 'auto'; co.classList.add('scrolls'); ch = co.offsetHeight; }
+  const litK = [...twLit()].filter(k => TOWER_BOX[k]);
+  const anchor = tw.main && TOWER_BOX[tw.main] ? tw.main : litK[0]; if (!anchor) { co.hidden = true; return; }
+  const [ax, ay, aw, ah] = TOWER_BOX[anchor], rects = litK.map(k => TOWER_BOX[k].map(v => v * f)), cands = [];
+  for (const side of ['r', 'l']) {
+    const left = side === 'r' ? (ax + aw) * f + 16 : ax * f - cw - 16;
+    for (const vt of [ay * f, (ay + ah) * f - ch, (ay + ah / 2) * f - ch / 2]) {
+      const L = Math.max(6, Math.min(left, W - cw - 6)), T = Math.max(6, Math.min(vt, H - ch - 6));
+      const over = rects.reduce((sum, [x, y, w, h]) => sum + Math.max(0, Math.min(x + w, L + cw) - Math.max(x, L)) * Math.max(0, Math.min(y + h, T + ch) - Math.max(y, T)), 0);
+      cands.push({ side, L, T, over });
+    }
+  }
+  cands.sort((a, b) => a.over - b.over || (a.side === 'r' ? -1 : 1));
+  const best = cands[0];
+  co.style.left = best.L + 'px'; co.style.top = best.T + 'px'; co.dataset.side = best.side;
+  co.style.setProperty('--ay', Math.max(26, Math.min(ch - 26, (ay + ah / 2) * f - best.T)) + 'px');
+}
+/* repaint everything that depends on what's selected */
+function twPaint() {
+  if (!$('#tw-mapwrap')) return;
+  const has = tw.defs.length > 0, sheet = $('#tw-sheet');
+  twPaintHots();
+  $('#tw-mapwrap').classList.toggle('has-focus', twLit().size > 0);
+  const showSheet = has && twNarrowMQ.matches;
+  sheet.classList.toggle('show', showSheet);
+  sheet.innerHTML = showSheet ? `<button class="tw-x" type="button" data-tw-clear aria-label="Close">✕</button>${twFocusCards()}` : '';
+  twPlace();
+}
+function twSelect(defs, main) {
+  tw.defs = defs; tw.main = main; twPaint();
+}
+function twClosePops() {
+  $$('.tw-slot.pop-open').forEach(s => { s.classList.remove('pop-open', 'up'); s.setAttribute('aria-expanded', 'false'); const c = s.closest('.tw-card'); if (c) c.classList.remove('has-pop'); });
+}
+function twOpenPop(s) {
+  s.classList.add('pop-open'); s.setAttribute('aria-expanded', 'true'); s.closest('.tw-card').classList.add('has-pop');
+  const sc = s.closest('.tw-callout.scrolls, .tw-sheet'), r = s.getBoundingClientRect(), popH = $('.tw-pop', s).offsetHeight + 16;
+  if (sc && sc.scrollHeight > sc.clientHeight && r.bottom + popH > sc.getBoundingClientRect().bottom) s.classList.add('up');
+}
+
 function mapStageHTML(s, sn) {
   const cur = MAP_PLANS.find(([id]) => id === state.mapPlan) || MAP_PLANS[0], orig = cur[0] === 'p1';
   const src = BASE + encodeURI(s.placementImg), fb = 'images/' + encodeURI(s.placementImg);
@@ -1572,9 +1786,14 @@ function mapStageHTML(s, sn) {
         ${orig ? `<button class="btn btn-sm" type="button" ${zoom}>Enlarge</button>` : ''}
       </div>
       ${orig
-        ? `<button class="map-frame" type="button" ${zoom} aria-label="View the Season ${sn} tower placement map full size">
-        <img src="${esc(src)}" data-fallback="${esc(fb)}" alt="Season ${sn} tower placement map" decoding="async">
-      </button>`
+        ? `<div class="tw-frame">
+        <div class="tw-mapwrap" id="tw-mapwrap"><div class="tw-cam">
+          <img src="${esc(src)}" data-fallback="${esc(fb)}" alt="Season ${sn} tower placement map" decoding="async">
+          <div class="tw-dim" aria-hidden="true"></div>
+          <div id="tw-hots">${twHotsHTML()}</div>
+        </div></div>
+        <div class="tw-cwrap"><div class="tw-callout" id="tw-callout" data-side="r" hidden></div></div>
+      </div>`
         : `<div class="map-plan"><div class="empty"><h3>${esc(cur[1])} is empty</h3><p>Nothing has been placed on this plan yet.</p></div></div>`}
     </div>`;
 }
@@ -1584,10 +1803,51 @@ function closeMapMenu() {
 function renderMap() {
   const sn = state.season, s = season(), el = $('#map-body');
   $('#map-sub').textContent = seasonRange(sn);
-  el.innerHTML = s.placementImg
-    ? mapStageHTML(s, sn)
-    : emptyHTML('map', 'No placements yet', `Tower placements for Season ${sn} haven't been added.`);
+  if (!s.placementImg) { el.innerHTML = emptyHTML('map', 'No placements yet', `Defense placements for Season ${sn} haven't been added.`); return; }
+  const onPlan1 = (MAP_PLANS.find(([id]) => id === state.mapPlan) || MAP_PLANS[0])[0] === 'p1';
+  tw.defs = []; tw.main = null; tw.pv = null; tw.sw = {};
+  tw.list = onPlan1 ? twBuildList(s) : [];
+  tw.src = BASE + encodeURI(s.placementImg);
+  tw.dims = /pic08/i.test(s.placementImg) ? [1514, 1089] : [1515, 1093];
+  el.innerHTML = mapStageHTML(s, sn)
+    + (onPlan1 && tw.list.length ? `<div class="tw-sheet" id="tw-sheet" role="dialog" aria-label="Selected defenses"></div>` : '');
+  tw.intro = false;
+  /* once the picture has loaded, use its real size so the boxes line up exactly */
+  const im = $('.tw-cam img', el);
+  if (im) {
+    const fit = () => {
+      if (im.naturalWidth < 800 || (im.naturalWidth === tw.dims[0] && im.naturalHeight === tw.dims[1])) return;
+      tw.dims = [im.naturalWidth, im.naturalHeight];
+      const h = $('#tw-hots'); if (h) h.innerHTML = twHotsHTML();
+      twPlace();
+    };
+    if (im.complete) fit(); else im.addEventListener('load', fit, { once:true });
+  }
 }
+
+/* Tap a tower to select it. Tapping anywhere else on the page (outside the open callout or sheet) deselects it. */
+document.addEventListener('click', e => {
+  const t = e.target;
+  if (state.view !== 'map' || !$('#tw-mapwrap')) return;
+  const swp = t.closest('[data-tw-swap]');
+  if (swp) { const [uid, j, idx] = swp.dataset.twSwap.split(':'); (tw.sw[uid] = tw.sw[uid] || [0, 0, 0])[+j] = +idx; twPaint(); return; }
+  const slot = t.closest('.tw-slot.sw');
+  if (slot) { if (t.closest('.tw-pop')) return; const was = slot.classList.contains('pop-open'); twClosePops(); if (!was) twOpenPop(slot); return; }
+  twClosePops();
+  if (t.closest('[data-tw-clear]')) { twSelect([], null); return; }
+  const hot = t.closest('[data-tw-hot]');
+  if (hot) { const k = hot.dataset.twHot; if (tw.main === k) twSelect([], null); else twSelect(twDefsOn(k), k); return; }
+  if (t.closest('.tw-callout, .tw-sheet')) return;
+  if (tw.defs.length) twSelect([], null);
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.tw-head, .tw-slot.sw')) { e.preventDefault(); e.target.click(); return; }
+  if (e.key === 'Escape' && $('#tw-mapwrap')) { if ($('.tw-slot.pop-open')) twClosePops(); else if (tw.defs.length) twSelect([], null); }
+});
+/* the intro ping is just decoration; once it ends, drop the class so it can't override a tower's lit state */
+document.addEventListener('animationend', e => { if (e.animationName === 'twping') e.target.classList.remove('ping'); });
+window.addEventListener('resize', () => { if ($('#tw-callout')) twPlace(); });
+twNarrowMQ.addEventListener('change', () => { if ($('#tw-mapwrap')) twPaint(); });
 
 const lb = $('#lightbox');
 let lbReturn = null;
@@ -1597,7 +1857,7 @@ function openLightbox(btn) {
   im.dataset.fallback = btn.dataset.fb; delete im.dataset.triedFallback;
   im.src = btn.dataset.src; im.alt = `Season ${state.season} tower placement map`;
   $('#lb-open').href = btn.dataset.src;
-  $('#lb-title').textContent = `Season ${state.season} · Tower placements`;
+  $('#lb-title').textContent = `Season ${state.season} · Defense placements`;
   lb.classList.remove('actual'); $('#lb-size').textContent = 'Actual size';
   lb.hidden = false; document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => lb.classList.add('open'));
