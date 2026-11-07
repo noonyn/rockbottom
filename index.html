@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Siege Defense · Rock Bottom</title>
+  <title>Siege Defense - Rock Bottom</title>
   <meta name="description" content="Rock Bottom's Summoners War guild siege defense comps, tower placements, siege schedule and season awards.">
 
   <link rel="icon" type="image/png" href="https://sw-rockbottom.com/images/logo.png">
@@ -1118,7 +1118,7 @@ const CAT_META = {
 };
 const AWARD_ICON  = { offense:'offense', defense:'shield', combined:'combined', defwins:'defwins', scorer:'flame', mvp:'crown' };
 const AWARD_COLOR = { gold:'var(--gold)', cyan:'var(--nat4)', orange:'#fb923c', green:'#34d399', red:'#f87171', purple:'var(--special)' };
-const VIEW_TITLES = { defenses:'Siege Defense', map:'Tower Placements', schedule:'Siege Schedule', season:'Hall of Fame', guild:'Guild' };
+const VIEW_TITLES = { defenses:'Siege Defense', map:'Tower Placements', schedule:'Siege Schedule', season:'Hall of Fame', guild:'Members' };
 const ALIASES = { '':'defenses', placements:'map', towers:'map', summary:'season', awards:'season', analytics:'season', members:'guild', changelog:'defenses' };
 const ANCHORS = { members:'members-h', changelog:'changelog-h', toolbar:'toolbar' };
 const MON = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
@@ -1845,7 +1845,7 @@ function route() {
     if (on) { el.style.removeProperty('animation'); $$('.hero-copy > *', el).forEach(c => c.style.removeProperty('animation')); }
   });
   $$('[data-nav]').forEach(a => { if (a.dataset.nav === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  document.title = `${VIEW_TITLES[v]} · Rock Bottom`;
+  document.title = `${VIEW_TITLES[v]} - Rock Bottom`;
   renderView(v);
   closeSuggest();
   if (ANCHORS[raw]) { const t = document.getElementById(ANCHORS[raw]); if (t) requestAnimationFrame(() => t.scrollIntoView({ behavior:'smooth', block:'start' })); }
