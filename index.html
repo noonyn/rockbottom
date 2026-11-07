@@ -170,6 +170,8 @@
     .hero-copy { display:flex; flex-direction:column; align-items:flex-start; gap:16px; max-width:580px; }
     .hero-copy .eyebrow { color:var(--eyebrow); }
     .hero h1 { font-family:var(--font-display); font-weight:900; text-transform:uppercase; font-size:clamp(2.75rem, 5.4vw, 4.75rem); line-height:0.95; letter-spacing:-0.015em; color:var(--ink); margin:0; text-shadow:0 2px 24px rgba(0,0,0,0.5); }
+    /* gradient text is transparent, so a text-shadow shows through the letters and dulls them — use a drop-shadow, which stays behind */
+    .hero h1 .grad-gold { text-shadow:none; filter:drop-shadow(0 2px 24px rgba(0,0,0,0.5)); }
     .hero-sub { max-width:480px; font-size:15.5px; line-height:1.6; color:var(--ink-2); }
     .hero-cta { display:flex; flex-wrap:wrap; align-items:center; gap:16px 28px; margin-top:6px; }
     .hero-link { display:inline-flex; align-items:center; gap:8px; color:var(--ink); font:800 13px/1 var(--font-display); letter-spacing:0.06em; text-transform:uppercase; text-decoration:none; padding-bottom:3px; border-bottom:1px solid rgba(255,255,255,0.35); transition:color .2s, border-color .2s; }
