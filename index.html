@@ -1409,8 +1409,8 @@ function renderDefenses() {
   const sn = state.season;
   $('#changelog-meta').textContent = `Season ${sn}`;
   $('#changelog-body').innerHTML = changelogHTML();
-  /* an empty "No changes logged" panel just looks unfinished — show the panel only when there's something to show (or it's still loading) */
-  $('.changelog-panel').hidden = !(DATA.seasons[sn].changelog || []).length && !(pending.has('changelog') && sn === JSON_SEASON);
+  /* always shown — a season with no entries yet gets the "No changes logged" message instead of the panel disappearing */
+  $('.changelog-panel').hidden = false;
   const key = `${sn}`;
   if (state.compsFor === key) { applyFilters(); return; }
   state.compsFor = key;
@@ -1740,10 +1740,7 @@ function renderSeason() {
         </div>
       </div>`;
   }
-  const analytics = analyticsHTML(sn);
-  if (analytics) html += `<h2 class="sec-label">Defense analytics</h2><div id="analytics">${analytics}</div>`;
   el.innerHTML = html;
-  animateRings();
 }
 
 /* ═══════════════════════════════════════════
