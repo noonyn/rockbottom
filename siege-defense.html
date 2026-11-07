@@ -2,6 +2,12 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <!-- Security. GitHub Pages can't send response headers, so the policy rides in a meta tag. It limits where the page may load
+       scripts, images, fonts, video and data from (and where it may send requests), and blocks plugins, <base> hijacking and form posts.
+       Inline script/style stay allowed because the whole site is one file. Real headers (frame-ancestors, HSTS) need a CDN in front. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https://sw-rockbottom.com data: blob:; media-src 'self' https://sw-rockbottom.com; connect-src 'self' https://api.github.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script>if (window.top !== window.self) { document.documentElement.style.display = 'none'; try { window.top.location.href = window.self.location.href; } catch (e) {} }   /* never run inside someone else's frame (clickjacking) */</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Siege Defense - Rock Bottom</title>
   <meta name="description" content="Rock Bottom's Summoners War guild siege defense comps, tower placements, siege schedule and season awards.">
@@ -1969,15 +1975,19 @@ window.addEventListener('scroll', () => {
 renderSeasonMenu();
 route();
 
-/* Live data — GitHub Contents API bypasses CDN cache */
+/* Live data. Read the JSON from the site itself first — the CDN serves it with no request limit, so heavy traffic (or someone hammering
+   the site) can't lock visitors out of the data. A per-minute token in the URL means edits show up within a minute instead of waiting
+   out the CDN's 10-minute cache. If that copy can't be read, fall back to GitHub's API (which allows only 60 requests an hour per IP). */
+const loadJSON = f => fetch(`${f}?t=${Math.floor(Date.now() / 60000)}`, { cache:'no-store' })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .catch(() => fetch(GH(f), { headers: GH_HDRS }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }));
 function settle(name) {
   pending.delete(name);
   const affects = { report:['season', 'defenses'], changelog:['defenses'], schedule:['defenses', 'schedule', 'season', 'map'] }[name];
   if (name === 'report') state.compsFor = null; // comp cards show wins/losses from report.json — force them to regenerate once it loads
   if (affects.includes(state.view)) renderView(state.view);
 }
-fetch(GH('report.json'), { headers: GH_HDRS })
-  .then(r => r.json())
+loadJSON('report.json')
   .then(d => {
     const r = DATA.guildStats.report;
     if (d.defenseWR      != null) r.defenseWR      = d.defenseWR;
@@ -1992,14 +2002,12 @@ fetch(GH('report.json'), { headers: GH_HDRS })
   .catch(() => {})
   .finally(() => settle('report'));
 
-fetch(GH('changelog.json'), { headers: GH_HDRS })
-  .then(r => r.json())
+loadJSON('changelog.json')
   .then(d => { if (Array.isArray(d.entries)) DATA.seasons[JSON_SEASON].changelog = d.entries; })
   .catch(() => {})
   .finally(() => settle('changelog'));
 
-fetch(GH('schedule.json'), { headers: GH_HDRS })
-  .then(r => r.json())
+loadJSON('schedule.json')
   .then(d => { if (Array.isArray(d.sieges)) DATA.seasons[JSON_SEASON].schedule = d.sieges; })
   .catch(() => {})
   .finally(() => settle('schedule'));
