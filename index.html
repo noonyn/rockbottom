@@ -405,7 +405,6 @@
     .count-pill { font:800 12px/1 var(--font-ui); color:var(--on-ink); background:var(--ink); border-radius:99px; padding:5px 9px; letter-spacing:0; }
 
     /* ═══════════════════════ TOWER PLACEMENTS ═══════════════════════ */
-    .map-updated { margin-top:16px; font-size:12.5px; font-weight:600; color:var(--ink-3); }
     /* the map sits on a faint faction-coloured glow (blue left, red top, yellow right — where each
        base actually lies on the map); isolation keeps the negative z-index inside this block */
     .map-stage { position:relative; isolation:isolate; }
@@ -1551,7 +1550,6 @@ function mapStageHTML(s, sn) {
   const zoom = `data-action="zoom-map" data-src="${esc(src)}" data-fb="${esc(fb)}"`;
   const menu = MAP_PLANS.map(([id, label, sub]) => `<button class="map-opt" type="button" role="option" data-map-plan="${id}" aria-selected="${id === cur[0]}"><span>${label}</span><small>${sub}</small></button>`).join('');
   const switcher = `<div class="map-switch"><button class="map-switch-btn" type="button" aria-haspopup="listbox" aria-expanded="false"><span>${esc(cur[1])}</span><span class="map-switch-sub">${esc(cur[2])}</span></button><div class="map-switch-menu" role="listbox" aria-label="Choose plan">${menu}</div></div>`;
-  const updated = s.lastUpdated ? `<p class="map-updated">Last updated ${esc(fmtLooseDMY(s.lastUpdated))}</p>` : '';
   return `<div class="map-stage">
       <div class="map-bar">
         ${switcher}
@@ -1560,8 +1558,7 @@ function mapStageHTML(s, sn) {
       ${orig
         ? `<button class="map-frame" type="button" ${zoom} aria-label="View the Season ${sn} tower placement map full size">
         <img src="${esc(src)}" data-fallback="${esc(fb)}" alt="Season ${sn} tower placement map" decoding="async">
-      </button>
-      ${updated}`
+      </button>`
         : `<div class="map-plan"><div class="empty"><h3>${esc(cur[1])} is empty</h3><p>Nothing has been placed on this plan yet.</p></div></div>`}
     </div>`;
 }
@@ -1570,7 +1567,7 @@ function closeMapMenu() {
 }
 function renderMap() {
   const sn = state.season, s = season(), el = $('#map-body');
-  $('#map-sub').textContent = `Season ${sn} Siege Map Plans`;
+  $('#map-sub').textContent = seasonRange(sn);
   el.innerHTML = s.placementImg
     ? mapStageHTML(s, sn)
     : emptyHTML('map', 'No placements yet', `Tower placements for Season ${sn} haven't been added.`);
@@ -1965,7 +1962,7 @@ route();
 /* Live data — GitHub Contents API bypasses CDN cache */
 function settle(name) {
   pending.delete(name);
-  const affects = { report:['season', 'defenses'], changelog:['defenses'], schedule:['defenses', 'schedule', 'season'] }[name];
+  const affects = { report:['season', 'defenses'], changelog:['defenses'], schedule:['defenses', 'schedule', 'season', 'map'] }[name];
   if (name === 'report') state.compsFor = null; // comp cards show wins/losses from report.json — force them to regenerate once it loads
   if (affects.includes(state.view)) renderView(state.view);
 }
