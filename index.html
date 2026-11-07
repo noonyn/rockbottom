@@ -263,7 +263,9 @@
     /* ═══════════════════════ COMP CARD ═══════════════════════ */
     .comp { position:relative; scroll-margin-top:150px; display:grid; grid-template-columns:72px auto minmax(0, 1fr); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--shadow-1); transition:border-color .25s, box-shadow .25s, transform .3s var(--ease), opacity .3s var(--ease), filter .3s var(--ease); animation:rise .5s var(--ease) both; }
     .comp.settled { animation:none; }
-    .comp:hover { border-color:color-mix(in srgb, var(--c) 30%, var(--line)); box-shadow:0 22px 40px -30px color-mix(in srgb, var(--c) 25%, rgba(0,0,0,0.75)); }
+    .comp:hover { border-color:color-mix(in srgb, var(--c) 16%, var(--line)); box-shadow:0 22px 40px -30px color-mix(in srgb, var(--c) 10%, rgba(0,0,0,0.75)); }
+    .comp.no-glow:hover { border-color:var(--line); box-shadow:var(--shadow-1); }   /* right after a swap: no hover glow until the pointer leaves the card */
+    .comp.pop-active:hover { border-color:var(--line); }                             /* while its swap menu is open */
     .comp.flash, .comp.settled.flash { animation:flash 1.8s var(--ease); }
     /* focus mode: while a swap popover is open, dim+blur every OTHER comp and the surrounding page
        chrome directly (opacity/filter on the elements themselves, not a translucent sheet laid over
@@ -315,7 +317,7 @@
     /* click-a-monster swap popover (replaces the always-visible swaps panel) */
     .slot.has-swaps { cursor:pointer; border-radius:var(--r-lg); transition:transform .15s var(--ease-out); }
     .slot.has-swaps:active { transform:scale(.97); }
-    @media (hover:hover) and (pointer:fine) { .slot.has-swaps:hover .slot-art .portrait { box-shadow:0 0 0 2px var(--orange); } }
+    @media (hover:hover) and (pointer:fine) { .comp:not(.no-glow) .slot.has-swaps:not(.pop-open):hover .slot-art .portrait { box-shadow:0 0 0 2px color-mix(in srgb, var(--orange) 55%, transparent); } }
     .slot.has-swaps:focus-visible { outline:0; }
     .slot.has-swaps:focus-visible .slot-art .portrait { box-shadow:0 0 0 2px var(--orange); }
     .slot-badge { position:absolute; top:-6px; right:-6px; z-index:2; min-width:23px; height:23px; padding:0 6px; border:3px solid var(--surface); border-radius:99px; background:var(--orange); color:#fff; font:800 11px/17px var(--font-ui); text-align:center; pointer-events:none; }
@@ -657,8 +659,9 @@
     html.mo .comp.rv .cr-leader { transition-delay:440ms; }
     html.mo .cat-toggle.pre { transform:translateX(-22px); }
     /* pointer spotlight */
-    .comp::after { content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; pointer-events:none; opacity:0; background:radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--c) 15%, transparent), transparent 72%); transition:opacity .4s; }
+    .comp::after { content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; pointer-events:none; opacity:0; background:radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--c) 7%, transparent), transparent 72%); transition:opacity .4s; }
     .comp:hover::after { opacity:1; }
+    .comp.pop-active::after, .comp.no-glow:hover::after { opacity:0; }
     .cr-team, .cr-stats, .cr-id { position:relative; z-index:1; }
     /* portraits ease in slowly on hover */
     .slot-art .portrait img { transition:opacity .4s, transform .9s var(--ease-out); }
@@ -1376,8 +1379,12 @@ function swapSlot(slotEl, idx) {
   slotEl.innerHTML = renderSlotInner(pool, idx, label, isLead);
   setSlotPop(slotEl, false);
   const comp = slotEl.closest('.comp');
-  if (comp) { refreshCompStats(comp); comp.classList.remove('flash'); void comp.offsetWidth; comp.classList.add('flash'); }
+  if (comp) { refreshCompStats(comp); comp.classList.add('no-glow'); comp.classList.remove('flash'); void comp.offsetWidth; comp.classList.add('flash'); }
 }
+/* the hover glow comes back once the pointer has left the card that was just swapped */
+document.addEventListener('pointerleave', e => {
+  if (e.target.classList && e.target.classList.contains('no-glow')) e.target.classList.remove('no-glow');
+}, true);
 function groupHeader(safe, title, sub, iconHTML) {
   return `<button class="cat-toggle" type="button" aria-expanded="true" aria-controls="cat-body-${safe}">
         ${iconHTML}
