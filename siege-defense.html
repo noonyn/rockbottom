@@ -102,6 +102,8 @@
     .btn:hover { border-color:var(--ink); }
     .btn:active { transform:translateY(1px); }
     .btn-ghost { background:transparent; }
+    .btn-apply { background:var(--grad-pill); border-color:transparent; color:#fff; box-shadow:0 14px 26px -14px rgba(232,36,12,0.75); }
+    .btn-apply:hover { border-color:transparent; filter:brightness(1.08); }
     .btn-icon { width:42px; padding:0; }
     .btn-sm { height:36px; padding:0 15px; font-size:12.5px; }
     .btn-sm.btn-icon { width:36px; padding:0; }
@@ -122,11 +124,15 @@
     .nav a::after { content:''; position:absolute; left:14px; right:14px; bottom:0; height:4px; border-radius:4px 4px 0 0; background:var(--grad-cta); transform:scaleX(0); transform-origin:left; transition:transform .25s var(--ease); }
     .nav a:hover { color:var(--orange); }
     .nav a:hover::after, .nav a[aria-current="page"]::after { transform:scaleX(1); }
-    .nav-cta { align-self:stretch; display:flex; align-items:center; margin-left:auto; padding:0 40px 0 56px; background:var(--grad-pill); color:#fff; text-decoration:none; text-shadow:0 1px 0 rgba(120,20,0,0.25); font:800 21px/1 var(--font-display); letter-spacing:0.02em; text-transform:uppercase; clip-path:polygon(26px 0, 100% 0, 100% 100%, 0 100%); transition:filter .2s; }
-    .nav-cta:hover { filter:brightness(1.08) saturate(1.1); }
 
-    /* season switch — lives in the defenses hero now, not the header */
+    /* season switch — one for the whole site; it fills the header's angled right-hand block (where Apply used to be) and drives every page */
     .season-switch { position:relative; }
+    .top-inner > .season-switch { align-self:stretch; display:flex; margin-left:auto; }
+    .topbar .season-btn { height:100%; padding:0 40px 0 56px; gap:10px; border-radius:0; box-shadow:none; font-size:21px; letter-spacing:0.02em; text-shadow:0 1px 0 rgba(120,20,0,0.25); clip-path:polygon(26px 0, 100% 0, 100% 100%, 0 100%); }
+    .topbar .season-btn:hover { transform:none; filter:brightness(1.08) saturate(1.1); }
+    .topbar .season-btn .ic { font-size:16px; }
+    .topbar .season-menu { left:auto; right:12px; top:calc(100% + 10px); transform:translate(0, -6px) scale(.98); transform-origin:top right; }
+    .topbar .season-switch.open .season-menu { transform:translate(0, 0) scale(1); }
     .season-btn { display:inline-flex; align-items:center; gap:10px; height:52px; padding:0 24px 0 22px; border-radius:99px; background:var(--grad-pill); border:0; color:#fff; cursor:pointer; font:800 15px/1 var(--font-display); letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; box-shadow:0 18px 32px -14px rgba(232,36,12,0.65); transition:filter .2s, transform .15s; }
     .season-btn:hover { filter:brightness(1.08); transform:translateY(-1px); }
     .season-btn:active { transform:translateY(0); }
@@ -595,7 +601,8 @@
       .chips { order:5; flex:1 1 100%; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
       .chips::-webkit-scrollbar { display:none; }
     }
-    @media (max-width:1080px) { .nav a { padding:0 10px; font-size:13px; } .nav a::after { left:10px; right:10px; } .top-inner { gap:14px; } .nav-cta { padding:0 22px 0 40px; font-size:17px; } }
+    /* header: brand, tabs and the season switch need to share one row — tighten everything below 1200px */
+    @media (max-width:1200px) { .nav { gap:2px; margin-left:4px; } .nav a { padding:0 9px; font-size:13px; } .nav a::after { left:9px; right:9px; } .top-inner { gap:12px; } .topbar .season-btn { padding:0 24px 0 40px; font-size:17px; } }
     @media (max-width:980px) {
       .sched-top, .awards, .guild-grid { grid-template-columns:1fr; }
       .stat-tiles { grid-template-columns:repeat(2, minmax(0, 1fr)); }
@@ -616,6 +623,7 @@
       .wrap { padding-left:16px; padding-right:16px; }   /* sides only — the 0 16px shorthand also wiped the vertical padding of .toolbar-row, .hero-inner, .page-body and the footer */
       .top-inner { padding-left:16px; }
       .brand-name { font-size:1.15rem; top:0; }
+      .topbar .season-btn { padding:0 16px 0 30px; gap:8px; font-size:15px; }
       .page-head::after, .cat-ghost { display:none; }
       .search { flex-basis:100%; max-width:none; }
       .toolbar-end { display:none; }
@@ -643,6 +651,7 @@
       .foot-bottom span { max-width:min(100%, calc(100vw - 168px)); }
     }
     @media (max-width:340px) { .tabbar a { font-size:9.5px; white-space:nowrap; } }
+    @media (max-width:350px) { .brand-name { font-size:1rem; } .top-inner { padding-left:12px; } .topbar .season-btn { padding:0 12px 0 26px; font-size:14px; } }
     /* ═══════════════════════ MOTION (subtle) ═══════════════════════ */
     :root { --ease-out:cubic-bezier(.16, 1, .3, 1); }
     /* scroll reveal — armed by script (html.mo), so no-JS / reduced-motion users see everything */
@@ -734,7 +743,13 @@
       <a href="#guild" data-nav="guild">Members</a>
     </nav>
 
-    <a class="nav-cta" href="https://rockbottom.swgt.io/recruit/" target="_blank" rel="noopener" aria-label="Apply to join Rock Bottom">Apply</a>
+    <div class="season-switch" id="season-switch">
+      <button class="season-btn" id="season-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="season-menu">
+        <span id="season-label">Season</span><svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg>
+      </button>
+      <div class="season-menu" id="season-menu" role="listbox" aria-label="Choose season"></div>
+    </div>
+
   </div>
 </header>
 
@@ -753,12 +768,6 @@
           <h1 id="def-title">Siege <span class="grad-gold">Defense</span></h1>
           <p class="hero-sub">Defense comps and tower assignments,<br>maintained by Rock Bottom.</p>
           <div class="hero-cta">
-            <div class="season-switch" id="season-switch">
-              <button class="season-btn" id="season-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="season-menu">
-                <span class="dot" aria-hidden="true"></span><span id="season-label">Season</span><svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg>
-              </button>
-              <div class="season-menu" id="season-menu" role="listbox" aria-label="Choose season"></div>
-            </div>
             <a class="hero-link" href="#toolbar">All Defenses<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></a>
           </div>
         </div>
@@ -841,7 +850,7 @@
         <div>
           <div class="ph-icon"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
           <span class="eyebrow">Siege Recap</span>
-          <h1 class="page-title" id="season-title">Season</h1>
+          <h1 class="page-title" id="season-title">Hall of <em>Fame</em></h1>
           <p class="page-sub" id="season-sub"></p>
         </div>
       </div>
@@ -860,6 +869,7 @@
             <h1 class="page-title" id="guild-title">Rock <em>Bottom</em></h1>
           </div>
           <div class="guild-cta">
+            <a class="btn btn-apply" href="https://rockbottom.swgt.io/recruit/" target="_blank" rel="noopener">Apply<svg class="ic" aria-hidden="true"><use href="#i-external"/></svg></a>
             <a class="btn" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener">SWGT<svg class="ic" aria-hidden="true"><use href="#i-external"/></svg></a>
           </div>
         </div>
@@ -1704,7 +1714,6 @@ function analyticsHTML(sn) {
 }
 function renderSeason() {
   const sn = state.season, s = season(), sm = s.summary, el = $('#season-body');
-  $('#season-title').innerHTML = `Season <em>${sn}</em>`;
   $('[data-view="season"] .page-head').dataset.ghost = sn;
   $('#season-sub').textContent = seasonRange(sn);
   let html = '';
@@ -1833,6 +1842,7 @@ function route() {
   const v = ALIASES[raw] != null ? ALIASES[raw] : (VIEW_TITLES[raw] ? raw : 'defenses');
   const changed = v !== state.view;
   state.view = v;
+  closeSeasonMenu();
   $$('.view').forEach(el => {
     const on = el.dataset.view === v;
     el.hidden = !on; el.classList.toggle('active', on);
