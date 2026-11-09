@@ -1300,8 +1300,9 @@ const IMG_BASE='https://sw-rockbottom.com/images/';
    B = Blue, R = Red, Y = Yellow; HQ is the Blue headquarters (the one with additional placements), HQR / HQY the other two.
    Which defense belongs to which tower is not here: it comes from each team's "tower" code in the season data.
    Per season: stars = bases that are 4-star (every other base with a defense is 5-star), special = Special Defense bases. */
+const ASSET_V='20261109c';
 const SIEGE_MAP={
-  img:'images/siege-map-crop.jpg', video:'', ratio:2600/1688,
+  img:'images/siege-map-crop.jpg?v='+ASSET_V, video:'', ratio:2600/1688,
   /* the part of the full map shown, in % of the full map (left, top, right, bottom); tower spots below are full-map % */
   view:[-4.565,22.5,66.5,107.75],
   guild:{B:'Blue',R:'Red',Y:'Yellow'},
@@ -1470,7 +1471,7 @@ const hotBox=k=>{ const hq=k.startsWith('HQ'), w=hq?6.6:4.6, h=+(w*SM.ratio).toF
 /* tower art: the in-game fortresses (5-star spiked, 4-star gold-trimmed, the crystal HQ), one per guild colour */
 function mkSVG(k){
   const g=gOf(k).toLowerCase(), src=k.startsWith('HQ')?'hq-b':((starsOf(k)===4?'t4-':'t5-')+g);
-  return `<img src="images/towers/${src}.webp" alt="" width="200" height="206" decoding="async" draggable="false">`;
+  return `<img src="images/towers/${src}.webp?v=${ASSET_V}" alt="" width="200" height="206" decoding="async" draggable="false">`;
 }
 function rng(seed){ let v=seed; return ()=>(v=(v*1664525+1013904223)%4294967296)/4294967296; }
 function fxHTML(){
