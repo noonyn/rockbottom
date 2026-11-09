@@ -198,7 +198,7 @@ body.pop-open .strip:not(.open){opacity:.35;transition:opacity .2s}
 .mapbox{position:relative}
 .maphost{position:relative;margin-top:calc(-1 * clamp(24px,5vw,86px))}
 .smap-scroll{position:relative}
-.smap-stage{--grade:saturate(.9) brightness(.8) contrast(1.08);position:relative;width:100%;aspect-ratio:2600/1512;overflow:hidden;
+.smap-stage{--grade:saturate(.9) brightness(.8) contrast(1.08);position:relative;width:100%;aspect-ratio:2600/1497;overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
 .smap-art,.smap-fx,.smap-dim,.smap-vig,.smap-hots{position:absolute;inset:0}
 .smap-art{filter:var(--grade)}
@@ -1284,9 +1284,9 @@ const IMG_BASE='https://sw-rockbottom.com/images/';
    Which defense belongs to which tower is not here: it comes from each team's "tower" code in the season data.
    Per season: stars = bases that are 4-star (every other base with a defense is 5-star), special = Special Defense bases. */
 const SIEGE_MAP={
-  img:'images/siege-map-crop.jpg', video:'', ratio:2600/1512,
+  img:'images/siege-map-crop.jpg', video:'', ratio:2600/1497,
   /* the part of the full map shown, in % of the full map (left, top, right, bottom); tower spots below are full-map % */
-  view:[-2.734,17,78,103.744],
+  view:[0,17,78,100],
   guild:{B:'Blue',R:'Red',Y:'Yellow'},
   /* towers out of play on this map: drawn grey, not clickable */
   /* towers kept empty on the map even if a team lists them */
@@ -1491,7 +1491,7 @@ function renderMap(){
   });});
   Object.entries((SM.place||{})[state.sn]||{}).forEach(([k,ids])=>ids.forEach(u=>{ const [sid,i]=u.split('-'); if(S().sections.some(x=>x.id===sid&&x.teams[+i])) (towerDefs[k]=towerDefs[k]||[]).includes(u)||(towerDefs[k]=towerDefs[k]||[]).push(u); }));
   const host=$('#maphost'), keys=Object.keys(SM.towers).filter(k=>!isClosed(k));
-  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1512" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
+  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1497" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
   const stage=$('#smap-stage');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>stage.classList.toggle('run',e.isIntersecting)),{threshold:0}).observe(stage);
   const vid=$('.smap-vid',stage);
