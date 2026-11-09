@@ -1254,17 +1254,47 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
 }
 
 /* bars after the in-game look: one dark bar with a thin dark outline, five tall segments, the badge overlapping its left end */
-#smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 47px)}
+#smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 45px)}
 #smap-stage .hot .tk{left:calc(50% - 47px + 24px);top:calc(80% + 10px);height:17px;padding:0 4px 0 11px;gap:2px;
   background:linear-gradient(180deg,#1b2026,#0c0f13);border:1.5px solid #05070a;border-radius:3px;box-shadow:0 2px 3px rgba(0,0,0,.55)}
 #smap-stage .hot.gB .tk{top:calc(80% + 11px)}
 #smap-stage .hot .tk b{width:9px;height:11px;border-radius:1.5px;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 70%,#fff) 0,var(--tc) 45%,color-mix(in srgb,var(--tc) 75%,#000) 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
 @media (max-width:700px){
-  #smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 39px)}
+  #smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 36px)}
   #smap-stage .hot .tk{left:calc(50% - 39px + 20px);top:calc(80% + 8px);height:14px;padding:0 3px 0 9px}
   #smap-stage .hot.gB .tk{top:calc(80% + 9px)}
   #smap-stage .hot .tk b{width:7px;height:9px}
 }
+
+/* the bar continues the badge: same dark plate, same guild ring (3px, like the badge), no outer outline, tucked under the badge, one shared shadow */
+#smap-stage .hot .tk{background:#0d070c;border:3px solid var(--tc);border-left:0;border-radius:0 4px 4px 0;box-shadow:none;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.75)) drop-shadow(0 0 1px rgba(0,0,0,.9));height:19px;padding:0 4px 0 12px;left:calc(50% - 45px + 22px);top:calc(80% + 9px)}
+#smap-stage .hot.gB .tk{top:calc(80% + 9px)}
+#smap-stage .hot .tk b{width:8px;height:9px;border-radius:1px;background:var(--tc);box-shadow:none}
+@media (max-width:700px){
+  #smap-stage .hot .tk{height:16px;padding:0 3px 0 10px;border-width:2.5px;border-left:0;left:calc(50% - 36px + 18px);top:calc(80% + 7px)}
+  #smap-stage .hot.gB .tk{top:calc(80% + 7px)}
+  #smap-stage .hot .tk b{width:6px;height:7px}
+}
+
+
+/* ===== tower badge, Readout draft: one slim chamfered plate, '// 10' in mono, five thin bars, hairline border, guild underline ===== */
+
+/* readout badge fixes: one-line label, square plate for every guild */
+
+/* ===== softer tower badge drafts ===== */
+
+/* ===== softer tower badge drafts, set 2 ===== */
+#smap-stage[data-bd="under"] .hot:not([data-k^="HQ"]) .nb{clip-path:none!important;border-radius:0!important;filter:none!important;box-shadow:none!important;top:83%!important;z-index:3}
+#smap-stage[data-bd="under"] .hot .nb::before{display:none!important}
+#smap-stage[data-bd="under"] .hot:not([data-k^="HQ"]) .nb span{display:flex!important;align-items:center;justify-content:center;height:100%!important;padding:0!important;white-space:nowrap;text-shadow:none}
+#smap-stage[data-bd="under"] .hot .tk{border:0!important;clip-path:none!important;filter:none!important;box-shadow:none!important;top:83%!important;padding:0!important;justify-content:center;align-items:center;transform:none;background:none!important}
+#smap-stage[data-bd="under"] .hot .tk::before{display:none!important}
+#smap-stage[data-bd="under"] .hot .tk b{box-shadow:none!important}
+#smap-stage[data-bd="under"] .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 16px)!important;width:32px!important;height:20px!important;border-radius:5px!important;background:rgba(12,10,14,.82)!important;box-shadow:0 2px 6px rgba(0,0,0,.4)!important}
+#smap-stage[data-bd="under"] .hot:not([data-k^="HQ"]) .nb span{font:600 13px/1 'Chakra Petch',sans-serif!important;color:#fff}
+#smap-stage[data-bd="under"] .hot .tk{left:calc(50% - 16px)!important;top:calc(83% + 23px)!important;width:32px;height:3px!important;gap:1.5px;justify-content:space-between}
+#smap-stage[data-bd="under"] .hot .tk b{width:5.2px!important;height:3px!important;border-radius:1px!important;background:var(--tc)!important;box-shadow:0 0 0 1px rgba(10,6,10,.55)!important}
 
 /* tower panel leader line (desktop) */
 .tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
@@ -1593,7 +1623,7 @@ function renderMap(){
   });});
   Object.entries((SM.place||{})[state.sn]||{}).forEach(([k,ids])=>ids.forEach(u=>{ const [sid,i]=u.split('-'); if(S().sections.some(x=>x.id===sid&&x.teams[+i])) (towerDefs[k]=towerDefs[k]||[]).includes(u)||(towerDefs[k]=towerDefs[k]||[]).push(u); }));
   const host=$('#maphost'), keys=Object.keys(SM.towers).filter(k=>!isClosed(k));
-  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1688" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
+  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout" data-bd="under"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1688" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
   const stage=$('#smap-stage');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>stage.classList.toggle('run',e.isIntersecting)),{threshold:0}).observe(stage);
   const vid=$('.smap-vid',stage);
