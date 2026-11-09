@@ -782,11 +782,8 @@ body.theme-signal::before{content:"";position:fixed;inset:0;z-index:300;pointer-
   .theme-signal .smap-stage.show-all .hot .hb em{font-size:15px}
 }
 
-/* placements: no corner frame; on desktop the map fits the screen height so a tapped tower and its panel are in view together */
+/* placements: no corner frame */
 .theme-signal .mapbox::before{display:none}
-@media (min-width:701px){
-  .smap-stage{width:min(100%,calc((100svh - 150px) * 2860 / 1516));margin:0 auto}
-}
 @media (prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
   .strip,.tile,.btn,.sbtn svg,.nav a::after{transition:none!important}
@@ -1119,7 +1116,11 @@ function placeTags(){
   tags.forEach(t=>delete t.dataset.pos); if(!st.classList.contains('show-all')||!tags.length) return;
   st.classList.add('placing'); const box=st.getBoundingClientRect();
   const POS=['up','down','left','right','ul','ur','dl','dr','uu','dd'], set=(t,p)=>{ if(p==='up') delete t.dataset.pos; else t.dataset.pos=p; };
-  const R=new Map(); tags.forEach(t=>{ const m={}; POS.forEach(p=>{ set(t,p); m[p]=t.getBoundingClientRect(); }); R.set(t,m); });   // measure every spot once
+  // each spot worked out from the tower box and the tag size (reading positions back can catch a tag mid-transition)
+  const R=new Map(); tags.forEach(t=>{ delete t.dataset.pos; const hr=t.closest('.hot').getBoundingClientRect(), tr=t.getBoundingClientRect(), w=tr.width, h=tr.height, W=hr.width, H=hr.height, L=hr.left, T=hr.top;
+    const mk=(x,y)=>({left:x,top:y,right:x+w,bottom:y+h});
+    R.set(t,{up:mk(L+W*.5-w/2,T-H*.02-h),down:mk(L+W*.5-w/2,T+H*1.02),left:mk(L-W*.04-w,T+H*.5-h/2),right:mk(L+W*1.04,T+H*.5-h/2),
+      ul:mk(L+W*.25-w,T-h),ur:mk(L+W*.75,T-h),dl:mk(L+W*.25-w,T+H),dr:mk(L+W*.75,T+H),uu:mk(L+W*.5-w/2,T-H*.02-2*h),dd:mk(L+W*.5-w/2,T+H*1.02+h)}); });
   const hit=(a,b)=>Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left))*Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top));
   const out=r=>r.left<box.left||r.right>box.right||r.top<box.top||r.bottom>box.bottom?1e6:0;
   const run=order=>{ const cur=new Map(order.map(t=>[t,'up']));
@@ -1153,21 +1154,33 @@ function paintHots(){
   });
   const st=$('#smap-stage'); if(st) st.classList.toggle('has-sel',!!state.sel);
 }
+function placePanel(){
+  const tp=$('#tp'); if(!tp) return;
+  if(innerWidth<=700||!state.sel){ tp.style.top=''; return; }
+  const box=$('.mapbox'), st=$('#smap-stage'), hot=$(`.hot[data-k="${state.sel}"]`); if(!box||!st||!hot) return;
+  const mb=box.getBoundingClientRect(), sr=st.getBoundingClientRect(), hr=hot.getBoundingClientRect(), h=tp.offsetHeight;
+  const visTop=Math.max(sr.top,74)+8, visBot=Math.min(sr.bottom,innerHeight)-12;
+  let top=(hr.top+hr.bottom)/2-h/2; top=Math.min(top,visBot-h); top=Math.max(top,visTop);
+  top=Math.max(sr.top+8,Math.min(top,sr.bottom-h-8));
+  tp.style.top=Math.round(top-mb.top)+'px';
+}
+{ let raf=0; const req=()=>{ if(!raf) raf=requestAnimationFrame(()=>{ raf=0; placePanel(); }); }; addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); }
 function paintPanel(){
   const tp=$('#tp'), L=lit(); paintHots();
-  if(!state.sel){ tp.classList.add('is-empty'); tp.innerHTML=''; return; }
+  if(!state.sel){ tp.classList.add('is-empty'); tp.innerHTML=''; tp.style.top=''; return; }
   tp.classList.remove('is-empty');
   { const xs=[...L].map(k=>SM.towers[k][0]), cx=xs.reduce((a,b)=>a+b,0)/xs.length/100; tp.classList.toggle('left',cx>0.5); tp.classList.toggle('right',cx<=0.5); }
   const k=state.sel; tp.dataset.k=tnum(k).padStart(2,'0'); tp.dataset.g=gOf(k);
   const ids=towerDefs[k]||[], also=[...L].filter(j=>j!==k).map(tname), sp=isSpecial(k), st=sp?0:starsOf(k);
   ids.forEach(u=>{ if(!teamOf[u]){ const [sid,i]=u.split('-'); const sec=S().sections.find(s=>s.id===sid); teamOf[u]=sec.teams[+i]; } });
   const meta=[sp?'Special Defense':'',st?st+' star':'',also.length?'Also lights '+also.join(', '):''].filter(Boolean).join(' \u00b7 ');
+  requestAnimationFrame(placePanel);
   tp.innerHTML=`<div class="tp-head"><h3>${esc(tname(k))}${meta?`<small>${esc(meta)}</small>`:''}</h3><button type="button" class="tp-x">Close</button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,true,n)).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
+  placePanel();
 }
 function selectTower(k,viaKey){
   closePops(); const was=state.sel; state.sel=(state.sel===k)?null:k; paintPanel();
   if(state.sel){ history.replaceState(null,'','#placements/'+state.sel);
-    { const st=$('#smap-stage'), r=st&&st.getBoundingClientRect(); if(r&&innerWidth>700&&(r.top<70||r.bottom>innerHeight-8)) st.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'}); }
     const sc=$('#smap-scroll'), h=$(`.hot[data-k="${state.sel}"]`); if(sc&&h&&sc.scrollWidth>sc.clientWidth){ sc.scrollTo({left:h.offsetLeft-sc.clientWidth/2,behavior:reduce?'auto':'smooth'}); }
     if(viaKey){ const x=$('.tp-x'); if(x) x.focus({preventScroll:true}); } }
   else { history.replaceState(null,'','#placements'); const h=$(`.hot[data-k="${was}"]`); if(h) h.focus({preventScroll:true}); }
