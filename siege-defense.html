@@ -1296,6 +1296,23 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
 #smap-stage[data-bd="under"] .hot .tk{left:calc(50% - 16px)!important;top:calc(83% + 23px)!important;width:32px;height:3px!important;gap:1.5px;justify-content:space-between}
 #smap-stage[data-bd="under"] .hot .tk b{width:5.2px!important;height:3px!important;border-radius:1px!important;background:var(--tc)!important;box-shadow:0 0 0 1px rgba(10,6,10,.55)!important}
 
+
+/* ===== map shape drafts ===== */
+#smap-stage :is(.smap-art,.smap-fx,.smap-dim){clip-path:var(--shape,none)}
+.theme-signal #smap-stage::after{clip-path:var(--shape,none)}
+.smap-shape{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:8}
+.smap-shape path{fill:none;stroke:rgba(233,236,239,.55);stroke-width:1.5;stroke-linejoin:miter}
+.smap-shape rect{fill:#e9ecef}
+
+
+
+/* cut map: no rectangular hairline or brackets (the svg outline and corner points replace them) */
+#smap-stage[data-shape="cut"]{box-shadow:none!important}
+#smap-stage[data-shape="cut"] .smap-brk{display:none!important}
+/* hero without the description: the buttons sit a step further from the title */
+.theme-signal #hero .cta-row{margin-top:clamp(30px,2.8vw,44px)}
+@media (max-width:700px){ .theme-signal #hero .cta-row{margin-top:20px} }
+
 /* tower panel leader line (desktop) */
 .tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
 .tp-link.on{display:block}
@@ -1340,7 +1357,6 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
   <div class="slash" aria-hidden="true"></div><div class="slash b" aria-hidden="true"></div>
   <div class="hero-in"><div class="hero-frame">
     <h1 id="h1" class="vA"><span class="h1-tag"><small>// Season</small><b id="hero-season">22</b><i aria-hidden="true"></i></span><span class="h1-main"><span>Siege</span> <span>Battle</span></span></h1>
-    <p class="lede">The Rock Bottom siege defense archive.<span class="lede-more"> Discover our defense compositions and seasonal history.</span></p>
     <div class="cta-row">
       <a class="btn fill" href="#lineup"><span>Explore defenses<svg class="ico down" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 4.5l5 5 5-5"/></svg></span></a>
       <a class="btn fill solid" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener"><span>Guild on SWGT<svg class="ico out" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 10l6-6M5 4h5v5"/></svg></span></a>
@@ -1623,7 +1639,7 @@ function renderMap(){
   });});
   Object.entries((SM.place||{})[state.sn]||{}).forEach(([k,ids])=>ids.forEach(u=>{ const [sid,i]=u.split('-'); if(S().sections.some(x=>x.id===sid&&x.teams[+i])) (towerDefs[k]=towerDefs[k]||[]).includes(u)||(towerDefs[k]=towerDefs[k]||[]).push(u); }));
   const host=$('#maphost'), keys=Object.keys(SM.towers).filter(k=>!isClosed(k));
-  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout" data-bd="under"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1688" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
+  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout" data-bd="under" data-shape="cut"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1688" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
   const stage=$('#smap-stage');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>stage.classList.toggle('run',e.isIntersecting)),{threshold:0}).observe(stage);
   const vid=$('.smap-vid',stage);
@@ -1660,8 +1676,18 @@ function fitHover(b){
   x=Math.max(sr.left+pad,Math.min(x,sr.right-pad-r.width));
   t.style.left=(x-hr.left)+'px'; t.style.top=(y-hr.top)+'px';
 }
+/* map shape: the painting is cut like the site's panels (top-left and bottom-right corners), an svg draws the outline and corner points */
+function drawShape(){
+  const st=$('#smap-stage'); if(!st) return;
+  let sv=$('.smap-shape',st); if(!sv){ sv=document.createElementNS('http://www.w3.org/2000/svg','svg'); sv.setAttribute('class','smap-shape'); sv.setAttribute('aria-hidden','true'); st.appendChild(sv); }
+  const r=st.getBoundingClientRect(), w=r.width, h=r.height, c=Math.min(w,h)*.07, f=n=>n.toFixed(1);
+  const P=[[c,0],[w,0],[w,h-c],[w-c,h],[0,h],[0,c]];
+  st.style.setProperty('--shape','polygon('+P.map(([x,y])=>`${f(x)}px ${f(y)}px`).join(',')+')');
+  sv.setAttribute('viewBox',`0 0 ${f(w)} ${f(h)}`);
+  sv.innerHTML=`<path d="M${P.map(([x,y])=>`${f(x)} ${f(y)}`).join(' L')} Z"/>`+P.map(([x,y])=>`<rect x="${f(x-2.5)}" y="${f(y-2.5)}" width="5" height="5"/>`).join('');
+}
 function placeTags(retry){
-  const st=$('#smap-stage'); if(!st) return; if(!retry) st.classList.remove('tight'); const tags=[...st.querySelectorAll('button.hot .hb')];
+  const st=$('#smap-stage'); if(!st) return; drawShape(); if(!retry) st.classList.remove('tight'); const tags=[...st.querySelectorAll('button.hot .hb')];
   tags.forEach(t=>{ delete t.dataset.pos; t.style.left=t.style.top=''; }); if(!st.classList.contains('show-all')||!tags.length){ drawLeads(); return; }
   { const sr=st.getBoundingClientRect(), pad=8, topIn=sr.top+sr.height*.02;
     const minL=sr.left+pad, maxB=sr.bottom-pad, maxR=sr.right-pad, gapP=4;
