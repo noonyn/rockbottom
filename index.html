@@ -1182,6 +1182,31 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
   #smap-stage .hot .tk b{width:6px;height:5px}
 }
 
+/* phone: the map scrolls sideways again (the desktop clip must not apply) */
+@media (max-width:700px){ .smap-scroll{overflow-x:auto!important;overflow-y:hidden;touch-action:pan-x pan-y} }
+
+/* phone hero: the art leads; the words sit in a short block at the bottom, stats in one slim row */
+@media (max-width:700px){
+  #hero{min-height:calc(100svh - 54px)}
+  #hero .hv{object-position:42% 22%}
+  .theme-signal #hero::after{background:linear-gradient(0deg,rgba(8,9,11,.97) 0,rgba(8,9,11,.82) 22%,rgba(8,9,11,.35) 38%,rgba(8,9,11,0) 52%)}
+  #hero .hero-frame{padding:0 18px 16px;margin:0 auto}
+  #hero .hero-frame::before,#hero .hero-frame::after{display:none}
+  #hero h1 .h1-tag{margin:0 0 8px;font-size:11px}
+  #hero h1 .h1-tag i{max-width:46px}
+  .theme-signal #hero h1,.theme-signal #hero h1.vA{font-size:min(10.6vw,44px);line-height:1}
+  #hero h1 .h1-main>span{display:inline}
+  .theme-signal #hero .lede{font-size:14.5px;margin-top:8px;color:#c9ced4}
+  #hero .lede-more{display:none}
+  .theme-signal #hero .cta-row{margin-top:14px}
+  .theme-signal #hero .cta-row .btn{padding:11px 18px 10px;font-size:11.5px;flex:0 1 auto;min-width:0}
+  .hx-bug{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px;background:rgba(10,11,13,.92)}
+  .hx-bug>div,.hx-bug>div:first-child{padding:10px 4px 9px;gap:5px;border-top:0;border-left:1px solid rgba(233,236,239,.1)}
+  .hx-bug>div:first-child{border-left:0}
+  .hx-bug .bug-cell span{font-size:8.5px;letter-spacing:.08em;line-height:1.15;white-space:normal}
+  .hx-bug .bug-cell b{font-size:16px}
+}
+
 /* tower panel leader line (desktop) */
 .tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
 .tp-link.on{display:block}
@@ -1226,7 +1251,7 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
   <div class="slash" aria-hidden="true"></div><div class="slash b" aria-hidden="true"></div>
   <div class="hero-in"><div class="hero-frame">
     <h1 id="h1" class="vA"><span class="h1-tag"><small>// Season</small><b id="hero-season">22</b><i aria-hidden="true"></i></span><span class="h1-main"><span>Siege</span> <span>Battle</span></span></h1>
-    <p class="lede">The Rock Bottom siege defense archive. Discover our defense compositions and seasonal history.</p>
+    <p class="lede">The Rock Bottom siege defense archive.<span class="lede-more"> Discover our defense compositions and seasonal history.</span></p>
     <div class="cta-row">
       <a class="btn fill" href="#lineup"><span>Explore defenses<svg class="ico down" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 4.5l5 5 5-5"/></svg></span></a>
       <a class="btn fill solid" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener"><span>Guild on SWGT<svg class="ico out" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 10l6-6M5 4h5v5"/></svg></span></a>
