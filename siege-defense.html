@@ -784,6 +784,20 @@ body.theme-signal::before{content:"";position:fixed;inset:0;z-index:300;pointer-
 
 /* placements: no corner frame */
 .theme-signal .mapbox::before{display:none}
+
+/* tower panel leader line (desktop) */
+.tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
+.tp-link.on{display:block}
+.tp-link .tl-path{fill:none;stroke:rgba(233,236,239,.6);stroke-width:1.25;stroke-linejoin:miter}
+.tp-link .tl-ret{fill:none;stroke:var(--lc,#e9ecef);stroke-width:1.5;opacity:.95}
+.tp-link .tl-par{fill:none;stroke:rgba(233,236,239,.32);stroke-width:1;stroke-dasharray:2 4}
+.tp-link .tl-node{fill:#0a0b0d;stroke:var(--lc,#e9ecef);stroke-width:1.25}
+.tp-link .tl-tick{fill:none;stroke:var(--lc,#e9ecef);stroke-width:2}
+.tp-link.on .tl-ret,.tp-link.on .tl-node,.tp-link.on .tl-tick,.tp-link.on .tl-par{animation:tlIn .3s ease-out .12s backwards}
+@keyframes tlIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){ .tp-link.on .tl-ret,.tp-link.on .tl-node,.tp-link.on .tl-tick,.tp-link.on .tl-par{animation:none} }
+@media (max-width:700px){ .tp-link{display:none!important} }
+
 @media (prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
   .strip,.tile,.btn,.sbtn svg,.nav a::after{transition:none!important}
@@ -852,7 +866,7 @@ body.theme-signal::before{content:"";position:fixed;inset:0;z-index:300;pointer-
     <button type="button" class="stog" id="smap-badges" aria-pressed="false">Show all</button>
   </div>
   <div class="in"></div>
-  <div class="mapbox"><div class="maphost" id="maphost"></div><aside class="tp is-empty" id="tp" aria-live="polite"></aside></div>
+  <div class="mapbox"><div class="maphost" id="maphost"></div><svg class="tp-link" id="tp-link" aria-hidden="true"><path class="tl-ret"></path><path class="tl-par"></path><path class="tl-path"></path><path class="tl-node"></path><path class="tl-tick"></path></svg><aside class="tp is-empty" id="tp" aria-live="polite"></aside></div>
   <div class="maplinks" aria-hidden="true"></div>
 </section>
 
@@ -1155,19 +1169,46 @@ function paintHots(){
   const st=$('#smap-stage'); if(st) st.classList.toggle('has-sel',!!state.sel);
 }
 function placePanel(){
-  const tp=$('#tp'); if(!tp) return;
-  if(innerWidth<=700||!state.sel){ tp.style.top=''; return; }
+  const tp=$('#tp'), link=$('#tp-link'); if(!tp) return;
+  const off=()=>{ tp.style.top=tp.style.left=tp.style.right=''; if(link){ link.classList.remove('on'); placePanel.k=null; } };
+  if(innerWidth<=700||!state.sel){ off(); return; }
   const box=$('.mapbox'), st=$('#smap-stage'), hot=$(`.hot[data-k="${state.sel}"]`); if(!box||!st||!hot) return;
-  const mb=box.getBoundingClientRect(), sr=st.getBoundingClientRect(), hr=hot.getBoundingClientRect(), h=tp.offsetHeight;
+  const mb=box.getBoundingClientRect(), sr=st.getBoundingClientRect(), hr=hot.getBoundingClientRect(), h=tp.offsetHeight, w=tp.offsetWidth;
+  const cy=(hr.top+hr.bottom)/2, cx=(hr.left+hr.right)/2, gap=Math.max(72,hr.width*.95);
+  // vertical: level with the tower, kept in the on-screen part of the map
   const visTop=Math.max(sr.top,74)+8, visBot=Math.min(sr.bottom,innerHeight)-12;
-  let top=(hr.top+hr.bottom)/2-h/2; top=Math.min(top,visBot-h); top=Math.max(top,visTop);
-  top=Math.max(sr.top+8,Math.min(top,sr.bottom-h-8));
-  tp.style.top=Math.round(top-mb.top)+'px';
+  let top=cy-h/2; top=Math.min(top,visBot-h); top=Math.max(top,visTop); top=Math.max(sr.top+8,Math.min(top,sr.bottom-h-8));
+  // horizontal: right beside the tower, on the side with room
+  const toRight=cx-sr.left < sr.width*.55;
+  let left=toRight? hr.right+gap : hr.left-gap-w;
+  left=Math.max(sr.left+8,Math.min(left,sr.right-w-8));
+  tp.style.top=Math.round(top-mb.top)+'px'; tp.style.left=Math.round(left-mb.left)+'px'; tp.style.right='auto';
+  if(!link) return;
+  if(toRight? left<hr.right+24 : left+w>hr.left-24){ link.classList.remove('on'); placePanel.k=null; return; }   // no room beside the tower (small screens): no line
+  // bracket: corner brackets on the tower; the line leaves the bracket side at the tower's centre, a 45-degree leg to a diamond, a level run with a dashed accent, a tick on the panel
+  const X=v=>(v-mb.left).toFixed(1), Y=v=>(v-mb.top).toFixed(1), dir=toRight?1:-1, q=c=>link.querySelector('.'+c), path=q('tl-path');
+  const px=toRight? left : left+w;
+  let ay=Math.max(top+26,Math.min(cy,top+h-26));
+  if(Math.abs(ay-cy)<16){ const alt=cy+(cy<top+h/2?18:-18); ay=Math.max(top+26,Math.min(alt,top+h-26)); }   // keep an angle even when the panel is level with the tower
+  const pad=4, bl=hr.left+hr.width*.12-pad, br=hr.right-hr.width*.12+pad, bt=hr.top+hr.height*.08-pad, bb=hr.bottom-hr.height*.04+pad, arm=Math.min(10,(br-bl)*.22);
+  const sx=(toRight? br : bl)+dir*3, sy=cy, up=ay<cy;
+  let leg=Math.abs(ay-sy); const room=Math.abs(px-sx)-22; if(leg>room) leg=Math.max(0,room);
+  const kx=sx+dir*leg, ky=sy+(ay>sy?1:-1)*leg;
+  path.setAttribute('d',`M${X(sx)} ${Y(sy)} L${X(kx)} ${Y(ky)} L${X(kx)} ${Y(ay)} H${X(px)}`);
+  q('tl-ret').setAttribute('d',[[bl,bt,1,1],[br,bt,-1,1],[bl,bb,1,-1],[br,bb,-1,-1]].map(([x,y,a,b])=>`M${X(x+a*arm)} ${Y(y)} H${X(x)} V${Y(y+b*arm)}`).join(' ')+` M${X(sx-dir*3)} ${Y(sy-3)} V${Y(sy+3)}`);
+  const pa=ay+(up?5:-5), p0=kx+dir*7, p1=px-dir*9;
+  q('tl-par').setAttribute('d',Math.abs(p1-p0)>8?`M${X(p0)} ${Y(pa)} H${X(p1)}`:'');
+  const n=4; q('tl-node').setAttribute('d',`M${X(kx)} ${Y(ay-n)} L${X(kx+n)} ${Y(ay)} L${X(kx)} ${Y(ay+n)} L${X(kx-n)} ${Y(ay)} Z`);
+  q('tl-tick').setAttribute('d',`M${X(px)} ${Y(ay-8)} V${Y(ay+8)}`);
+  link.style.setProperty('--lc',getComputedStyle(tp).borderTopColor);
+  link.classList.add('on');
+  if(placePanel.k!==state.sel){ placePanel.k=state.sel; if(!reduce){ const L=path.getTotalLength(); path.style.transition='none'; path.style.strokeDasharray=L; path.style.strokeDashoffset=L; path.getBoundingClientRect(); path.style.transition='stroke-dashoffset .38s cubic-bezier(.16,1,.3,1)'; path.style.strokeDashoffset='0'; } }
+  else if(!reduce){ path.style.transition='none'; path.style.strokeDasharray='none'; path.style.strokeDashoffset='0'; }
 }
 { let raf=0; const req=()=>{ if(!raf) raf=requestAnimationFrame(()=>{ raf=0; placePanel(); }); }; addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); }
 function paintPanel(){
   const tp=$('#tp'), L=lit(); paintHots();
-  if(!state.sel){ tp.classList.add('is-empty'); tp.innerHTML=''; tp.style.top=''; return; }
+  if(!state.sel){ tp.classList.add('is-empty'); tp.innerHTML=''; placePanel(); return; }
   tp.classList.remove('is-empty');
   { const xs=[...L].map(k=>SM.towers[k][0]), cx=xs.reduce((a,b)=>a+b,0)/xs.length/100; tp.classList.toggle('left',cx>0.5); tp.classList.toggle('right',cx<=0.5); }
   const k=state.sel; tp.dataset.k=tnum(k).padStart(2,'0'); tp.dataset.g=gOf(k);
