@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -369,7 +369,7 @@ body.pop-open .strip:not(.open){opacity:.35;transition:opacity .2s}
   .hero .cta-row .btn{flex:1;padding:14px 6px 12px;font-size:17px}
   .hero .cta-row .btn span{justify-content:center;width:100%}
 }
-/* ── Barlow Condensed: italic carries the lean, weights stay at 700-800 ── */
+/* â”€â”€ Barlow Condensed: italic carries the lean, weights stay at 700-800 â”€â”€ */
 .logo{font:italic 800 26px var(--display);letter-spacing:.03em}
 .nav a{font:700 17px var(--display);letter-spacing:.1em}
 .sbtn{font:italic 800 var(--t-ui) var(--display);letter-spacing:.06em}
@@ -385,7 +385,7 @@ html,body{overflow-x:clip}
   .join::before{top:auto;bottom:-6%;height:42%;width:44vw;right:-10vw}
 }
 
-/* ═════════ placements themes: body.theme-abyssal / theme-signal / theme-violet. No class = the original look. ═════════ */
+/* â•â•â•â•â•â•â•â•â• placements themes: body.theme-abyssal / theme-signal / theme-violet. No class = the original look. â•â•â•â•â•â•â•â•â• */
 .smap-stage::before{content:none}
 body[class*="theme-"] .smap{background:var(--t-bg)}
 body[class*="theme-"] .smap::before,body[class*="theme-"] .smap::after{content:"";position:absolute;left:0;right:0;height:clamp(60px,9vw,130px);z-index:6;pointer-events:none}
@@ -414,7 +414,7 @@ body[class*="theme-"] .tp[data-g=B]{--gtc:var(--t-b)}
 body[class*="theme-"] .tp[data-g=R]{--gtc:var(--t-r)}
 body[class*="theme-"] .tp[data-g=Y]{--gtc:var(--t-y)}
 
-/* ───────── B · SIGNAL LOST ───────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€ B Â· SIGNAL LOST â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body.theme-signal{--t-bg:#0a0b0d;--t-ink:#e9ecef;--t-dimink:#8b9199;--t-accent:#e9ecef;--t-line:rgba(233,236,239,.3);--t-disp:'Chakra Petch',sans-serif;--t-ui:'Chakra Petch',sans-serif;--t-mono:'Share Tech Mono',monospace;--t-rad:0;--t-loading:"ESTABLISHING UPLINK_";
   --t-b:#2f9bff;--t-r:#ff3b3b;--t-y:#ffd400;--t-gb:rgba(47,155,255,.6);--t-gr:rgba(255,59,59,.65);--t-gy:rgba(255,212,0,.62);
   --t-grade:grayscale(.4) brightness(.86) contrast(1.16) saturate(1.45);
@@ -483,7 +483,7 @@ body.theme-signal{--t-bg:#0a0b0d;--t-ink:#e9ecef;--t-dimink:#8b9199;--t-accent:#
   body[class*="theme-"] .smap-stage:not(.loaded)::before{animation:none}
 }
 
-/* ═════════ SIGNAL LOST, site-wide: charcoal and monochrome, guild colours as the only accents, thin frames, cut corners, mono micro-labels ═════════ */
+/* â•â•â•â•â•â•â•â•â• SIGNAL LOST, site-wide: charcoal and monochrome, guild colours as the only accents, thin frames, cut corners, mono micro-labels â•â•â•â•â•â•â•â•â• */
 html{scrollbar-color:#3a3f46 #0a0b0d;scrollbar-width:thin}
 body.theme-signal::before{content:"";position:fixed;inset:0;z-index:300;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)}
 ::selection{background:#e9ecef;color:#0a0b0d}
@@ -675,7 +675,7 @@ body.theme-signal::before{content:"";position:fixed;inset:0;z-index:300;pointer-
 .smap-stage.show-all .hb[data-pos="dl"]{left:25%!important;top:100%!important;transform:translate(-100%,0)!important}
 .smap-stage.show-all .hb[data-pos="dr"]{left:75%!important;top:100%!important;transform:translate(0,0)!important}
 
-/* hero lockup: SIEGE BATTLE, then the season as a counter — a small upright SEASON label beside a big numeral */
+/* hero lockup: SIEGE BATTLE, then the season as a counter â€” a small upright SEASON label beside a big numeral */
 @media (max-width:700px){
   .smap-stage.show-all .hb .hd img{width:18px;height:18px}
   .theme-signal .smap-stage.show-all .hb{font-size:10px;padding:3px 6px 3px 6px}
@@ -1207,6 +1207,65 @@ body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.0
   .hx-bug .bug-cell b{font-size:16px}
 }
 
+/* towers: no bars; the number badge sits centred under the tower */
+#smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 12px)}
+@media (max-width:700px){ #smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 10.5px)} }
+
+/* phone hero: the art in the top of the screen, framed on Jeanne with her shield; the words on the dark below */
+@media (max-width:700px){
+  #hero .hv{top:0;bottom:auto;height:min(70%,600px);object-position:50% 42%}
+  .theme-signal #hero::after{background:
+    linear-gradient(180deg,rgba(8,9,11,0) 0,rgba(8,9,11,0) calc(min(70%,600px) - 160px),rgba(8,9,11,.9) min(70%,600px),rgba(8,9,11,.98) 100%)}
+  #hero{background:#0a0b0d}
+}
+
+/* number badges a size up and easier to read: thicker guild ring, darker plate, bolder numeral, a drop shadow; HQ centred and larger */
+#smap-stage .hot:not([data-k^="HQ"]) .nb{width:31px;height:31px;left:calc(50% - 15.5px);top:80%}
+#smap-stage .hot.gB:not([data-k^="HQ"]) .nb{height:33px}
+#smap-stage .hot .nb{filter:drop-shadow(0 2px 3px rgba(0,0,0,.75)) drop-shadow(0 0 1px rgba(0,0,0,.9))}
+#smap-stage .hot .nb::before{inset:3px;background:#0d070c}
+#smap-stage .hot .nb span{font:italic 700 17px/1 'Chakra Petch',sans-serif;color:#fff;letter-spacing:-.01em;text-shadow:0 1px 2px rgba(0,0,0,.8)}
+#smap-stage .hot.gB:not([data-k^="HQ"]) .nb span{height:80%}
+#smap-stage .hot[data-k^="HQ"] .nb{width:44px;height:30px;left:calc(50% - 22px);top:84%;bottom:auto;clip-path:polygon(0 0,100% 0,100% 64%,50% 100%,0 64%)}
+#smap-stage .hot[data-k^="HQ"] .nb span{height:72%;font-size:15px;letter-spacing:.04em}
+@media (max-width:700px){
+  #smap-stage .hot:not([data-k^="HQ"]) .nb{width:26px;height:26px;left:calc(50% - 13px)}
+  #smap-stage .hot.gB:not([data-k^="HQ"]) .nb{height:28px}
+  #smap-stage .hot .nb span{font-size:14px}
+  #smap-stage .hot[data-k^="HQ"] .nb{width:38px;height:26px;left:calc(50% - 19px)}
+  #smap-stage .hot[data-k^="HQ"] .nb span{font-size:13px}
+}
+
+/* badge + bars as one unit centred under the tower: the bars sit on a small dark tab tucked under the badge's right edge */
+#smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 42px);z-index:3}
+#smap-stage .hot .tk{left:calc(50% - 42px + 26px);top:calc(80% + 9px);height:14px;padding:0 5px 0 9px;gap:2px;align-items:center;z-index:2;
+  background:#0d070c;border:1.5px solid var(--tc);border-left:0;box-shadow:0 2px 3px rgba(0,0,0,.6);transform:none}
+#smap-stage .hot.gB .tk{top:calc(80% + 10px)}
+#smap-stage .hot .tk b{width:7px;height:6px;box-shadow:none}
+.smap-stage:not(.show-all) #smap-stage .hot .tk,#smap-stage:not(.show-all) .hot .tk{display:flex}
+#smap-stage.show-all .hot:not(.on) .tk{display:none}
+/* no HQ label */
+#smap-stage .hot[data-k^="HQ"] .nb{display:none!important}
+@media (max-width:700px){
+  #smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 36px)}
+  #smap-stage .hot .tk{left:calc(50% - 36px + 21px);top:calc(80% + 7px);height:12px;padding:0 4px 0 8px}
+  #smap-stage .hot.gB .tk{top:calc(80% + 8px)}
+  #smap-stage .hot .tk b{width:6px;height:5px}
+}
+
+/* bars after the in-game look: one dark bar with a thin dark outline, five tall segments, the badge overlapping its left end */
+#smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 47px)}
+#smap-stage .hot .tk{left:calc(50% - 47px + 24px);top:calc(80% + 10px);height:17px;padding:0 4px 0 11px;gap:2px;
+  background:linear-gradient(180deg,#1b2026,#0c0f13);border:1.5px solid #05070a;border-radius:3px;box-shadow:0 2px 3px rgba(0,0,0,.55)}
+#smap-stage .hot.gB .tk{top:calc(80% + 11px)}
+#smap-stage .hot .tk b{width:9px;height:11px;border-radius:1.5px;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 70%,#fff) 0,var(--tc) 45%,color-mix(in srgb,var(--tc) 75%,#000) 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+@media (max-width:700px){
+  #smap-stage .hot:not([data-k^="HQ"]) .nb{left:calc(50% - 39px)}
+  #smap-stage .hot .tk{left:calc(50% - 39px + 20px);top:calc(80% + 8px);height:14px;padding:0 3px 0 9px}
+  #smap-stage .hot.gB .tk{top:calc(80% + 9px)}
+  #smap-stage .hot .tk b{width:7px;height:9px}
+}
+
 /* tower panel leader line (desktop) */
 .tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
 .tp-link.on{display:block}
@@ -1374,7 +1433,7 @@ if(!(saveData||reduce)){
 /* monsters: live site first, local images folder as the fallback */
 const mon=m=>`<img class="mon" src="${IMG_BASE+encodeURI(m.p)}.png" onerror="this.onerror=null;this.src='images/${encodeURI(m.p)}.png'" alt="${esc(m.n)}" width="100" height="100" loading="lazy" decoding="async">`;
 
-/* ── a defense: three stacked portraits; any slot with alternates can be swapped ── */
+/* â”€â”€ a defense: three stacked portraits; any slot with alternates can be swapped â”€â”€ */
 let teamOf={};
 const swKey=(uid,j)=>`${state.sn}|${uid}|${j}`;
 function slotHTML(uid,j){
@@ -1426,7 +1485,7 @@ function pick(btn){
   const art=$(`.slot[data-uid="${uid}"][data-j="${j}"] button.art`); if(art) art.focus({preventScroll:true});
 }
 
-/* ── render ── */
+/* â”€â”€ render â”€â”€ */
 /* monster suggestions: a picture popup that opens only while you type */
 let monIndex=[], sugIdx=-1;
 function buildMonIndex(){
@@ -1719,7 +1778,7 @@ function renderSchedule(){
   const sc=S().schedule;
   const now=Date.now(), SIEGE_MS=36*3600*1000;   // a siege counts as done 36 hours after it starts
   $('#tiles').innerHTML=sc.map((s,idx)=>{const done=new Date(s.date).getTime()+SIEGE_MS<=now; return `<div class="tile${done?' done':''}" style="--i:${idx}"><div class="s">${esc(s.label)}</div><div class="d">${dUTC(s.date,{day:'numeric',month:'short'})}</div><div class="w">${dUTC(s.date,{weekday:'long'})}</div>${done?'<span class="sr">Done</span>':''}</div>`;}).join('');
-  $('#sg-note').textContent=sc.length?S().range.replace(/ — /,' to '):'No siege schedule has been published for this season.';
+  $('#sg-note').textContent=sc.length?S().range.replace(/ â€” /,' to '):'No siege schedule has been published for this season.';
 }
 function renderHeroX(){
   const st=S().stats||{};
