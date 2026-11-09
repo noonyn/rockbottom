@@ -1086,6 +1086,85 @@ body.theme-signal .smap-art::after{display:none}
 /* the tower under the pointer (and its box) draws above every other tower */
 .smap-hots .hot:hover,.smap-hots .hot:focus-visible,.smap-hots .hot:focus-within{z-index:30}
 
+
+/* ===== map frame: short feather; corner brackets just outside the map, as in the hero ===== */
+.smap-art,.smap-fx,.smap-dim{
+  --fh:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) 1.2%,#000 3%,#000 97%,rgba(0,0,0,.45) 98.8%,transparent 100%);
+  --fv:linear-gradient(180deg,transparent 0,rgba(0,0,0,.45) 1.4%,#000 3.5%,#000 96.5%,rgba(0,0,0,.45) 98.6%,transparent 100%);
+  --fr:linear-gradient(#000,#000)}
+.smap-brk{position:absolute;z-index:8;width:clamp(28px,2.6vw,40px);height:clamp(28px,2.6vw,40px);border:0 solid rgba(233,236,239,.55);pointer-events:none}
+.smap-brk.tl{left:calc(-1*clamp(12px,1.1vw,18px));top:calc(-1*clamp(12px,1.1vw,18px));border-left-width:2px;border-top-width:2px}
+.smap-brk.br{right:calc(-1*clamp(12px,1.1vw,18px));bottom:calc(-1*clamp(12px,1.1vw,18px));border-right-width:2px;border-bottom-width:2px}
+@media (min-width:701px){ .smap-scroll{padding:clamp(14px,1.3vw,20px) 0} }
+@media (max-width:700px){ .smap-brk{display:none} }
+/* ===== Show all, quieter: one slim row per tower (small number tab with the grade under it, three small portraits), lighter plate ===== */
+.theme-signal #smap-stage.show-all .hot .hb:not(.hb-hq){column-gap:4px;row-gap:1px;padding:3px 4px 3px 3px;
+  background:rgba(14,10,15,.78);border:1px solid rgba(255,236,248,.07);box-shadow:inset 0 -1.5px 0 color-mix(in srgb,var(--tc) 80%,transparent),0 3px 8px rgba(0,0,0,.35)}
+.theme-signal #smap-stage.show-all .hot .hb:not(.hb-hq) b{min-width:clamp(18px,1.6cqi,22px);padding:2px 3px 1px;font-size:clamp(11px,1.05cqi,14px);clip-path:polygon(0 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%)}
+.theme-signal #smap-stage.show-all .hot .hb:not(.hb-hq) em{font-size:clamp(9px,.8cqi,10.5px);color:#b7aeb5}
+#smap-stage.show-all .hot .hb:not(.hb-hq) .hd{gap:2px}
+#smap-stage.show-all .hot .hb:not(.hb-hq) .hd img{width:clamp(20px,1.95cqi,27px)!important;height:clamp(20px,1.95cqi,27px)!important;border-color:rgba(255,236,248,.1)}
+#smap-stage.show-all .hot .hb .hd small{font-size:11px}
+/* hovering one brings it up to full size and strength */
+#smap-stage.show-all .hot:hover .hb:not(.hb-hq),#smap-stage.show-all .hot:focus-visible .hb:not(.hb-hq){background:rgba(14,10,15,.94)}
+#smap-stage.show-all .hot:hover .hb:not(.hb-hq) .hd img,#smap-stage.show-all .hot:focus-visible .hb:not(.hb-hq) .hd img{width:clamp(26px,2.5cqi,34px)!important;height:clamp(26px,2.5cqi,34px)!important}
+
+
+/* ===== map edge drafts ===== */
+.smap-brk.tr,.smap-brk.bl,.smap-hud{display:none}
+#placements:not([data-edge="fade"]) :is(.smap-art,.smap-fx,.smap-dim){-webkit-mask-image:none!important;mask-image:none!important}
+#placements:not([data-edge="fade"]) .smap-brk{display:none}
+#placements:not([data-edge="fade"]) .smap-scroll::before{display:none}
+  -webkit-mask-image:radial-gradient(ellipse 62% 72% at 50% 50%,#000 38%,transparent 100%);mask-image:radial-gradient(ellipse 62% 72% at 50% 50%,#000 38%,transparent 100%)}
+/* 3 HUD: hard edge, hairline border, brackets on all four corners, edge ticks, mono labels */
+#placements[data-edge="hud"] .smap-stage{box-shadow:0 0 0 1px rgba(233,236,239,.26)}
+#placements[data-edge="hud"] .smap-brk{display:block;width:22px;height:22px;border-color:#e9ecef}
+#placements[data-edge="hud"] .smap-brk.tl{left:-4px;top:-4px}
+#placements[data-edge="hud"] .smap-brk.br{right:-4px;bottom:-4px}
+#placements[data-edge="hud"] .smap-brk.tr{right:-4px;top:-4px;border-right-width:2px;border-top-width:2px}
+#placements[data-edge="hud"] .smap-brk.bl{left:-4px;bottom:-4px;border-left-width:2px;border-bottom-width:2px}
+#placements[data-edge="hud"] .smap-hud{display:block;position:absolute;inset:0;z-index:8;pointer-events:none}
+#placements[data-edge="hud"] .smap-hud::before,#placements[data-edge="hud"] .smap-hud::after{content:"";position:absolute;left:40px;right:40px;height:6px;background:repeating-linear-gradient(90deg,rgba(233,236,239,.45) 0 1px,transparent 1px 48px)}
+#placements[data-edge="hud"] .smap-hud::before{top:-10px}
+#placements[data-edge="hud"] .smap-hud::after{bottom:-10px}
+#placements[data-edge="hud"] .smap-hud b{position:absolute;font:400 11px/1 'Share Tech Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#8b9199;font-weight:400}
+#placements[data-edge="hud"] .smap-hud b:first-child{left:0;top:-26px}
+#placements[data-edge="hud"] .smap-hud b:last-child{right:0;bottom:-26px}
+#placements[data-edge="hud"] .smap-scroll{padding:30px 0}
+@media (max-width:700px){ #placements[data-edge="hud"] .smap-hud,#placements[data-edge="hud"] .smap-brk{display:none} }
+
+/* a notch darker: the painting and the tower art */
+body.theme-signal .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.04)}
+.hot .nd img{filter:brightness(.92) saturate(.96)}
+
+
+/* ===== Show all box drafts ===== */
+
+
+
+
+
+
+
+/* ===== box drafts, a size up ===== */
+/* stack: one row, never wraps */
+/* strip: bigger portraits, a proper flap with number and grade side by side */
+
+
+
+
+
+/* 9 READOUT: the hero's label language: // number, a dotted rule, the grade; a hairline chamfered plate */
+.theme-signal #smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq){display:grid!important;grid-template-columns:auto 1fr;grid-template-areas:"n s" "p p";column-gap:8px;row-gap:6px;padding:7px 9px 9px;
+  background:rgba(9,10,12,.9)!important;border:1px solid rgba(233,236,239,.22)!important;box-shadow:0 6px 14px rgba(0,0,0,.45)!important;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))!important}
+.theme-signal #smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) b{all:unset;grid-area:n;font:400 12.5px/1 'Share Tech Mono',monospace!important;letter-spacing:.14em;color:#e9ecef}
+.theme-signal #smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) b::before{content:"// ";color:var(--tc)}
+.theme-signal #smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) em{grid-area:s;display:flex!important;align-items:center;gap:6px;font:400 11px/1 'Share Tech Mono',monospace!important;color:var(--tc)!important}
+.theme-signal #smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) em::before{content:"";flex:1;min-width:14px;height:4px;background:radial-gradient(circle,rgba(233,236,239,.45) 1px,transparent 1.3px) 0 50%/6px 4px repeat-x}
+#smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) .hd{grid-area:p;gap:3px}
+#smap-stage.show-all[data-pv="readout"] .hot .hb:not(.hb-hq) .hd img{width:clamp(30px,2.85cqi,40px)!important;height:clamp(30px,2.85cqi,40px)!important;border:1px solid rgba(233,236,239,.16)!important}
+
+
 /* tower panel leader line (desktop) */
 .tp-link{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:11;display:none}
 .tp-link.on{display:block}
@@ -1161,7 +1240,7 @@ body.theme-signal .smap-art::after{display:none}
   </div>
 </section>
 
-<section class="smap" id="placements" aria-labelledby="h-map">
+<section class="smap" id="placements" aria-labelledby="h-map" data-edge="hud">
   <div class="in smap-head">
     <h2 class="h2" id="h-map">Placements</h2>
     <button type="button" class="stog" id="smap-badges" aria-pressed="false">Show all</button>
@@ -1412,7 +1491,7 @@ function renderMap(){
   });});
   Object.entries((SM.place||{})[state.sn]||{}).forEach(([k,ids])=>ids.forEach(u=>{ const [sid,i]=u.split('-'); if(S().sections.some(x=>x.id===sid&&x.teams[+i])) (towerDefs[k]=towerDefs[k]||[]).includes(u)||(towerDefs[k]=towerDefs[k]||[]).push(u); }));
   const host=$('#maphost'), keys=Object.keys(SM.towers).filter(k=>!isClosed(k));
-  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1512" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div></div></div>`;
+  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage" data-pv="readout"><div class="smap-art"><img class="smap-img" src="${SM.img}" width="2600" height="1512" alt="Season ${esc(state.sn)} siege map, with the defense placed on each Blue, Red and Yellow tower" decoding="async">${(reduce||saveData||!SM.video)?'':'<video class="smap-vid" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>'}</div><div class="smap-fx" aria-hidden="true">${reduce?'':fxHTML()}</div><div class="smap-dim" aria-hidden="true"></div><div class="smap-hots" id="hots"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><div class="smap-px" aria-hidden="true"></div><div class="smap-vig" aria-hidden="true"></div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b><b>${Object.keys(towerDefs).filter(k=>!isClosed(k)&&SM.towers[k]).length} bases held</b></i></div></div>`;
   const stage=$('#smap-stage');
   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>stage.classList.toggle('run',e.isIntersecting)),{threshold:0}).observe(stage);
   const vid=$('.smap-vid',stage);
