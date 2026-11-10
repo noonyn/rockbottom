@@ -1144,6 +1144,10 @@ html{scroll-padding-top:76px}
 @media (max-width:700px){ :root .tile .d{font-size:18px;white-space:nowrap} }
 /* the map's loops rest while it is off screen (class set by script) */
 :root #placements.idle *,:root #placements.idle *::before,:root #placements.idle *::after{animation-play-state:paused}
+/* phone: Explore defenses is plain text and arrow, no frame (the frame comes back for keyboard focus) */
+@media (max-width:700px){
+  #main #hero .cta-row .btn.fill:not(.solid):not(:focus-visible),#main #hero .cta-row .btn.fill:not(.solid):not(:focus-visible):hover{border-color:transparent;background:transparent;color:var(--white)}
+}
 </style>
 </head>
 <body>
@@ -1170,7 +1174,7 @@ html{scroll-padding-top:76px}
     <h1 id="h1" class="vA"><span class="h1-tag"><small>// Season</small><b id="hero-season">22</b><i aria-hidden="true"></i></span><span class="h1-main"><span>Siege</span> <span>Battle</span></span></h1>
     <div class="cta-row">
       <a class="btn fill" href="#lineup"><span>Explore defenses<svg class="ico down" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 4.5l5 5 5-5"/></svg></span></a>
-      <a class="btn fill solid" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener"><span>Guild on SWGT<svg class="ico out" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 10l6-6M5 4h5v5"/></svg></span></a>
+      <a class="btn fill solid" href="https://rockbottom.swgt.io/" target="_blank" rel="noopener" aria-label="Rock Bottom on SWGT (opens in a new tab)"><span>SWGT<svg class="ico out" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 10l6-6M5 4h5v5"/></svg></span></a>
     </div>
   </div></div>
   <div class="hx hx-bug" id="hx-bug"></div>
