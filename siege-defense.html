@@ -1176,13 +1176,13 @@ html{scroll-padding-top:76px}
 /* tower hit area: the whole tower art, not just the base square */
 .hot .hit{position:absolute;left:-14%;right:-14%;top:-93%;bottom:0}
 .hot[data-k^="HQ"] .hit{left:-22%;right:-22%;top:-126%}
-/* hero and Join buttons: soft gold, rounded 6px. Browse defenses and Apply here are the gold fill, SWGT the gold outline. Gold is not a guild colour: it is warmer than Yellow Guild, and only these buttons use it */
+/* hero buttons: soft gold, rounded 6px. SWGT is the gold fill, Browse defenses the gold outline. Gold is not a guild colour: it is warmer than Yellow Guild, and only the hero buttons use it (Apply here stays white) */
 :root{--gold:#d9a546;--gold-rgb:217 165 70;--gold-hi:#e6b862;--gold-ink:#e8c785}
-#main :is(#hero,.join) .cta-row .btn{clip-path:none;border-radius:6px;background-image:none;border-width:1px;border-style:solid;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)}
-#main :is(#hero,.join) .cta-row .btn.fill:not(.solid){border-color:var(--gold);background-color:var(--gold);color:var(--black)}
-#main :is(#hero,.join) .cta-row .btn.fill:not(.solid):hover{border-color:var(--gold-hi);background-color:var(--gold-hi);color:var(--black)}
-#main :is(#hero,.join) .cta-row .btn.fill.solid,#main :is(#hero,.join) .cta-row .btn.fill.solid:active{border-color:rgb(var(--gold-rgb) / .55);background-color:rgb(var(--black-rgb) / .35);color:var(--gold-ink)}
-#main :is(#hero,.join) .cta-row .btn.fill.solid:hover{border-color:var(--gold);background-color:rgb(var(--gold-rgb) / .12);color:var(--gold-ink)}
+#main #hero .cta-row .btn{clip-path:none;border-radius:6px;background-image:none;border-width:1px;border-style:solid;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)}
+#main #hero .cta-row .btn.fill:not(.solid){border-color:rgb(var(--gold-rgb) / .55);background-color:rgb(var(--black-rgb) / .35);color:var(--gold-ink)}
+#main #hero .cta-row .btn.fill:not(.solid):hover{border-color:var(--gold);background-color:rgb(var(--gold-rgb) / .12);color:var(--gold-ink)}
+#main #hero .cta-row .btn.fill.solid,#main #hero .cta-row .btn.fill.solid:active{border-color:var(--gold);background-color:var(--gold);color:var(--black)}
+#main #hero .cta-row .btn.fill.solid:hover{border-color:var(--gold-hi);background-color:var(--gold-hi);color:var(--black)}
 @media (max-width:700px){ #main #hero .cta-row .btn.fill:not(.solid):not(:focus-visible) .ico{color:var(--gold)} }
 /* section titles: the // marker near cap height and bold, so it reads at every width */
 :root .h2::before,:root .smap-head .h2::before{font:700 .9em/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:-.04em;margin:0}
