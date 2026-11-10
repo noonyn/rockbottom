@@ -451,7 +451,7 @@ body::before{content:"";position:fixed;inset:0;z-index:300;pointer-events:none;b
 .cat h3::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgb(var(--white-rgb) / .3),transparent)}
 .sf{transform:none;border:1px solid rgb(var(--white-rgb) / .5);background:rgb(var(--black-rgb) / .75);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
 .sf>*{transform:none}
-.sf:focus-within{border-color:var(--hi);box-shadow:inset 0 0 0 1px var(--hi)}
+.sf:focus-within{border-color:var(--hi);box-shadow:inset 0 0 0 2px var(--hi)}
 .sf input{font:400 15px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.12em;height:50px}
 .qx{font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.12em;border:1px solid rgb(var(--white-rgb) / .5)}
 .res{font:400 12px/1.3 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.12em}
@@ -1142,6 +1142,8 @@ html{scroll-padding-top:76px}
 .foot p{text-wrap:balance}
 /* polish: phone schedule dates stay on one line so tile rows line up */
 @media (max-width:700px){ :root .tile .d{font-size:18px;white-space:nowrap} }
+/* the map's loops rest while it is off screen (class set by script) */
+:root #placements.idle *,:root #placements.idle *::before,:root #placements.idle *::after{animation-play-state:paused}
 </style>
 </head>
 <body>
@@ -1283,13 +1285,16 @@ const S=()=>D.seasons[state.sn];
 const hv=$('.hv');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const saveData=!!(navigator.connection&&navigator.connection.saveData);
-/* hero video: not loaded for data-saver or reduced motion (the still poster stays); otherwise it plays only while the hero is on screen */
-if(!(saveData||reduce)){
+/* hero video: not loaded on phones, for data-saver or for reduced motion (the still poster stays); otherwise it plays only while the hero is on screen */
+const phone=matchMedia('(max-width:700px)').matches;
+if(!(saveData||reduce||phone)){
   const so=document.createElement('source'); so.src='images/hero-bg.mp4'; so.type='video/mp4'; hv.appendChild(so); hv.load();
   let inView=true; const go=()=>{ if(inView) hv.play().catch(()=>{}); };
   hv.addEventListener('canplay',go); go();
   new IntersectionObserver(es=>es.forEach(e=>{ inView=e.isIntersecting; if(inView) go(); else hv.pause(); }),{threshold:.05}).observe(hv);
 }
+/* map: its road and pulse loops pause while the section is off screen */
+new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('idle',!e.isIntersecting)),{rootMargin:'100px'}).observe($('#placements'));
 
 /* monsters: live site first, local images folder as the fallback */
 const mon=m=>`<img class="mon" src="${IMG_BASE+encodeURI(m.p)}.png" onerror="this.onerror=null;this.src='images/${encodeURI(m.p)}.png'" alt="${esc(m.n)}" width="100" height="100" loading="lazy" decoding="async">`;
