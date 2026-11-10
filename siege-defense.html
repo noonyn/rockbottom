@@ -1289,9 +1289,8 @@ const S=()=>D.seasons[state.sn];
 const hv=$('.hv');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const saveData=!!(navigator.connection&&navigator.connection.saveData);
-/* hero video: not loaded on phones, for data-saver or for reduced motion (the still poster stays); otherwise it plays only while the hero is on screen */
-const phone=matchMedia('(max-width:700px)').matches;
-if(!(saveData||reduce||phone)){
+/* hero video: not loaded for data-saver or reduced motion (the still poster stays); otherwise it plays only while the hero is on screen */
+if(!(saveData||reduce)){
   const so=document.createElement('source'); so.src='images/hero-bg.mp4'; so.type='video/mp4'; hv.appendChild(so); hv.load();
   let inView=true; const go=()=>{ if(inView) hv.play().catch(()=>{}); };
   hv.addEventListener('canplay',go); go();
@@ -1444,7 +1443,7 @@ function hotHTML(k){
 /* holo map: diamond under each tower, the readout plate under it, a pulsing ring on the HQ */
 function holoMark(k){
   const hq=k.startsWith('HQ');
-  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i>${hq?'<i class="hx-pulse" aria-hidden="true"></i>':''}<i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b><i>${'<s></s>'.repeat(4)}</i></i>`;
+  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i>${hq?'<i class="hx-pulse" aria-hidden="true"></i>':''}<i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b><i>${'<s></s>'.repeat(5)}</i></i>`;
 }
 function holoHTML(){
   const held=k=>!!k&&!!SM.towers[k]&&isActive(k);
@@ -1475,11 +1474,12 @@ function holoWire(st){
     const y=Math.max(pad,Math.min((ar.top+ar.bottom)/2-sr.top-h/2,sr.height-pad-h));
     info.dataset.side=side; info.style.left=x+'px'; info.style.top=y+'px'; void info.offsetWidth; info.classList.add('open');
   };
-  const enter=b=>{ if(!b||b.classList.contains('closed')) return; st._hxHover=b.dataset.k; light(b.dataset.k); if(!st.classList.contains('show-all')) open(b); };
+  const enter=b=>{ if(!b||b.classList.contains('closed')) return; st._hxHover=b.dataset.k; light(b.dataset.k); if(!st.classList.contains('show-all')&&b.dataset.k!==state.sel) open(b); }; /* the open tower already has its panel: no second card for it */
   const leave=()=>{ st._hxHover=null; info.classList.remove('open'); light(state.sel); };
   hots.addEventListener('pointerover',e=>{ const b=e.target.closest('.hot'); if(b&&st._hxHover!==b.dataset.k) enter(b); });
   hots.addEventListener('pointerout',e=>{ const b=e.target.closest('.hot'); if(b&&!b.contains(e.relatedTarget)) leave(); });
-  hots.addEventListener('focusin',e=>{ const b=e.target.closest('.hot'); if(b) enter(b); });
+  /* keyboard focus only: a tap or click (and focus handed back when the tower panel closes) must not open it */
+  hots.addEventListener('focusin',e=>{ const b=e.target.closest('.hot'); if(b&&b.matches(':focus-visible')) enter(b); });
   hots.addEventListener('focusout',leave);
   hots.addEventListener('click',()=>info.classList.remove('open'));
   if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
