@@ -1148,6 +1148,9 @@ html{scroll-padding-top:76px}
 @media (max-width:700px){
   #main #hero .cta-row .btn.fill:not(.solid):not(:focus-visible),#main #hero .cta-row .btn.fill:not(.solid):not(:focus-visible):hover{border-color:transparent;background:transparent;color:var(--white)}
 }
+/* tower hit area: the whole tower art, not just the base square */
+.hot .hit{position:absolute;left:-14%;right:-14%;top:-93%;bottom:0}
+.hot[data-k^="HQ"] .hit{left:-22%;right:-22%;top:-126%}
 </style>
 </head>
 <body>
@@ -1438,7 +1441,7 @@ function hotHTML(k){
   const pos=`left:${b.l+b.w/2}%;top:${b.t+b.h/2}%;width:${b.w}%;height:${b.h}%;--d:-${((x=>x-Math.floor(x))(Math.sin(b.l*12.9898+b.t*78.233)*43758.5453)*3.2).toFixed(2)}s`, nd=(isClosed(k)?'':holoMark(k))+`<i class="nd" aria-hidden="true">${mkSVG(k)}</i>`;
   if(isClosed(k)) return `<span class="hot off closed g${g}" data-k="${k}" aria-hidden="true" style="${pos}">${nd}${badge}</span>`;
   if(!act) return `<span class="hot off${(SM.bare||[]).includes(k)?' bare':''} g${g}" data-k="${k}" style="${pos}">${nd}${badge}</span>`;
-  return `<button type="button" class="hot g${g}" data-k="${k}" style="${pos}" aria-pressed="false" aria-label="${esc(tname(k))}${sp?', Special Defense':''}${st?', '+st+' star':''}">${nd}${badge}</button>`;
+  return `<button type="button" class="hot g${g}" data-k="${k}" style="${pos}" aria-pressed="false" aria-label="${esc(tname(k))}${sp?', Special Defense':''}${st?', '+st+' star':''}"><i class="hit" aria-hidden="true"></i>${nd}${badge}</button>`;
 }
 /* holo map: diamond under each tower, the readout plate under it, a pulsing ring on the HQ */
 function holoMark(k){
