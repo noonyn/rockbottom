@@ -1209,6 +1209,9 @@ html{scroll-padding-top:76px}
 .mrd b{color:var(--white);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums}
 .mrd i{display:inline-block;width:8px;height:8px;margin-right:8px}
 @media (max-width:767px){ .mrd{display:none} }
+/* a hairline under the map that fades in from both ends: closes the map off from the next section without a frame */
+.mbase{position:absolute;left:6%;right:6%;bottom:-18px;height:1px;z-index:8;pointer-events:none;background:linear-gradient(90deg,transparent,rgb(var(--white-rgb) / .22) 30%,rgb(var(--white-rgb) / .22) 70%,transparent)}
+@media (max-width:767px){ .mbase{display:none} #placements .mapbox::after{content:"";position:absolute;left:8%;right:8%;bottom:0;height:1px;z-index:8;pointer-events:none;background:linear-gradient(90deg,transparent,rgb(var(--white-rgb) / .22) 30%,rgb(var(--white-rgb) / .22) 70%,transparent)} }
 /* the glow eases out (several stops, no hard ring) and the whole layer fades away toward every edge of the map, so a glow near an edge never ends in a straight line */
 .mglow{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);mask-composite:intersect}
 #placements .smap-holo{-webkit-mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%);mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%)}
@@ -1608,6 +1611,7 @@ function mapReadouts(stage,keys){
   const h=document.createElement('div'); h.className='mrd';
   h.innerHTML=`<div class="tl"><span>Siege plan <b>1/1</b></span></div>`;
   stage.appendChild(h);
+  const line=document.createElement('i'); line.className='mbase'; line.setAttribute('aria-hidden','true'); stage.appendChild(line);
 }
 function renderMap(){
   towerDefs={};
