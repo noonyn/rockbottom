@@ -1215,6 +1215,18 @@ html{scroll-padding-top:76px}
 /* the glow eases out (several stops, no hard ring) and the whole layer fades away toward every edge of the map, so a glow near an edge never ends in a straight line */
 .mglow{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);mask-composite:intersect}
 #placements .smap-holo{-webkit-mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%);mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%)}
+/* Show all: every tower gets the hover card (name, Grade row, portraits) instead of the old "// 12 .. 5*" tag. Square box, Console Black at 94%,
+   a 1px hairline at 26% and a 2px guild-colour left edge; text in the card's sizes, a touch smaller so twenty fit on the map */
+#main #smap-stage.show-all .hot .hb:not(.hb-hq){display:grid;grid-template-columns:1fr;grid-template-areas:"n" "s" "p";row-gap:0;padding:9px 11px 10px;min-width:128px;
+  background:rgb(var(--black-rgb) / .94)!important;border:1px solid rgb(var(--white-rgb) / .26)!important;border-left:2px solid var(--tc)!important;box-shadow:none!important;clip-path:none!important;text-transform:uppercase}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) b{all:unset;grid-area:n;display:block;margin:0 0 7px;font:700 15px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.02em;color:var(--hi);white-space:nowrap}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) b::before{content:none}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) em{grid-area:s;justify-self:stretch;width:auto;margin:0!important;padding:0!important;display:flex;justify-content:space-between;align-items:baseline;gap:16px;font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;font-style:normal;letter-spacing:.1em;color:var(--white)}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) em::before{content:none}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) em s{text-decoration:none;color:var(--grey)}
+#main #smap-stage.show-all .hot .hb:not(.hb-hq) .hd{grid-area:p;margin-top:9px;gap:3px}
+#main #smap-stage.show-all.smap-stage .hot .hb:not(.hb-hq) .hd img{width:30px!important;height:30px!important;border:1px solid rgb(var(--white-rgb) / .16)!important}
+#main #smap-stage.show-all .hot:is(:hover,:focus-visible) .hb:not(.hb-hq){border-color:rgb(var(--white-rgb) / .5)!important;border-left-color:var(--tc)!important}
 /* hero: no corner brackets */
 #hero .hero-frame::before,#hero .hero-frame::after{display:none}
 /* scroll cue: centred above the stats bar, a muted label and a slow bob; the arrow rests for reduced motion */
@@ -1550,7 +1562,7 @@ function hotHTML(k){
   const faces=teams.length===1?[teams[0].lead,teams[0].m2,teams[0].m3]:teams.slice(0,3).map(t=>t.lead);
   const pic=m=>m?`<img src="${IMG_BASE+encodeURI(m.p)}.png" onerror="this.onerror=null;this.src='images/${encodeURI(m.p)}.png'" alt="" width="40" height="40" loading="lazy" decoding="async">`:'';
   const hd=act&&teams.length?`<span class="hd">${faces.filter(Boolean).map(pic).join('')}${teams.length>3?`<small>+${teams.length-3}</small>`:''}</span>`:'';
-  const badge=k.startsWith('HQ')?`<span class="hb hb-hq" data-lab="HQ"></span>`:`<span class="hb" data-lab="${lab}"><b>${tnum(k)}</b>${st?`<em>${st}\u2605</em>`:''}${sp?'<i>Special</i>':''}${hd}</span>`;
+  const badge=k.startsWith('HQ')?`<span class="hb hb-hq" data-lab="HQ"></span>`:`<span class="hb" data-lab="${lab}"><b>${esc(tname(k))}</b>${sp||st?`<em><s>Type</s>${sp?'Special':st+'\u2605'}</em>`:''}${hd}</span>`;
   const pos=`left:${b.l+b.w/2}%;top:${b.t+b.h/2}%;width:${b.w}%;height:${b.h}%;--d:-${((x=>x-Math.floor(x))(Math.sin(b.l*12.9898+b.t*78.233)*43758.5453)*3.2).toFixed(2)}s`, nd=(isClosed(k)?'':holoMark(k))+`<i class="nd" aria-hidden="true">${mkSVG(k)}</i>`;
   if(isClosed(k)) return `<span class="hot off closed g${g}" data-k="${k}" aria-hidden="true" style="${pos}">${nd}${badge}</span>`;
   if(!act) return `<span class="hot off${(SM.bare||[]).includes(k)?' bare':''} g${g}" data-k="${k}" style="${pos}">${nd}${badge}</span>`;
@@ -1583,7 +1595,7 @@ function holoWire(st){
     const teams=(towerDefs[k]||[]).map(u=>{ const i=u.lastIndexOf('-'), sec=S().sections.find(x=>x.id===u.slice(0,i)); return sec&&sec.teams[+u.slice(i+1)]; }).filter(Boolean);
     const faces=teams.length===1?[teams[0].lead,teams[0].m2,teams[0].m3]:teams.slice(0,4).map(t=>t.lead);
     const grade=hq?'Command':sp?'Special':stars?`${stars}★`:'';
-    info.innerHTML=`<b class="hx-n">${esc(tname(k))}</b><dl><dt>Faction</dt><dd class="f">${SM.guild[g]}</dd>${grade?`<dt>Grade</dt><dd>${grade}</dd>`:''}</dl>${teams.length?`<span class="hx-faces">${faces.filter(Boolean).map(pic).join('')}</span>`:''}`;
+    info.innerHTML=`<b class="hx-n">${esc(tname(k))}</b>${grade?`<dl><dt>Type</dt><dd>${grade}</dd></dl>`:''}${teams.length?`<span class="hx-faces">${faces.filter(Boolean).map(pic).join('')}</span>`:''}`;
     st.style.setProperty('--fc',FC[g]); info.classList.remove('open'); info.style.left=info.style.top='0px';
     const sr=st.getBoundingClientRect(), art=$('.nd img',b), ar=(art||b).getBoundingClientRect(), w=info.offsetWidth, h=info.offsetHeight, pad=8;
     let side='r', x=ar.right-sr.left+6; if(x+w>sr.width-pad){ side='l'; x=ar.left-sr.left-6-w; }
@@ -1771,7 +1783,7 @@ function paintPanel(){
   const k=state.sel; tp.dataset.k=tnum(k).padStart(2,'0'); tp.dataset.g=gOf(k);
   const ids=towerDefs[k]||[], also=[...L].filter(j=>j!==k).map(tname), sp=isSpecial(k), st=sp?0:starsOf(k);
   ids.forEach(u=>{ if(!teamOf[u]){ const [sid,i]=u.split('-'); const sec=S().sections.find(s=>s.id===sid); teamOf[u]=sec.teams[+i]; } });
-  const meta=[sp?'Special Defense':'',st?st+' star':'',also.length?'Also lights '+also.join(', '):''].filter(Boolean).join(' \u00b7 ');
+  const meta=[sp?'Special Defense':'',also.length?'Also lights '+also.join(', '):''].filter(Boolean).join(' \u00b7 ');
   requestAnimationFrame(placePanel);
   tp.innerHTML=`<div class="tp-head"><h3>${esc(tname(k))}${meta?`<small>${esc(meta)}</small>`:''}</h3><button type="button" class="tp-x">Close</button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,true,n)).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
   placePanel();
