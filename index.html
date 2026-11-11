@@ -1209,6 +1209,12 @@ html{scroll-padding-top:76px}
 :root .tp .strip{background:rgb(var(--hi-rgb) / .04)}
 .hx-info{clip-path:polygon(0 0,100% 0,100% 100%,100% 100%,0 100%);background:rgb(var(--black-rgb) / .94)}
 .hx-plate,.tp-x{clip-path:none}
+.hx-plate::after{display:none}   /* tower number plates: plain square, no corner tick */
+/* number and the five bars centred in the plate: even padding, the number's trailing letter-spacing taken back */
+#smap-stage .hx-plate{padding:4px 7px;align-items:center;justify-content:center}
+#smap-stage .hx-plate b{display:block;margin-right:-.06em;text-align:center;text-box:trim-both cap alphabetic}   /* the number's box is the digits' height, so the space above and below reads even */
+#smap-stage .hx-plate{padding:5px 7px;gap:4px}
+#smap-stage .hx-plate i{justify-content:center}
 /* placements map: no frame (no corner brackets or tick rulers); the "Season 22 // Siege map" label stays above it */
 #placements .smap-brk,#placements #smap-stage .smap-brk{display:none!important}
 #placements .smap-hud::before,#placements .smap-hud::after{display:none}
