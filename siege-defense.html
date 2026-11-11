@@ -1205,7 +1205,7 @@ html{scroll-padding-top:76px}
 /* map readouts: the same small tracked caps as the label, just outside the map's corners; desktop only (the map scrolls sideways on phones) */
 .mrd{position:absolute;inset:0;z-index:8;pointer-events:none;font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--grey)}
 .mrd>div{position:absolute;display:flex;gap:22px;align-items:center;white-space:nowrap}
-.mrd .tr{right:0;top:-26px}.mrd .bl{left:0;bottom:-28px}.mrd .br{right:0;bottom:-28px}
+.mrd .tl{left:0;top:-2px;flex-direction:column;align-items:flex-start;gap:12px}
 .mrd b{color:var(--white);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums}
 .mrd i{display:inline-block;width:8px;height:8px;margin-right:8px}
 @media (max-width:767px){ .mrd{display:none} }
@@ -1596,8 +1596,7 @@ function holoWire(st){
   hots.addEventListener('focusout',leave);
   hots.addEventListener('click',()=>info.classList.remove('open'));
 }
-// map readouts, plain text just outside the map's corners: towers per guild, HQ not counted (top right), total towers and the siege plan (bottom left),
-// the tower under the pointer or keyboard focus (bottom right). The Blue headquarters reads just "HQ". Also lays the territory glow.
+// map readouts: the siege plan under the "Season 22 // Siege map" label (desktop). Also lays the territory glow.
 function mapReadouts(stage,keys){
   const g=k=>k==='HQ'?'B':k.startsWith('HQ')?k[2]:k[0], N={B:'Blue',R:'Red',Y:'Yellow'}, C={B:'var(--blue)',R:'var(--red)',Y:'var(--yellow)'}, cnt={B:0,R:0,Y:0};
   keys.forEach(k=>{ if(k.startsWith('HQ')) return; const q=g(k); if(q in cnt) cnt[q]++; });   // the guild counts leave the headquarters out
@@ -1606,12 +1605,9 @@ function mapReadouts(stage,keys){
   const glow=document.createElement('div'); glow.className='mglow'; glow.setAttribute('aria-hidden','true');
   glow.style.background=['B','R','Y'].filter(q=>cnt[q]).map(q=>{ const [x,y]=cen(q); const c=a=>`rgb(${RGB[q]} / ${a})`; return `radial-gradient(ellipse 30% 34% at ${x.toFixed(1)}% ${y.toFixed(1)}%,${c(.045)} 0%,${c(.035)} 22%,${c(.02)} 44%,${c(.009)} 64%,${c(.003)} 82%,transparent 100%)`; }).join(',');
   stage.prepend(glow);
-  const h=document.createElement('div'); h.className='mrd'; h.setAttribute('aria-hidden','true');
-  h.innerHTML=`<div class="tr">${['B','R','Y'].filter(k=>cnt[k]).map(k=>`<span><i style="background:${C[k]}"></i>${N[k]} <b>${cnt[k]}</b></span>`).join('')}</div>`+
-    `<div class="bl"><span>Total towers <b>${keys.length}</b></span><span>Siege plan <b>1/1</b></span></div><div class="br"><span class="live">Point at a tower</span></div>`;
+  const h=document.createElement('div'); h.className='mrd';
+  h.innerHTML=`<div class="tl"><span>Siege plan <b>1/1</b></span></div>`;
   stage.appendChild(h);
-  const live=$('.live',h);
-  stage.querySelectorAll('.hot').forEach(b=>{ const show=()=>{ const k=b.dataset.k; live.innerHTML=`<b>${k==='HQ'?'HQ':esc(tname(k))}</b>`; }; b.addEventListener('pointerenter',show); b.addEventListener('focus',show); });
 }
 function renderMap(){
   towerDefs={};
