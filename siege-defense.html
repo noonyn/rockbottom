@@ -1193,6 +1193,13 @@ html{scroll-padding-top:76px}
 /* search field: a plain square hairline box (the cut corners left gaps in the border); focus keeps the bright border and inner ring */
 #main .sf{clip-path:none;border-color:rgb(var(--white-rgb) / .4)}
 #main .sf:focus-within{border-color:var(--hi)}
+/* Show all and Apply here share the search field's square border: no cut corners, no corner lines */
+#main .stog{clip-path:none;border-color:rgb(var(--white-rgb) / .4)}
+#main .stog:hover{border-color:var(--hi)}
+#main #join .btn{clip-path:none;background-image:none}
+/* award cards: square, with a white bracket closing the top-right corner (18px arms on the border line) */
+:root .slab{clip-path:none;background:linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/18px 1px no-repeat,linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/1px 18px no-repeat,var(--panel);background-origin:border-box;background-clip:border-box}
+:root #fame .slab.mvp{background:linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/18px 1px no-repeat,linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/1px 18px no-repeat,linear-gradient(90deg,rgb(var(--gold-rgb) / .07),transparent 55%),var(--panel);background-origin:border-box;background-clip:border-box}
 /* hero: no corner brackets */
 #hero .hero-frame::before,#hero .hero-frame::after{display:none}
 /* scroll cue: centred above the stats bar, a muted label and a slow bob; the arrow rests for reduced motion */
