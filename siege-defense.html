@@ -1325,7 +1325,11 @@ html{scroll-padding-top:76px}
 :root .art,:root #lineup .art .mon,:root #lineup .art::after,:root .sn,:root .tp .sn{clip-path:none}
 /* tower panel: no number tab on its defenses (the numbers read as tower numbers); guild words in their colour, numbers white */
 /* without the tab the portraits would grow: the panel narrows by the tab's width so they stay the size they were (about 88px) */
-@media (min-width:701px){ .tp{width:min(372px,34%)} }
+@media (min-width:701px){ .tp{width:min(356px,33%)} }
+/* tower panel: a slimmer tab with a smaller tower number */
+#main .tp .sn{width:44px}
+#main .tp .sn b{font-size:20px}
+@media (max-width:700px){ #main .tp .sn{width:40px} #main .tp .sn b{font-size:18px} }
 @media (max-width:700px){ :root .tp .strip{max-width:318px} }
 .tp .gw-B{color:var(--t-b)} .tp .gw-R{color:var(--t-r)} .tp .gw-Y{color:var(--t-y)}
 :root .tp-head h3 small{color:var(--grey)}
