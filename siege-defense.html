@@ -356,6 +356,8 @@ html,body{overflow-x:clip}
 .tp{scrollbar-width:thin;scrollbar-color:var(--t-accent) transparent}
 
 .tp[data-g=B]{--gtc:var(--t-b)}
+.tp[data-g=R]{--gtc:var(--t-r)}
+.tp[data-g=Y]{--gtc:var(--t-y)}
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€ B Â· SIGNAL LOST â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body{--t-bg:var(--black);--t-ink:var(--white);--t-dimink:var(--grey);--t-accent:var(--white);--t-line:rgb(var(--white-rgb) / .3);--t-disp:Helvetica,Roboto,Arial,sans-serif;--t-ui:Helvetica,Roboto,Arial,sans-serif;--t-mono:Helvetica,Roboto,Arial,sans-serif;--t-rad:0;--t-loading:"ESTABLISHING UPLINK_";
@@ -388,7 +390,7 @@ body{--t-bg:var(--black);--t-ink:var(--white);--t-dimink:var(--grey);--t-accent:
 .tp::after{content:"";position:absolute;inset:0;z-index:-1;background:rgb(var(--black-rgb) / .9);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
 .tp .pop{z-index:90}
 .tp::before{content:attr(data-t) " // BASE_" attr(data-k);display:block;margin:0 -18px 14px;padding:7px 18px 6px;font:400 12px Helvetica,Roboto,Arial,sans-serif;letter-spacing:.14em;color:var(--grey);background:radial-gradient(circle,rgb(var(--hi-rgb) / .14) 1px,transparent 1.4px) 0 0/5px 5px,rgb(var(--hi-rgb) / .04);border-bottom:1px solid rgb(var(--white-rgb) / .2)}
-.tp[data-t="HQ"]::before{content:"HQ"}
+.tp[data-t="HQ"]::before{content:"HQ // ADDITIONALS"}
 .tp-head h3{font:700 32px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:0}
 .tp-head h3 small{font:400 13px Helvetica,Roboto,Arial,sans-serif;letter-spacing:.04em;color:var(--gtc,var(--grey))}
 .tp-x{font:400 12px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.14em;border:1px solid rgb(var(--white-rgb) / .5);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%)}
@@ -1315,6 +1317,13 @@ html{scroll-padding-top:76px}
 @media (prefers-reduced-motion:reduce){ .pline{animation:none} .pline.wait{clip-path:none} .pline.go{transition:none} }
 /* monster cards: square portraits and a square number tab, no cut corner (defense cards and tower panel) */
 :root .art,:root #lineup .art .mon,:root #lineup .art::after,:root .sn,:root .tp .sn{clip-path:none}
+/* tower panel: no number tab on its defenses (the numbers read as tower numbers); guild words in their colour, numbers white */
+#main .tp .sn{display:none}
+/* without the tab the portraits would grow: the panel narrows by the tab's width so they stay the size they were (about 88px) */
+@media (min-width:701px){ .tp{width:min(304px,30%)} }
+@media (max-width:700px){ :root .tp .strip{max-width:264px} }
+.tp .gw-B{color:var(--t-b)} .tp .gw-R{color:var(--t-r)} .tp .gw-Y{color:var(--t-y)}
+:root .tp-head h3 small{color:var(--grey)}
 </style>
 </head>
 <body>
@@ -1438,7 +1447,7 @@ SM.topo="M363 268C362 274 354 279 351 284C347 289 344 294 341 299C337 304 335 31
 if(SM.view){ const [x0,y0,x1,y1]=SM.view; Object.keys(SM.towers).forEach(k=>{ const [x,y]=SM.towers[k]; SM.towers[k]=[+((x-x0)/(x1-x0)*100).toFixed(2),+((y-y0)/(y1-y0)*100).toFixed(2)]; }); }
 const gOf=k=>k==='HQ'?'B':k==='HQR'?'R':k==='HQY'?'Y':k[0];
 const tname=k=>k==='HQ'?'HQ':k==='HQR'?'Red HQ':k==='HQY'?'Yellow HQ':SM.guild[k[0]]+' '+k.slice(1);
-const tnameHTML=k=>esc(tname(k)).replace(/^(\S+)(?= )/,'<span class="gw">$1</span>');   // guild word coloured, number white
+const tnameHTML=k=>esc(tname(k)).replace(/^(\S+ .+)$/,`<span class="gw gw-${gOf(k)}">$1</span>`);   // guild word coloured, number white
 const tnum=k=>k.startsWith('HQ')?'HQ':k.slice(1);
 const sconf=()=>SM.seasons[state.sn]||{};
 const isSpecial=k=>(sconf().special||[]).includes(k);
@@ -1819,12 +1828,12 @@ function paintPanel(){
   tp.classList.remove('is-empty');
   { const xs=[...L].map(k=>SM.towers[k][0]), cx=xs.reduce((a,b)=>a+b,0)/xs.length/100; tp.classList.toggle('left',cx>0.5); tp.classList.toggle('right',cx<=0.5); }
   const k=state.sel; tp.dataset.k=tnum(k).padStart(2,'0'); tp.dataset.g=gOf(k);
-  const ids=towerDefs[k]||[], also=[...L].filter(j=>j!==k).map(tname), sp=isSpecial(k), st=sp?0:starsOf(k);
+  const ids=towerDefs[k]||[], also=[...L].filter(j=>j!==k).map(tnameHTML), sp=isSpecial(k), st=sp?0:starsOf(k);
   tp.dataset.t=k.startsWith('HQ')?'HQ':sp?'SPECIAL':st?`NAT_${st}`:'BASE';   // header label: the tower's type
   ids.forEach(u=>{ if(!teamOf[u]){ const [sid,i]=u.split('-'); const sec=S().sections.find(s=>s.id===sid); teamOf[u]=sec.teams[+i]; } });
   const meta=[sp?'Special Defense':'',also.length?'Also lights '+also.join(', '):''].filter(Boolean).join(' \u00b7 ');
   requestAnimationFrame(placePanel);
-  tp.innerHTML=`<div class="tp-head"><h3>${esc(tname(k))}${meta?`<small>${esc(meta)}</small>`:''}</h3><button type="button" class="tp-x">Close</button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,false,n)).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
+  tp.innerHTML=`<div class="tp-head"><h3>${tnameHTML(k)}${meta?`<small>${meta}</small>`:''}</h3><button type="button" class="tp-x">Close</button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,false,n)).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
   placePanel();
 }
 function selectTower(k,viaKey){
