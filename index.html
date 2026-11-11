@@ -1324,12 +1324,17 @@ html{scroll-padding-top:76px}
 /* monster cards: square portraits and a square number tab, no cut corner (defense cards and tower panel) */
 :root .art,:root #lineup .art .mon,:root #lineup .art::after,:root .sn,:root .tp .sn{clip-path:none}
 /* tower panel: no number tab on its defenses (the numbers read as tower numbers); guild words in their colour, numbers white */
-#main .tp .sn{display:none}
 /* without the tab the portraits would grow: the panel narrows by the tab's width so they stay the size they were (about 88px) */
-@media (min-width:701px){ .tp{width:min(304px,30%)} }
-@media (max-width:700px){ :root .tp .strip{max-width:264px} }
+@media (min-width:701px){ .tp{width:min(372px,34%)} }
+@media (max-width:700px){ :root .tp .strip{max-width:318px} }
 .tp .gw-B{color:var(--t-b)} .tp .gw-R{color:var(--t-r)} .tp .gw-Y{color:var(--t-y)}
 :root .tp-head h3 small{color:var(--grey)}
+/* tower panel: no heading row; Close is an X in the header bar's top-right corner */
+#main .tp-head{position:absolute;top:0;right:0;margin:0;z-index:2}
+#main .tp-x{display:grid;place-items:center;width:30px;height:27px;padding:0;border:0;border-left:1px solid rgb(var(--white-rgb) / .2);background:none;color:var(--grey);transition:color .15s,background .15s}
+#main .tp-x svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:square}
+#main .tp-x:hover,#main .tp-x:focus-visible{color:var(--black);background:var(--white);outline:none}
+@media (max-width:700px){ #main .tp-x{width:44px} #main .tp-x svg{width:13px;height:13px} }   /* a bigger tap target on phone */
 </style>
 </head>
 <body>
@@ -1494,9 +1499,9 @@ function slotHTML(uid,j){
   const q=state.q, hit=!!q&&pool.some(x=>x.n.toLowerCase().includes(q)), altOnly=hit&&!cur.n.toLowerCase().includes(q);
   return `<div class="slot${hit?' sel':''}${altOnly?' alt-hit':''}" data-uid="${uid}" data-j="${j}">${art}${pop}</div>`;
 }
-function stripHTML(uid,withCat,n){
+function stripHTML(uid,withCat,n,lab){
   const [sid,i]=uid.split('-'), num=String(+i+1).padStart(2,'0');
-  return `<article class="strip" style="--i:${n||0}" data-uid="${uid}" aria-label="${esc((CATSHORT[sid]||sid)+' defense '+(+i+1)+': '+SLOTKEYS.map(k=>teamOf[uid][k].n).join(', '))}"><div class="sn"><b>${num}</b>${withCat?`<span>${esc(CATSHORT[sid]||sid)}</span>`:''}</div><div class="stack">${[0,1,2].map(j=>slotHTML(uid,j)).join('')}</div></article>`;
+  return `<article class="strip" style="--i:${n||0}" data-uid="${uid}" aria-label="${esc((CATSHORT[sid]||sid)+' defense '+(+i+1)+': '+SLOTKEYS.map(k=>teamOf[uid][k].n).join(', '))}"><div class="sn"><b>${lab!=null?esc(lab):num}</b>${withCat?`<span>${esc(CATSHORT[sid]||sid)}</span>`:''}</div><div class="stack">${[0,1,2].map(j=>slotHTML(uid,j)).join('')}</div></article>`;
 }
 function refreshSlot(uid,j){
   $$(`.slot[data-uid="${uid}"][data-j="${j}"]`).forEach(el=>{ el.outerHTML=slotHTML(uid,j); });
@@ -1839,7 +1844,7 @@ function paintPanel(){
   ids.forEach(u=>{ if(!teamOf[u]){ const [sid,i]=u.split('-'); const sec=S().sections.find(s=>s.id===sid); teamOf[u]=sec.teams[+i]; } });
   const meta=[sp?'Special Defense':'',also.length?'Also lights '+also.join(', '):''].filter(Boolean).join(' \u00b7 ');
   requestAnimationFrame(placePanel);
-  tp.innerHTML=`<div class="tp-head"><h3>${tnameHTML(k)}${meta?`<small>${meta}</small>`:''}</h3><button type="button" class="tp-x">Close</button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,false,n)).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
+  tp.innerHTML=`<div class="tp-head"><h3 class="sr">${tnameHTML(k)}${meta?`<small>${meta}</small>`:''}</h3><button type="button" class="tp-x" aria-label="Close"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div>`+(ids.length?`<div class="strips">${ids.map((u,n)=>stripHTML(u,false,n,tnum(k))).join('')}</div>`:`<p class="tp-note">${sp?'Special Defense base. No team is listed for it.':'No defense set for this base.'}</p>`);
   placePanel();
 }
 function selectTower(k,viaKey){
