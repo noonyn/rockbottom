@@ -1329,6 +1329,9 @@ html{scroll-padding-top:76px}
 /* tower panel: a slimmer tab with a smaller tower number */
 #main .tp .sn{width:44px}
 #main .tp .sn b{font-size:20px}
+/* tower panel cards: the left edge matches the Defenses cards (white at 45%, full white on hover) instead of the guild colour */
+#main .tp .strip{border-left-color:rgb(var(--white-rgb) / .45)}
+#main .tp .strip:hover,#main .tp .strip.open{border-left-color:var(--hi)}
 @media (max-width:700px){ #main .tp .sn{width:40px} #main .tp .sn b{font-size:18px} }
 @media (max-width:700px){ :root .tp .strip{max-width:318px} }
 .tp .gw-B{color:var(--t-b)} .tp .gw-R{color:var(--t-r)} .tp .gw-Y{color:var(--t-y)}
