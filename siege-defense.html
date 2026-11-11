@@ -1092,13 +1092,6 @@ body .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.04)}
 .hx-info dd.f{color:var(--fc)}
 .hx-faces{display:flex;gap:3px;margin-top:10px}
 .hx-faces img{display:block;width:30px;height:30px;border:1px solid rgb(var(--white-rgb) / .16)}
-/* crosshair */
-.hx-xh{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .2s}
-#smap-stage.xh-on .hx-xh{opacity:1}
-.hx-xh i{position:absolute;left:0;top:0;background:rgb(var(--white-rgb) / .13)}
-.hx-xh i:first-child{width:1px;height:100%}
-.hx-xh i:nth-child(2){width:100%;height:1px}
-.hx-xh b{position:absolute;left:0;top:0;font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.1em;color:rgb(var(--white-rgb) / .6);white-space:pre}
 #smap-stage .smap-shape{display:none}
 /* 4. inside the page gutter at tablet and laptop widths, so the HUD labels and brackets are never cut */
 @media (min-width:768px){
@@ -1197,9 +1190,28 @@ html{scroll-padding-top:76px}
 #main .stog{clip-path:none;border-color:rgb(var(--white-rgb) / .4)}
 #main .stog:hover{border-color:var(--hi)}
 #main #join .btn{clip-path:none;background-image:none}
-/* award cards: square, with a white bracket closing the top-right corner (18px arms on the border line) */
-:root .slab{clip-path:none;background:linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/18px 1px no-repeat,linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/1px 18px no-repeat,var(--panel);background-origin:border-box;background-clip:border-box}
-:root #fame .slab.mvp{background:linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/18px 1px no-repeat,linear-gradient(rgb(var(--white-rgb) / .85),rgb(var(--white-rgb) / .85)) right top/1px 18px no-repeat,linear-gradient(90deg,rgb(var(--gold-rgb) / .07),transparent 55%),var(--panel);background-origin:border-box;background-clip:border-box}
+/* one border language: plain square boxes with a 1px hairline all the way round (no cut corners, no corner brackets); the accent edges on
+   award cards (white, gold on MVP) and defense cards (white, guild colour in the tower panel) stay */
+:root .slab{clip-path:none;background:var(--panel)}
+:root #fame .slab.mvp{background:linear-gradient(90deg,rgb(var(--gold-rgb) / .07),transparent 55%),var(--panel)}
+:root .tile{border-top:1px solid var(--line);background:var(--panel)}
+:root .strip{background-image:none}
+:root .tp .strip{background:rgb(var(--hi-rgb) / .04)}
+.hx-info{clip-path:polygon(0 0,100% 0,100% 100%,100% 100%,0 100%);background:rgb(var(--black-rgb) / .94)}
+.hx-plate,.tp-x{clip-path:none}
+/* placements map: no frame (no corner brackets or tick rulers); the "Season 22 // Siege map" label stays above it */
+#placements .smap-brk,#placements #smap-stage .smap-brk{display:none!important}
+#placements .smap-hud::before,#placements .smap-hud::after{display:none}
+/* map readouts: the same small tracked caps as the label, just outside the map's corners; desktop only (the map scrolls sideways on phones) */
+.mrd{position:absolute;inset:0;z-index:8;pointer-events:none;font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--grey)}
+.mrd>div{position:absolute;display:flex;gap:22px;align-items:center;white-space:nowrap}
+.mrd .tr{right:0;top:-26px}.mrd .bl{left:0;bottom:-28px}.mrd .br{right:0;bottom:-28px}
+.mrd b{color:var(--white);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.mrd i{display:inline-block;width:8px;height:8px;margin-right:8px}
+@media (max-width:767px){ .mrd{display:none} }
+/* the glow eases out (several stops, no hard ring) and the whole layer fades away toward every edge of the map, so a glow near an edge never ends in a straight line */
+.mglow{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);mask-composite:intersect}
+#placements .smap-holo{-webkit-mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%);mask-image:radial-gradient(ellipse 58% 58% at 50% 50%,#000 40%,transparent 86%)}
 /* hero: no corner brackets */
 #hero .hero-frame::before,#hero .hero-frame::after{display:none}
 /* scroll cue: centred above the stats bar, a muted label and a slow bob; the arrow rests for reduced motion */
@@ -1583,14 +1595,23 @@ function holoWire(st){
   hots.addEventListener('focusin',e=>{ const b=e.target.closest('.hot'); if(b&&b.matches(':focus-visible')) enter(b); });
   hots.addEventListener('focusout',leave);
   hots.addEventListener('click',()=>info.classList.remove('open'));
-  if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-  const xh=document.createElement('div'); xh.className='hx-xh'; xh.setAttribute('aria-hidden','true'); xh.innerHTML='<i></i><i></i><b></b>'; st.appendChild(xh);
-  const [v,hl]=xh.querySelectorAll('i'), t=$('b',xh), pad3=n=>String(Math.max(0,n)).padStart(3,'0'); let raf=0, ev=null;
-  st.addEventListener('pointermove',e=>{ ev=e; if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; const r=st.getBoundingClientRect(), x=ev.clientX-r.left, y=ev.clientY-r.top;
-    v.style.transform=`translateX(${x}px)`; hl.style.transform=`translateY(${y}px)`;
-    t.textContent=`X ${pad3(Math.round(x/r.width*1000))}  Y ${pad3(Math.round(y/r.height*650))}`;
-    t.style.transform=`translate(${x>r.width-130?x-t.offsetWidth-12:x+12}px,${y>r.height-30?y-22:y+12}px)`; st.classList.add('xh-on'); }); });
-  st.addEventListener('pointerleave',()=>st.classList.remove('xh-on'));
+}
+// map readouts, plain text just outside the map's corners: towers per guild, HQ not counted (top right), total towers and the siege plan (bottom left),
+// the tower under the pointer or keyboard focus (bottom right). The Blue headquarters reads just "HQ". Also lays the territory glow.
+function mapReadouts(stage,keys){
+  const g=k=>k==='HQ'?'B':k.startsWith('HQ')?k[2]:k[0], N={B:'Blue',R:'Red',Y:'Yellow'}, C={B:'var(--blue)',R:'var(--red)',Y:'var(--yellow)'}, cnt={B:0,R:0,Y:0};
+  keys.forEach(k=>{ if(k.startsWith('HQ')) return; const q=g(k); if(q in cnt) cnt[q]++; });   // the guild counts leave the headquarters out
+  // territory glow: a very soft guild-colour wash centred on each guild's towers, behind everything else on the map
+  const RGB={B:'var(--blue-rgb)',R:'var(--red-rgb)',Y:'var(--yellow-rgb)'}, cen=q=>{ const p=keys.filter(k=>g(k)===q).map(k=>SM.towers[k]); return [p.reduce((s,a)=>s+a[0],0)/p.length,p.reduce((s,a)=>s+a[1],0)/p.length]; };
+  const glow=document.createElement('div'); glow.className='mglow'; glow.setAttribute('aria-hidden','true');
+  glow.style.background=['B','R','Y'].filter(q=>cnt[q]).map(q=>{ const [x,y]=cen(q); const c=a=>`rgb(${RGB[q]} / ${a})`; return `radial-gradient(ellipse 30% 34% at ${x.toFixed(1)}% ${y.toFixed(1)}%,${c(.045)} 0%,${c(.035)} 22%,${c(.02)} 44%,${c(.009)} 64%,${c(.003)} 82%,transparent 100%)`; }).join(',');
+  stage.prepend(glow);
+  const h=document.createElement('div'); h.className='mrd'; h.setAttribute('aria-hidden','true');
+  h.innerHTML=`<div class="tr">${['B','R','Y'].filter(k=>cnt[k]).map(k=>`<span><i style="background:${C[k]}"></i>${N[k]} <b>${cnt[k]}</b></span>`).join('')}</div>`+
+    `<div class="bl"><span>Total towers <b>${keys.length}</b></span><span>Siege plan <b>1/1</b></span></div><div class="br"><span class="live">Point at a tower</span></div>`;
+  stage.appendChild(h);
+  const live=$('.live',h);
+  stage.querySelectorAll('.hot').forEach(b=>{ const show=()=>{ const k=b.dataset.k; live.innerHTML=`<b>${k==='HQ'?'HQ':esc(tname(k))}</b>`; }; b.addEventListener('pointerenter',show); b.addEventListener('focus',show); });
 }
 function renderMap(){
   towerDefs={};
@@ -1600,8 +1621,9 @@ function renderMap(){
   });});
   Object.entries((SM.place||{})[state.sn]||{}).forEach(([k,ids])=>ids.forEach(u=>{ const [sid,i]=u.split('-'); if(S().sections.some(x=>x.id===sid&&x.teams[+i])) (towerDefs[k]=towerDefs[k]||[]).includes(u)||(towerDefs[k]=towerDefs[k]||[]).push(u); }));
   const host=$('#maphost'), keys=Object.keys(SM.towers).filter(k=>!isClosed(k));
-  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage">${holoHTML()}<div class="smap-hots" id="hots" role="group" aria-label="Season ${esc(state.sn)} siege map: Blue, Red and Yellow towers with the defense placed on each"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Siege map // Season ${esc(state.sn)}</b></i></div></div>`;
+  host.innerHTML=`<div class="smap-scroll" id="smap-scroll"><div class="smap-stage run${$('#smap-badges').getAttribute('aria-pressed')==='true'?' show-all':''}" id="smap-stage">${holoHTML()}<div class="smap-hots" id="hots" role="group" aria-label="Season ${esc(state.sn)} siege map: Blue, Red and Yellow towers with the defense placed on each"><svg class="leads" id="leads" aria-hidden="true"></svg>${keys.map(hotHTML).join('')}</div><i class="smap-brk tl" aria-hidden="true"></i><i class="smap-brk br" aria-hidden="true"></i><i class="smap-brk tr" aria-hidden="true"></i><i class="smap-brk bl" aria-hidden="true"></i><i class="smap-hud" aria-hidden="true"><b>Season ${esc(state.sn)} // Siege map</b></i></div></div>`;
   const stage=$('#smap-stage');
+  mapReadouts(stage,keys);
   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>stage.classList.toggle('run',e.isIntersecting)),{threshold:0}).observe(stage);
   { const sc=$('#smap-scroll'), cue=document.createElement('div'); cue.className='smap-swipe'; cue.setAttribute('aria-hidden','true');
     cue.innerHTML='<svg viewBox="0 0 64 20"><path d="M9 4 3 10l6 6M55 4l6 6-6 6"/><circle cx="32" cy="10" r="4"/></svg>'; host.appendChild(cue);
