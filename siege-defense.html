@@ -842,7 +842,8 @@ body::before{content:"";position:fixed;inset:0;z-index:300;pointer-events:none;b
 #hero h1 .h1-tag i{flex:1;min-width:60px;max-width:220px;height:6px;margin-left:.4em;background:radial-gradient(circle,rgb(var(--white-rgb) / .45) 1px,transparent 1.4px) 0 50%/7px 6px repeat-x;position:relative}
 #hero h1 .h1-tag i::after{content:"";position:absolute;right:-3px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:var(--white)}
 #hero h1 .h1-main>span{display:block}
-:root #hero h1,:root #hero h1.vA{font-size:clamp(56px,6.8vw,108px);line-height:.92}
+#hero{--title-size:clamp(56px,6.8vw,108px)}
+:root #hero h1,:root #hero h1.vA{font-size:var(--title-size);line-height:.92}
 
 @media (max-width:700px){
   #hero .hero-frame{width:auto}
@@ -1174,16 +1175,21 @@ html{scroll-padding-top:76px}
 :root{--gold:#d9a546;--gold-rgb:217 165 70;--gold-hi:#e6b862;--gold-ink:#e8c785}
 /* hero title block, after Riot esports event pages: a gold eyebrow, the title, then the season's dates in small tracked caps.
    Spacing: 12px eyebrow to title, 20px title to dates. */
-#main #hero h1 .h1-tag{display:flex;align-items:center;justify-content:flex-start;gap:0;margin:0 0 12px;font:700 13px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+#main #hero h1 .h1-tag{display:flex;align-items:center;justify-content:flex-start;gap:0;margin:0 0 12px;font:700 14px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
 #main #hero h1 .h1-tag::before{content:none}
 #main #hero h1 .h1-tag small,#main #hero h1 .h1-tag b{font:inherit;letter-spacing:inherit;color:inherit}
 #main #hero h1 .h1-tag b{margin-left:.3em}
 #main #hero h1 .h1-tag small span,#main #hero h1 .h1-tag i{display:none}
 #hero .hdates{display:block;margin:20px 0 0;font:400 13px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:rgb(var(--white-rgb) / .78);font-variant-numeric:tabular-nums;text-shadow:0 1px 8px rgb(var(--black-rgb) / .85)}
 #hero .hdates[hidden]{display:none}
+/* optical alignment: the title's letters sit inside their side-bearings (the B of BATTLE about 6.5% of the title size), so the two small lines step in to meet its ink rather than its box */
+@media (min-width:701px){ #hero .hdates{padding-left:calc(var(--title-size) * .065)} }
 @media (max-width:700px){
   #main #hero h1 .h1-tag{justify-content:center}
   #hero .hdates{text-align:center;font-size:11px}
+  /* centred tracked caps carry one letter-space after the last character; pad the left by the same so the ink centres under the title */
+  #main #hero h1 .h1-tag{padding-left:.3em}
+  #hero .hdates{padding-left:.24em}
 }
 /* hero: no corner brackets */
 #hero .hero-frame::before,#hero .hero-frame::after{display:none}
