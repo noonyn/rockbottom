@@ -1170,16 +1170,20 @@ html{scroll-padding-top:76px}
 /* tower hit area: the whole tower art, not just the base square */
 .hot .hit{position:absolute;left:-14%;right:-14%;top:-93%;bottom:0}
 .hot[data-k^="HQ"] .hit{left:-22%;right:-22%;top:-126%}
-/* gold: warmer than Yellow Guild and never a guild colour; used by the hero dates rule, the scroll cue chevron and the active nav line */
+/* gold: warmer than Yellow Guild and never a guild colour; used by the scroll cue chevron and the active nav line */
 :root{--gold:#d9a546;--gold-rgb:217 165 70;--gold-hi:#e6b862;--gold-ink:#e8c785}
-/* hero dates: a short gold upright beside the season's dates, the year small beneath */
-#hero .hdates{display:grid;gap:8px;justify-items:start;margin:clamp(26px,2.6vw,40px) 0 0;padding-left:16px;border-left:2px solid var(--gold);text-shadow:0 1px 8px rgb(var(--black-rgb) / .85)}
+/* hero title block, after Riot esports event pages: a gold eyebrow, the title, then the season's dates in small tracked caps.
+   Spacing: 12px eyebrow to title, 20px title to dates. */
+#main #hero h1 .h1-tag{display:flex;align-items:center;justify-content:flex-start;gap:0;margin:0 0 12px;font:700 13px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+#main #hero h1 .h1-tag::before{content:none}
+#main #hero h1 .h1-tag small,#main #hero h1 .h1-tag b{font:inherit;letter-spacing:inherit;color:inherit}
+#main #hero h1 .h1-tag b{margin-left:.3em}
+#main #hero h1 .h1-tag small span,#main #hero h1 .h1-tag i{display:none}
+#hero .hdates{display:block;margin:20px 0 0;font:400 13px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:rgb(var(--white-rgb) / .78);font-variant-numeric:tabular-nums;text-shadow:0 1px 8px rgb(var(--black-rgb) / .85)}
 #hero .hdates[hidden]{display:none}
-#hero .hdates b{font:700 clamp(19px,1.5vw,23px)/1 Helvetica,Roboto,Arial,sans-serif;color:var(--white);font-variant-numeric:tabular-nums}
-#hero .hdates span{font:400 11px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.24em;color:var(--grey);font-variant-numeric:tabular-nums}
 @media (max-width:700px){
-  #hero .hdates{justify-items:center;margin-top:18px;padding:0;border:0}
-  #hero .hdates b::before{content:"";display:inline-block;width:2px;height:.9em;margin-right:10px;vertical-align:-.1em;background:var(--gold)}
+  #main #hero h1 .h1-tag{justify-content:center}
+  #hero .hdates{text-align:center;font-size:11px}
 }
 /* hero: no corner brackets */
 #hero .hero-frame::before,#hero .hero-frame::after{display:none}
@@ -1244,7 +1248,7 @@ html{scroll-padding-top:76px}
   <div class="slash" aria-hidden="true"></div><div class="slash b" aria-hidden="true"></div>
   <div class="hero-in"><div class="hero-frame">
     <h1 id="h1" class="vA"><span class="h1-tag"><small><span aria-hidden="true">//</span> Season</small><b id="hero-season">22</b><i aria-hidden="true"></i></span><span class="h1-main"><span>Siege</span> <span>Battle</span></span></h1>
-    <p class="hdates" id="hdates" hidden><b id="hd-range"></b><span id="hd-year"></span></p>
+    <p class="hdates" id="hdates" hidden><span id="hd-range"></span></p>
   </div></div>
   <div class="hx hx-bug" id="hx-bug"><a class="cue" id="cue" href="#lineup"><span>Defenses</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 4.5l5 5 5-5"/></svg></a></div>
 </section>
@@ -1744,7 +1748,7 @@ function renderSchedule(){
   const cut=n?new Date(new Date(sc[n-1].date).getTime()+864e5-30*864e5):null, before=cut?sc.filter(s=>new Date(s.date)<=cut).length:0;
   const mark=cut&&before>0&&before<n?`<span class="sgp-cut" style="--at:${(before/n*100).toFixed(3)}%" title="Be in the guild by this date to get the season-end rewards"><i></i><em>Rewards cut-off ${dUTC(cut.toISOString(),{day:'numeric',month:'short'})}</em></span>`:'';
   $('#sgp').innerHTML=n?`<div class="sgp-top"><span class="sgp-l">Siege progress</span><b class="sgp-c">${played}<small> / ${n} played</small></b></div><div class="sgp-bar" style="--n:${n}" role="img" aria-label="${played} of ${n} sieges played${cut&&before>0&&before<n?`; season-end rewards cut-off ${dUTC(cut.toISOString(),{day:'numeric',month:'long'})}`:''}">${sc.map((s,i)=>`<i class="${i<played?'on':nxt&&s===nxt?'nx':''}"></i>`).join('')}${mark}</div>${nxt?`<div class="sgp-meta">Next: ${esc(nxt.label)}, ${dUTC(nxt.date,{weekday:'short',day:'numeric',month:'short'})}</div>`:''}`:'';
-  $('#sg-note').textContent=sc.length?S().range.replace(/ â€” /,' to '):'No siege schedule has been published for this season.';
+  const note=$('#sg-note'); note.textContent=sc.length?'':'No siege schedule has been published for this season.'; note.hidden=!!sc.length;
 }
 function renderHeroX(){
   const st=S().stats||{};
@@ -1753,16 +1757,16 @@ function renderHeroX(){
   if(cue) bug.append(cue);   // the scroll cue rides on top of the stats bar; last child, so the cells' first-child rules hold
   renderHeroSeason();
 }
-// hero dates: "Jul 27 – Oct 30" and the year, from the season's range ("27 Jul 2026 — 30 Oct 2026")
+// hero dates: "27 Jul – 30 Oct 2026", set in caps by CSS (both years when a season crosses one), from the season's range
 function renderHeroSeason(){
   const box=$('#hdates'); if(!box) return;
   const M=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
   const parse=s=>{ const m=String(s||'').trim().match(/^(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})$/); if(!m) return null; const mo=M.indexOf(m[2].toLowerCase()); return mo<0?null:new Date(Date.UTC(+m[3],mo,+m[1])); };
   const [a,b]=String(S().range||'').split(/\s*[\u2013\u2014-]\s*/).map(parse);
   if(!a||!b){ box.hidden=true; return; }
-  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
-  $('#hd-range').textContent=`${fmt(a)} \u2013 ${fmt(b)}`;
-  $('#hd-year').textContent=a.getUTCFullYear()===b.getUTCFullYear()?b.getUTCFullYear():`${a.getUTCFullYear()} \u2013 ${b.getUTCFullYear()}`;
+  const dm=d=>`${d.getUTCDate()} ${'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[d.getUTCMonth()]}`;   // fixed three-letter months (en-GB would give "Sept")
+  const ya=a.getUTCFullYear(), yb=b.getUTCFullYear(), dash=' \u2013 ';
+  $('#hd-range').textContent=ya===yb?`${dm(a)}${dash}${dm(b)} ${yb}`:`${dm(a)} ${ya}${dash}${dm(b)} ${yb}`;
   box.hidden=false;
 }
 function renderAll(){
