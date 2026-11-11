@@ -1333,7 +1333,7 @@ html{scroll-padding-top:76px}
 #main .tp .strip{border-left-color:rgb(var(--white-rgb) / .45)}
 #main .tp .strip:hover,#main .tp .strip.open{border-left-color:var(--hi)}
 @media (max-width:700px){ #main .tp .sn{width:40px} #main .tp .sn b{font-size:18px} }
-@media (max-width:700px){ :root .tp .strip{max-width:318px} }
+
 .tp .gw-B{color:var(--t-b)} .tp .gw-R{color:var(--t-r)} .tp .gw-Y{color:var(--t-y)}
 :root .tp-head h3 small{color:var(--grey)}
 /* tower panel: no heading row; Close is an X in the header bar's top-right corner */
@@ -1342,6 +1342,10 @@ html{scroll-padding-top:76px}
 #main .tp-x svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:square}
 #main .tp-x:hover,#main .tp-x:focus-visible{color:var(--black);background:var(--white);outline:none}
 @media (max-width:700px){ #main .tp-x{width:44px} #main .tp-x svg{width:13px;height:13px} }   /* a bigger tap target on phone */
+/* tower panel: the swap count overlaps the portrait's top-right corner, as on the Defenses cards */
+#main .tp .art{overflow:visible}
+#main .tp .art .mon{display:block}
+#main .tp .plus{top:-5px;right:-5px;box-shadow:0 0 0 2px var(--panel)}
 </style>
 </head>
 <body>
@@ -1532,7 +1536,8 @@ function openPop(slot){
   pop.hidden=false; art.setAttribute('aria-expanded','true');
   slot.closest('.strip').classList.add('open'); slot.classList.add('is-open'); document.body.classList.add('pop-open');
   let r=pop.getBoundingClientRect();
-  if(r.bottom>innerHeight-8 && slot.getBoundingClientRect().top-r.height-6>70){ pop.classList.add('up'); r=pop.getBoundingClientRect(); }
+  let lim=innerHeight; for(let a=slot.parentElement;a&&a!==document.body;a=a.parentElement){ const o=getComputedStyle(a); if(/hidden|clip|auto|scroll/.test(o.overflowY+o.overflow)){ lim=Math.min(lim,a.getBoundingClientRect().bottom); } }
+  if(r.bottom>lim-8 && slot.getBoundingClientRect().top-r.height-6>70){ pop.classList.add('up'); r=pop.getBoundingClientRect(); }
   let dx=0; if(r.left<8) dx=8-r.left; else if(r.right>vw-8) dx=vw-8-r.right;
   if(dx) pop.style.transform=`translateX(calc(-50% + ${Math.round(dx)}px))`;
   const first=$('button',pop); if(first) first.focus({preventScroll:true});
