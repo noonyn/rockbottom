@@ -1310,6 +1310,8 @@ html{scroll-padding-top:76px}
 @keyframes plB3{from{--b3:50%}to{--b3:66%}}
 @keyframes plB4{from{--b4:64%}to{--b4:82%}}
 @media (prefers-reduced-motion:reduce){ .pline{animation:none} .pline.wait{clip-path:none} .pline.go{transition:none} }
+/* monster cards: square portraits and a square number tab, no cut corner (defense cards and tower panel) */
+:root .art,:root #lineup .art .mon,:root #lineup .art::after,:root .sn,:root .tp .sn{clip-path:none}
 </style>
 </head>
 <body>
