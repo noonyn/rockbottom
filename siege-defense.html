@@ -1346,6 +1346,9 @@ html{scroll-padding-top:76px}
 #main .tp .art{overflow:visible}
 #main .tp .art .mon{display:block}
 #main .tp .plus{top:-5px;right:-5px;box-shadow:0 0 0 2px var(--panel)}
+/* touch: a tapped card keeps :hover; its lift would anchor the phone swap tray to the card and clip it inside the tower sheet */
+@media (hover:none){ .strip:hover{transform:none} }
+@media (max-width:700px){ :root .tp .strip,:root .tp .strip:hover{transform:none} }
 </style>
 </head>
 <body>
