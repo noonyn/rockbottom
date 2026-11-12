@@ -1642,7 +1642,7 @@ function hotHTML(k){
 /* holo map: diamond under each tower, the readout plate under it, a pulsing ring on the HQ */
 function holoMark(k){
   const hq=k.startsWith('HQ');
-  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i>${hq?'<i class="hx-pulse" aria-hidden="true"></i>':''}<i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b><i>${'<s></s>'.repeat(5)}</i></i>`;
+  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i>${hq?'<i class="hx-pulse" aria-hidden="true"></i>':''}<i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b>${hq?'':`<i>${'<s></s>'.repeat(5)}</i>`}</i>`;
 }
 function holoHTML(){
   const held=k=>!!k&&!!SM.towers[k]&&isActive(k);
