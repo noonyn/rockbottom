@@ -1079,8 +1079,10 @@ body .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.04)}
 .hx-base{position:absolute;left:50%;top:50%;width:64%;height:21%;transform:translate(-50%,-50%);border-radius:50%;background:rgb(var(--black-rgb) / .85);pointer-events:none;z-index:1}
 .hot[data-k^="HQ"] .hx-base{width:70%;height:22%}
 .hot.off .hx-dia polygon{stroke:rgb(var(--white-rgb) / .3);fill:none}
-.hx-pulse{position:absolute;left:50%;top:50%;width:92%;height:46%;border:1px solid var(--tc);border-radius:50%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;z-index:0;animation:hxPulse 4.2s ease-out infinite}
-@keyframes hxPulse{0%{opacity:.75;transform:translate(-50%,-50%) scale(.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.7)}}
+/* HQ: its tile breathes, lit and unlit, nothing past its edges */
+.hot[data-k^="HQ"]:not(.off) .hx-dia polygon{animation:hxBreath 4s ease-in-out infinite}
+.hot[data-k^="HQ"]:is(:hover,:focus-visible) .hx-dia polygon{animation:none}
+@keyframes hxBreath{0%,100%{fill:color-mix(in srgb,var(--tc) 14%,transparent)}50%{fill:color-mix(in srgb,var(--tc) 72%,transparent)}}
 .hx-plate{position:absolute;left:50%;top:79%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;padding:3px 7px 4px;background:rgb(var(--black-rgb) / .88);border:1px solid rgb(var(--white-rgb) / .26);clip-path:polygon(0 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%);pointer-events:none;z-index:3}
 .hx-plate::after{content:"";position:absolute;right:-1px;bottom:-1px;width:6px;height:6px;background:linear-gradient(to top left,transparent calc(50% - .7px),rgb(var(--white-rgb) / .55) calc(50% - .7px) calc(50% + .7px),transparent calc(50% + .7px))}
 .hx-plate b{font:400 12px/1 Helvetica,Roboto,Arial,sans-serif;letter-spacing:.06em;color:var(--white)}
@@ -1112,7 +1114,7 @@ body .smap-stage{--grade:saturate(.93) brightness(.86) contrast(1.04)}
   #placements .smap-scroll{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   #placements .smap-stage{width:max(100%,1140px)}
 }
-@media (prefers-reduced-motion:reduce){ .hx-held path,.hx-pulse,.hx-info.open{animation:none} .hx-pulse{opacity:.45} }
+@media (prefers-reduced-motion:reduce){ .hx-held path,.hot[data-k^="HQ"] .hx-dia polygon,.hx-info.open{animation:none} }
 
 /* type: Helvetica / Roboto for headings and UI, Noto Sans JP for running text (after theghostintheshell-anime.jp) */
 body{font-variant-numeric:tabular-nums}
@@ -1642,10 +1644,10 @@ function hotHTML(k){
   if(!act) return `<span class="hot off${(SM.bare||[]).includes(k)?' bare':''} g${g}" data-k="${k}" style="${pos}">${nd}${badge}</span>`;
   return `<button type="button" class="hot g${g}" data-k="${k}" style="${pos}" aria-pressed="false" aria-label="${esc(tname(k))}${sp?', Special Defense':''}${st?', '+st+' star':''}"><i class="hit" aria-hidden="true"></i>${nd}${badge}</button>`;
 }
-/* holo map: diamond under each tower, the readout plate under it, a pulsing ring on the HQ */
+/* holo map: diamond under each tower, the readout plate under it, a breathing glow on the HQ tile */
 function holoMark(k){
   const hq=k.startsWith('HQ');
-  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i>${hq?'<i class="hx-pulse" aria-hidden="true"></i>':''}<i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b>${hq?'':`<i>${'<s></s>'.repeat(5)}</i>`}</i>`;
+  return `<svg class="hx-dia" viewBox="0 0 40 20" preserveAspectRatio="none" aria-hidden="true"><polygon points="20 .5 39.5 10 20 19.5 .5 10"/></svg><i class="hx-base" aria-hidden="true"></i><i class="hx-plate" aria-hidden="true"><b>${tnum(k)}</b>${hq?'':`<i>${'<s></s>'.repeat(5)}</i>`}</i>`;
 }
 function holoHTML(){
   const held=k=>!!k&&!!SM.towers[k]&&isActive(k);
